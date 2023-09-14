@@ -16,3 +16,6 @@ You should be able to see something like this in your terminal
 > react-scripts start
 
 Give it a few minutes and you should have a new window opened in your browser and other text indicating React is starting with ***Compiled successfully*** text.
+
+Nodejs version (node -v): 18.17.1
+npm version (npm -v) 10.1.0
