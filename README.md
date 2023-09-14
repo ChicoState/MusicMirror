@@ -1,7 +1,7 @@
 # MusicMirror
 
 MusicMirror
-##How to get started with React (windows, linux/mac steps may vary):
+## How to get started with React (windows, linux/mac steps may vary):
 
 1. Install nodejs with sudo apt install nodejs (if that doesn't work, try to install npm or another package manager such as env, brew, n, nvm, etc.)
 2. npm should come with nodejs but if it doesn't, install via your package manager.
