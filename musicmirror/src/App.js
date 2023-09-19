@@ -1,4 +1,5 @@
 import './App.css';
+import Playlist from './components/Playlist';
 
 function App() {
   return (
@@ -7,18 +8,7 @@ function App() {
         <h1>MusicMirror</h1>
       </header>
       <main className="App-main">
-        <h2 className="Test-h2">Streaming Service</h2>
-        <div className="Test-playlist">
-          <h3>Playlist</h3>
-          <ol>
-              <li>song</li>
-              <li>song</li>
-              <li>song</li>
-              <li>song</li>
-              <li>song with a long title</li>
-              <li>song</li>
-            </ol>
-        </div>
+        <Playlist />
       </main>
     </div>
   );

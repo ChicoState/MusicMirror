@@ -1,0 +1,41 @@
+{
+  "title": "playlist title",
+  "songs": [
+    {
+      "title": "song title",
+      "artist": "artist",
+      "album": "album",
+      "length": "length"
+    },
+    {
+      "title": "song title",
+      "artist": "artist",
+      "album": "album",
+      "length": "length"
+    },
+    {
+      "title": "song title",
+      "artist": "artist",
+      "album": "album",
+      "length": "length"
+    },
+    {
+      "title": "song title",
+      "artist": "artist",
+      "album": "album",
+      "length": "length"
+    },
+    {
+      "title": "song title",
+      "artist": "artist",
+      "album": "album",
+      "length": "length"
+    },
+    {
+      "title": "song title",
+      "artist": "artist",
+      "album": "album",
+      "length": "length"
+    }
+  ]
+}
