@@ -1,4 +1,5 @@
 import playlist from '../playlist.json';
+import '../styles/Playlist.css';
 
 function Playlist() {
   return (
