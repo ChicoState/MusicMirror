@@ -19,12 +19,3 @@
   font-size: calc(10px + 1vmin);
   color: #61dafb;
 }
-
-.Test-h2 {
-  margin-top: 0;
-}
-
-.Test-playlist ol {
-  padding-left: 0;
-  list-style-position: inside;
-}
