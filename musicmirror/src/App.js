@@ -4,16 +4,19 @@ import * as auth from './auth';
 //import React, { useEffect } from 'react';
 
 function App() {
-  auth.checkCode();
+  
+  //auth.checkCode();
   return (
     <div className="App">
       <header className="App-header">
         <h1>MusicMirror</h1>
         
       </header>
-      <main className="App-main">
-        <Playlist />
-      </main>
+        <main className="App-main">
+          <Playlist />
+        </main>
+        <button onClick={auth.checkCode()}>Sign in</button>
+
       <body>
         <h1>Display your Spotify profile data</h1>
 

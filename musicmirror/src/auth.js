@@ -7,7 +7,10 @@ export async function checkCode(){
         redirectToAuthCodeFlow(clientId);
         console.log(code);
     } else {
+        console.log("above");
+        console.log(code);
         const accessToken = await getAccessToken(clientId, code);
+        console.log("we out");
         const profile = await fetchProfile(accessToken);
         populateUI(profile);
     }
@@ -16,7 +19,7 @@ export async function checkCode(){
 export async function redirectToAuthCodeFlow(clientId) {
     const verifier = generateCodeVerifier(128);
     const challenge = await generateCodeChallenge(verifier);
-
+    
     localStorage.setItem("verifier", verifier);
 
     const params = new URLSearchParams();
@@ -31,6 +34,7 @@ export async function redirectToAuthCodeFlow(clientId) {
 }
 
 export function generateCodeVerifier(length) {
+    console.log("generateCode");
     let text = '';
     let possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
