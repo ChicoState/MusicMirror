@@ -1,5 +1,6 @@
 import './App.css';
 import Playlist from './components/Playlist';
+import AddSongs from './components/AddSongs';
 
 function App() {
   return (
@@ -9,6 +10,7 @@ function App() {
       </header>
       <main className="App-main">
         <Playlist />
+        <AddSongs />
       </main>
     </div>
   );
