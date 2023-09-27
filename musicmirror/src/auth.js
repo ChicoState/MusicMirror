@@ -1,9 +1,11 @@
 const clientId = "950b5e4bacb54dc1ad9c2ce70e2a4d48";
-const code = undefined;
+const params = new URLSearchParams(window.location.search);
+const code = params.get("code");
 
 export async function checkCode(){
     if (!code) {
         redirectToAuthCodeFlow(clientId);
+        console.log(code);
     } else {
         const accessToken = await getAccessToken(clientId, code);
         const profile = await fetchProfile(accessToken);
@@ -38,7 +40,7 @@ export function generateCodeVerifier(length) {
     return text;
 }
 
-async function generateCodeChallenge(codeVerifier) {
+export async function generateCodeChallenge(codeVerifier) {
     const data = new TextEncoder().encode(codeVerifier);
     const digest = await window.crypto.subtle.digest('SHA-256', data);
     return btoa(String.fromCharCode.apply(null, [...new Uint8Array(digest)]))
@@ -48,6 +50,7 @@ async function generateCodeChallenge(codeVerifier) {
 }
 
 export async function getAccessToken(clientId, code) {
+    
     const verifier = localStorage.getItem("verifier");
 
     const params = new URLSearchParams();
@@ -64,36 +67,22 @@ export async function getAccessToken(clientId, code) {
     });
 
     const { access_token } = await result.json();
-    console.log("hi")
     return access_token;
 }
 
-/*
-async function getAccessToken(clientId, code) {
-  // TODO: Get access token for code
-}
-*/
-
-async function fetchProfile(token) {
+export async function fetchProfile(token) {
     const result = await fetch("https://api.spotify.com/v1/me", {
         method: "GET", headers: { Authorization: `Bearer ${token}` }
     });
-
     return await result.json();
 }
 
 export function populateUI(profile) {
     document.getElementById("displayName").innerText = profile.display_name;
-    if (profile.images[0]) {
-        const profileImage = new Image(200, 200);
-        profileImage.src = profile.images[0].url;
-        document.getElementById("avatar").appendChild(profileImage);
-        document.getElementById("imgUrl").innerText = profile.images[0].url;
-    }
     document.getElementById("id").innerText = profile.id;
     document.getElementById("email").innerText = profile.email;
-    document.getElementById("uri").innerText = profile.uri;
+    /*document.getElementById("uri").innerText = profile.uri;
     document.getElementById("uri").setAttribute("href", profile.external_urls.spotify);
     document.getElementById("url").innerText = profile.href;
-    document.getElementById("url").setAttribute("href", profile.href);
+    document.getElementById("url").setAttribute("href", profile.href);*/
 }
