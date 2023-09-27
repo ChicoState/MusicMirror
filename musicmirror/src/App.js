@@ -1,4 +1,4 @@
-import './App.css';
+import './styles/App.css';
 import Playlist from './components/Playlist';
 import AddSongs from './components/AddSongs';
 
