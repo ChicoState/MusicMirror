@@ -19,11 +19,15 @@ export async function findSongs(){
         let resp = await fetch(url, {
             method: "GET", headers: { Authorization: `Bearer ${token}` }
         });
-        let obj = resp.json();
+        //let obj = resp.json();
+        let obj = await resp.json();
         //if exists, add to playlist
+        console.log("obj: " + obj);
         if(Object.keys(obj.tracks.items).length > 0){
+            
             uriList += obj.tracks.items[0].uri;
         }
+
     }
     console.log(uriList);
 }
