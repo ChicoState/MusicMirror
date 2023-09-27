@@ -1,11 +1,11 @@
 import './App.css';
 import Playlist from './components/Playlist';
 import * as auth from './auth';
+import * as playlist from './playlist';
 //import React, { useEffect } from 'react';
 
 function App() {
   
-  //auth.checkCode();
   return (
     <div className="App">
       <header className="App-header">
@@ -15,7 +15,8 @@ function App() {
         <main className="App-main">
           <Playlist />
         </main>
-        <button onClick={auth.checkCode()}>Sign in</button>
+        <button onClick={playlist.findSongs}>RAAAAAAAAAAAAAAAAAAH</button>
+        <button onClick={auth.checkCode}>Sign in</button>
 
       <body>
         <h1>Display your Spotify profile data</h1>

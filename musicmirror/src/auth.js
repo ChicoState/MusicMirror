@@ -5,12 +5,13 @@ const code = params.get("code");
 export async function checkCode(){
     if (!code) {
         redirectToAuthCodeFlow(clientId);
-        console.log(code);
+        // console.log("if: " + code);
     } else {
-        console.log("above");
-        console.log(code);
+        // console.log("above");
+        // console.log(code);
         const accessToken = await getAccessToken(clientId, code);
-        console.log("we out");
+        localStorage.setItem("token", accessToken);
+        // console.log("we out");
         const profile = await fetchProfile(accessToken);
         populateUI(profile);
     }
