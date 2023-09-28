@@ -1,9 +1,3 @@
-// import * as auth from './auth';
-
-// const clientId = "950b5e4bacb54dc1ad9c2ce70e2a4d48";
-// const params = new URLSearchParams(window.location.search);
-// const code = params.get("code");
-
 export async function findSongs(){
     const token = localStorage.getItem("token");
     //separate each query by line
@@ -12,43 +6,39 @@ export async function findSongs(){
     //iterate over songs and search for song
     let uriList = [];
     let url = "";
-    let user_id = "";
     for(let i in songs){
         url = "https://api.spotify.com/v1/search/?q=" + songs[i].replace(' ', '+') + "&type=track";
         //search for songs[i]
         let resp = await fetch(url, {
             method: "GET", headers: { Authorization: `Bearer ${token}` }
         });
-        //let obj = resp.json();
         let obj = await resp.json();
         //if exists, add to playlist
-        console.log("obj: " + obj);
         if(Object.keys(obj.tracks.items).length > 0){
-            
-            uriList += obj.tracks.items[0].uri;
+            uriList.push(obj.tracks.items[0].uri);
         }
 
     }
-    console.log(uriList);
+    genPlaylist(uriList, token);
 }
 
-export async function genPlaylist(uriList, user_id){
+export async function genPlaylist(uriList, token){
+    const user_id = localStorage.getItem("user_id");
     // if list size > 0, create playlist (api req)
-    if(uriList.size > 0){
+    if(uriList.length > 0){
         //create spotify playlist
-        //POST REQ
-        let resp = fetch("https://api.spotify.com/v1/users/" + user_id + "/playlists", {
+        let resp = await fetch("https://api.spotify.com/v1/users/" + user_id + "/playlists", {
             method: "POST",
             body: JSON.stringify({name: "Music Mirror Playlist"}),
-            headers: {Authentication: 'Bearer Token'}
-        }).then((response) => response.json())
-        .then((json) => console.log(json));
-
+            headers: { Authorization: `Bearer ${token}` }
+        });
+        let obj = await resp.json();
+        let p_id = obj.id;
         // Iterate through list of matches and add each song to the playlist (api req)
-        resp = fetch("https://api.spotify.com/v1/playlists/" + user_id + "/playlists", {
+        resp = await fetch("https://api.spotify.com/v1/playlists/" + p_id + "/tracks", {
             method: "POST",
-            body: JSON.stringify({name: "Music Mirror Playlist"}),
-            headers: {Authentication: 'Bearer Token'}
+            body: JSON.stringify({uris: uriList}),
+            headers: { Authorization: `Bearer ${token}` }
         }).then((response) => response.json())
         .then((json) => console.log(json));
     }
