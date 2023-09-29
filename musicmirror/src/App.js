@@ -1,4 +1,4 @@
-import './App.css';
+import './styles/App.css';
 import Playlist from './components/Playlist';
 import * as auth from './auth';
 import * as playlist from './playlist';
