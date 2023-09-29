@@ -15,6 +15,11 @@ img {
   border-radius: 5px;
   box-shadow: 2px 2px 10px #111111;
   cursor: pointer;
+  transition: background-color 0.25s;
+}
+
+img:hover {
+  background-color: rgba(0, 0, 0, 0.1);
 }
 
 textarea {

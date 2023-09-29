@@ -4,7 +4,7 @@ import '../styles/Playlist.css';
 
 function Playlist() {
   return (
-    <div className="Playlist-container">
+    <div className="Playlist-container mt-5">
       <div className="list-container">
         <h3>{testlist.title}</h3>
         <ol className="">
@@ -13,7 +13,7 @@ function Playlist() {
             ))}
           </ol>
       </div>
-      <button onClick={playlist.findSongs}>Find Songs</button>
+      <button className="btn btn-secondary" onClick={playlist.findSongs}>Find Songs</button>
     </div>
   );
 }

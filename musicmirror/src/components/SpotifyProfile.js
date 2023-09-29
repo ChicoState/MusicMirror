@@ -10,7 +10,7 @@ function SpotifyProfile() {
         <li>Email: <div id="email"></div></li>
         <li>Profile Image: <div id="imgUrl"></div></li>
       </ul>
-      <button onClick={auth.checkCode}>Sign in</button>
+      <button className="btn btn-secondary" onClick={auth.checkCode}>Sign in to Spotify</button>
     </section>
   );
 }
