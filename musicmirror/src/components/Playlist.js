@@ -3,7 +3,7 @@ import '../styles/Playlist.css';
 
 function Playlist() {
   return (
-    <div className="Playlist-container">
+    <div className="Playlist-container p-4 col-12 col-md">
       <h2 className="service-name">Streaming Service</h2>
       <div className="list-container">
         <h3>{playlist.title}</h3>
