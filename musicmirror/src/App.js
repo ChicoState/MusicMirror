@@ -14,11 +14,11 @@ function App() {
       </header>
       <main className="App-main mx-0 px-5 py-4 container">
         <div className="row grid gap-5">
+          <AddSongs />
           <div className="spotify-stuff p-4 col-12 col-md">
             <SpotifyProfile />
             <Playlist />
           </div>
-          <AddSongs />
         </div>
       </main>
       <footer className="App-footer"></footer>

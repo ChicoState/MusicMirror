@@ -4,11 +4,11 @@ import '../styles/SpotifyProfile.css';
 function SpotifyProfile() {
   return (
     <section id="profile">
-      <h3>Logged in to Spotify as <div id="displayName"></div></h3>
+      <h3 className="d-flex justify-content-center">Logged into Spotify as&nbsp;<div id="displayName"></div></h3>
       <ul>
-        <li>User ID: <div id="id"></div></li>
-        <li>Email: <div id="email"></div></li>
-        <li>Profile Image: <div id="imgUrl"></div></li>
+        <li className="d-flex justify-content-between">User ID:&nbsp;<div id="id" className="profile-info"></div></li>
+        <li className="d-flex justify-content-between">Email:&nbsp;<div id="email" className="profile-info"></div></li>
+        {/* <li className="d-flex justify-content-between">Profile Image:&nbsp;<div id="imgUrl"></div></li> */}
       </ul>
       <button className="btn btn-secondary" onClick={auth.checkCode}>Sign in to Spotify</button>
     </section>
