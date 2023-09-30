@@ -1,8 +1,8 @@
-export async function findSongs(){
+export async function findSongs(input){
+    console.log(input);
     const token = localStorage.getItem("token");
     //separate each query by line
-    let songList = "give me everything - pitbull\nsuper shy - newjeans\nI'm god - lil B\nphoton scooter\ndior - pop smoke";
-    let songs = songList.split('\n');
+    let songs = input.split('\n');
     //iterate over songs and search for song
     let uriList = [];
     let url = "";
@@ -17,7 +17,6 @@ export async function findSongs(){
         if(Object.keys(obj.tracks.items).length > 0){
             uriList.push(obj.tracks.items[0].uri);
         }
-
     }
     genPlaylist(uriList, token);
 }

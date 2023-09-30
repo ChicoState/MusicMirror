@@ -1,5 +1,4 @@
 import testlist from '../testlist.json';
-import * as playlist from '../playlist';
 import '../styles/Playlist.css';
 
 function Playlist() {
@@ -13,7 +12,7 @@ function Playlist() {
             ))}
           </ol>
       </div>
-      <button className="btn btn-secondary" onClick={playlist.findSongs}>Find Songs</button>
+      <button className="btn btn-secondary">Find Songs</button>
     </div>
   );
 }
