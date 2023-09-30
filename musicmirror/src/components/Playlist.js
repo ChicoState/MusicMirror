@@ -12,7 +12,7 @@ function Playlist() {
             ))}
           </ol>
       </div>
-      <button className="btn btn-secondary">Find Songs</button>
+      <button className="btn btn-secondary">Create Playlist</button>
     </div>
   );
 }
