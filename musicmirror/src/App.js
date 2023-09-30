@@ -1,35 +1,27 @@
 import './styles/App.css';
+import AddSongs from './components/AddSongs';
 import Playlist from './components/Playlist';
-import * as auth from './auth';
-import * as playlist from './playlist';
+import SpotifyProfile from './components/SpotifyProfile';
 //import React, { useEffect } from 'react';
 
 function App() {
   
   return (
     <div className="App">
-      <header className="App-header">
+      <header className="App-header d-flex justify-content-center align-items-center">
         <h1>MusicMirror</h1>
         
       </header>
-        <main className="App-main">
-          <Playlist />
-        </main>
-        <button onClick={playlist.findSongs}>RAAAAAAAAAAAAAAAAAAH</button>
-        <button onClick={auth.checkCode}>Sign in</button>
-
-      <body>
-        <h1>Display your Spotify profile data</h1>
-
-        <section id="profile">
-          <h2>Logged in as <span id="displayName"></span></h2>
-          <ul>
-            <li>User ID: <span id="id"></span></li>
-            <li>Email: <span id="email"></span></li>
-            <li>Profile Image: <span id="imgUrl"></span></li>
-          </ul>
-        </section>
-      </body>
+      <main className="App-main mx-0 px-5 py-4 container">
+        <div className="row grid gap-5">
+          <AddSongs />
+          <div className="spotify-stuff p-4 col-12 col-md">
+            <SpotifyProfile />
+            <Playlist />
+          </div>
+        </div>
+      </main>
+      <footer className="App-footer"></footer>
     </div>
   );
 }

@@ -1,18 +1,19 @@
-import playlist from '../playlist.json';
+import testlist from '../testlist.json';
+import * as playlist from '../playlist';
 import '../styles/Playlist.css';
 
 function Playlist() {
   return (
-    <div className="Playlist-container">
-      <h2 className="service-name">Streaming Service</h2>
+    <div className="Playlist-container mt-5">
       <div className="list-container">
-        <h3>{playlist.title}</h3>
+        <h3>{testlist.title}</h3>
         <ol className="">
-            {playlist.songs.map((song) => (
+            {testlist.songs.map((song) => (
               <li className="">{song.title} | {song.artist} | {song.album} | {song.length}</li>
             ))}
           </ol>
       </div>
+      <button className="btn btn-secondary" onClick={playlist.findSongs}>Find Songs</button>
     </div>
   );
 }
