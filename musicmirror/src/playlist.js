@@ -22,12 +22,9 @@ export async function findSongs(input){
             playlist.uris.push(obj.tracks.items[0].uri);
             let names = "";
             for(let i in obj.tracks.items[0].artists){
-                names += obj.tracks.items[0].artists[i].name;
-                //prevent trailing comma
-                if(i === Object.keys(obj.tracks.items[0].artists).length - 1){
-                    names += ', ';
-                }
+                names += obj.tracks.items[0].artists[i].name + ", ";
             }
+            names = names.substring(0, names.length - 2)
             let time = new Date(obj.tracks.items[0].duration_ms);
             //console.log(`duration: ${duration}`);
             let song = {

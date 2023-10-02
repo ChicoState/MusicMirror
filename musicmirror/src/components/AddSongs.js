@@ -7,8 +7,8 @@ let list = {
   songs: []
 };
 
-export async function getPlaylist() {
-  console.log(`getPlaylist type: ${typeof(list)}`);
+export function getPlaylist() {
+  // console.log(`getPlaylist type: ${typeof(list)}`);
   return JSON.stringify(list);
 }
 
@@ -22,11 +22,11 @@ function AddSongs(props) {
   };
 
   const handleClick = async() => {
+    console.log("handleclick");
     list = await findSongs(message);
     setShowPlaylist(true);
     console.log(`showplaylist = true : ${showPlaylist}`);
   };
-  console.log(`guh: ${showPlaylist}`);
   props.passData(showPlaylist);
   return (
     // add path to form-handler inside action attribute
