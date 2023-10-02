@@ -3,7 +3,6 @@ import AddSongs from './components/AddSongs';
 import Playlist from './components/Playlist';
 import SpotifyProfile from './components/SpotifyProfile';
 import { useState } from 'react';
-//import React, { useEffect } from 'react';
 
 function App() {
   const [isShowing, setShowing] = useState(false);

@@ -3,20 +3,7 @@ import '../styles/Playlist.css';
 import {getPlaylist} from './AddSongs.js'
 import { useState, useEffect } from 'react';
 
-
-// let playlist = {
-//   title: "Music Mirror Playlist",
-//   songs: []
-// };
-// async function setPlaylist() {
-//   playlist = JSON.parse(await getPlaylist);
-//   console.log("out of getPlaylist");
-//   setWaiting(false);
-//   // waiting = false;
-// }
-
 export function Playlist() {
-  // const [isWaiting, setWaiting] = useState(true);
   const [playlist, setPlaylist] = useState();
 
     useEffect(() => {
@@ -28,12 +15,6 @@ export function Playlist() {
       getData();
     }, []);
     console.log("out of getPlaylist");
-    // setWaiting(false);
-  // setPlaylist();
-  // let str = getPlaylist();
-  // let playlist = JSON.parse(str);
-  // console.log("out of getPlaylist");
-  // console.log(`playlist: ${playlist} str: ${str}`);
 
   if(!playlist){
     return(

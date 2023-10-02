@@ -1,8 +1,6 @@
 import '../styles/AddSongs.css';
 import { useState } from 'react';
 import { findSongs } from '../playlist';
-import { Playlist } from './Playlist.js';
-import { SpotifyProfile } from './SpotifyProfile.js';
 
 let list = {
   title: "Music Mirror Playlist",
@@ -27,8 +25,6 @@ function AddSongs(props) {
     list = await findSongs(message);
     setShowPlaylist(true);
     console.log(`showplaylist = true : ${showPlaylist}`);
-    //re-render playlist preview area (?)
-    //Playlist();
   };
   console.log(`guh: ${showPlaylist}`);
   props.passData(showPlaylist);
