@@ -3,8 +3,12 @@ import '../styles/Playlist.css';
 import getPlaylist from './AddSongs.js'
 
 export function Playlist() {
+  console.log("Playlist() triggered");
   let playlist = getPlaylist();
+  console.log("out of getPlaylist");
+  console.log("playlist: " + playlist);
   if(playlist.songs){
+    console.log("in if statement");
     return (
       <div className="Playlist-container mt-5">
         <div className="list-container">

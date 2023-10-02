@@ -11,6 +11,12 @@ export async function findSongs(input){
     };
     let url = "";
     for(let i in songs){
+        /*
+        const query = songs[i].trim();
+        if(query == ""){
+            continue;
+        }
+        */
         url = "https://api.spotify.com/v1/search/?q=" + songs[i].replace(' ', '+') + "&type=track";
         //search for songs[i]
         let resp = await fetch(url, {
@@ -44,6 +50,7 @@ export async function findSongs(input){
 }
 
 export async function genPlaylist(uriList){
+    console.log("getPlaylist triggered");
     const user_id = localStorage.getItem("user_id");
     const token = localStorage.getItem("token");
     // if list size > 0, create playlist (api req)
