@@ -4,7 +4,11 @@ export async function findSongs(input){
     //separate each query by line
     let songs = input.split('\n');
     //iterate over songs and search for song
-    let uriList = [];
+    //let uriList = [];
+    let playlist = {
+        title: "Music Mirror Playlist",
+        songs: []
+    };
     let url = "";
     for(let i in songs){
         url = "https://api.spotify.com/v1/search/?q=" + songs[i].replace(' ', '+') + "&type=track";
@@ -15,14 +19,33 @@ export async function findSongs(input){
         let obj = await resp.json();
         //if exists, add to playlist
         if(Object.keys(obj.tracks.items).length > 0){
-            uriList.push(obj.tracks.items[0].uri);
+            //uriList.push(obj.tracks.items[0].uri);
+            let names = "";
+            for(let i in obj.tracks.items[0].artists){
+                names += obj.tracks.items[0].artists[i].name;
+                //prevent trailing comma
+                if(i === Object.keys(obj.tracks.items[0].artists).length - 1){
+                    names += ', ';
+                }
+            }
+            let time = new Date(obj.tracks.items[0].duration_ms);
+            let song = {
+                title: obj.tracks.items[0].name,
+                artist: names,
+                album: obj.tracks.items[0].album.name,
+                length: `${time.getMinutes}:${time.getSeconds}`
+            };
+            playlist.songs.push(song);
         }
     }
-    genPlaylist(uriList, token);
+    console.log(playlist);
+    return playlist;
+    //genPlaylist(uriList);
 }
 
-export async function genPlaylist(uriList, token){
+export async function genPlaylist(uriList){
     const user_id = localStorage.getItem("user_id");
+    const token = localStorage.getItem("token");
     // if list size > 0, create playlist (api req)
     if(uriList.length > 0){
         //create spotify playlist

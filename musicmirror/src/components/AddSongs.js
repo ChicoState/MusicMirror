@@ -1,6 +1,17 @@
 import '../styles/AddSongs.css';
 import {useState} from 'react';
 import { findSongs } from '../playlist';
+import { Playlist } from './Playlist.js'
+
+let list = {
+  title: "Music Mirror Playlist",
+  songs: []
+};
+
+export function getPlaylist() {
+  console.log(typeof(list.songs));
+  return list;
+}
 
 function AddSongs() {
   const [message, setMessage] = useState('');
@@ -11,7 +22,9 @@ function AddSongs() {
 
   const handleClick = event => {
     event.preventDefault();
-    findSongs(message);
+    list = findSongs(message);
+    //re-render playlist preview area (?)
+    Playlist();
   };
 
   return (
