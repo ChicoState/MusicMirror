@@ -1,3 +1,4 @@
+import { genPlaylist } from '../playlist';
 import '../styles/Playlist.css';
 import {getPlaylist} from './AddSongs.js'
 import { useState, useEffect } from 'react';
@@ -56,7 +57,7 @@ export function Playlist() {
               ))}
             </ol>
         </div>
-        <button className="btn btn-secondary">Create Playlist</button>
+        <button className="btn btn-secondary" onClick={() => genPlaylist(playlist)}>Create Playlist</button>
       </div>
     );
   }
