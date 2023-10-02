@@ -1,16 +1,17 @@
 import '../styles/AddSongs.css';
 import { useState } from 'react';
 import { findSongs } from '../playlist';
-import { Playlist } from './Playlist.js'
+import { Playlist } from './Playlist.js';
+import { SpotifyProfile } from './SpotifyProfile.js';
 
 let list = {
   title: "Music Mirror Playlist",
   songs: []
 };
 
-export function getPlaylist() {
-  console.log(typeof(list.songs));
-  return list;
+export async function getPlaylist() {
+  console.log(`getPlaylist type: ${typeof(list)}`);
+  return JSON.stringify(list);
 }
 
 function AddSongs() {
@@ -22,14 +23,14 @@ function AddSongs() {
     setMessage(event.target.value);
   };
 
-  const handleClick = event => {
-    list = findSongs(message);
+  const handleClick = async() => {
+    list = await findSongs(message);
     setShowPlaylist(true);
-
+    console.log(`showplaylist = true : ${showPlaylist}`);
     //re-render playlist preview area (?)
     //Playlist();
   };
-
+  console.log(`guh: ${showPlaylist}`);
   return (
     // add path to form-handler inside action attribute
     <div className="container p-4 col">
@@ -47,7 +48,10 @@ function AddSongs() {
       <textarea className="form-control" id="textInput" rows="5" onChange={handleChange} value={message} placeholder="Type each song on its own line."></textarea>
     </div>
     <button className="mt-5 btn btn-secondary" onClick={handleClick}>Find Songs</button>
+    {/* <div className="spotify-stuff p-4 col-12 col-md"> */}
+            {/* <SpotifyProfile /> */}
     {showPlaylist && <Playlist />}
+    {/* </div> */}
   </div>
   );
 }

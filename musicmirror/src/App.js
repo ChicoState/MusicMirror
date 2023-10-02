@@ -17,7 +17,7 @@ function App() {
           <AddSongs />
           <div className="spotify-stuff p-4 col-12 col-md">
             <SpotifyProfile />
-            <Playlist />
+            {/* <Playlist /> */}
           </div>
         </div>
       </main>
