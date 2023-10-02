@@ -35,11 +35,12 @@ export async function findSongs(input){
                 }
             }
             let time = new Date(obj.tracks.items[0].duration_ms);
+            //console.log(`duration: ${duration}`);
             let song = {
                 title: obj.tracks.items[0].name,
                 artist: names,
                 album: obj.tracks.items[0].album.name,
-                length: `${time.getMinutes}:${time.getSeconds}`
+                length: `${time.getMinutes()}:${time.getSeconds()}`
             };
             playlist.songs.push(song);
         }
