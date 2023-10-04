@@ -1,7 +1,7 @@
 import * as auth from '../auth';
 import '../styles/SpotifyProfile.css';
 
-function SpotifyProfile() {
+export function SpotifyProfile() {
   return (
     <section id="profile">
       <h3 className="d-flex justify-content-center">Logged into Spotify as&nbsp;<div id="displayName"></div></h3>
