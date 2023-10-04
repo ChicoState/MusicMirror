@@ -32,13 +32,32 @@ export function Playlist() {
       <div className="Playlist-container mt-5">
         <div className="list-container">
           <h3>{playlist.title}</h3>
-          <ol className="">
-              {playlist.songs.map((song) => (
-                <li className="">{song.title} | {song.artist} | {song.album} | {song.length}</li>
-              ))}
-            </ol>
+  
+          {playlist.songs.map((song) => (
+            <div className="song_card d-flex">
+              <div className="preview flex-fill">
+                <img className="play"></img>
+                <img className="stop"></img>
+              </div>
+              <div className="details flex-fill">
+                <h4>{song.title}</h4>
+                <div className="d-flex justify-content-between">
+                  <p>{song.artist}</p>
+                  <p>|</p>
+                  <p>{song.album}</p>
+                  <p>|</p>
+                  <p>{song.length}</p>
+                </div>
+              </div>
+              <div className="options flex-fill">
+                <img className="next"></img>
+                <img className="remove"></img>
+              </div>
+            </div>
+          ))}
+
         </div>
-        <button className="btn btn-secondary" onClick={() => genPlaylist(playlist)}>Create Playlist</button>
+        <button className="btn btn-secondary" onClick={() => genPlaylist(playlist)}>Confirm Playlist</button>
       </div>
     );
   }

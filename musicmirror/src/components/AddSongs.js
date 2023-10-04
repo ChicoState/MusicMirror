@@ -44,7 +44,7 @@ function AddSongs(props) {
         </label>
         <textarea className="form-control" id="textInput" rows="5" onChange={handleChange} value={message} placeholder="Type each song on its own line."></textarea>
       </div>
-      <button className="mt-5 btn btn-secondary" onClick={handleClick}>Find Songs</button>
+      <button className="mt-5 btn btn-secondary" onClick={handleClick}>Search for Songs</button>
     </div>
   );
 }
