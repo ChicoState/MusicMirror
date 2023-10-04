@@ -14,5 +14,4 @@ function SpotifyProfile() {
     </section>
   );
 }
-
 export default SpotifyProfile;
