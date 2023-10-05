@@ -1,6 +1,6 @@
 import { genPlaylist } from '../playlist';
 import '../styles/Playlist.css';
-import {getPlaylist} from './AddSongs.js'
+import AddSongs from './AddSongs.js'
 import { useState, useEffect } from 'react';
 
 export function Playlist() {
@@ -8,7 +8,7 @@ export function Playlist() {
 
     useEffect(() => {
       const getData = async () => {
-        let obj = await getPlaylist();
+        let obj = await AddSongs.getPlaylist();
         let list = JSON.parse(obj);
         setPlaylist(list);
       }
