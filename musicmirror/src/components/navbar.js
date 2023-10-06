@@ -1,4 +1,5 @@
 
+import SpotifyProfile from "./SpotifyProfile"
 export default function Navbar() {
     return (<nav className ="nav">
         <a heref="/" className="MusicMirror"> MusicMirror</a>
