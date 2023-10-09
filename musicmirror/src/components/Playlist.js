@@ -57,17 +57,10 @@ export function Playlist() {
 
               {/* This is what you see in the playlist */}
               <div className="song-preview d-flex">
-                <div className="preview flex-fill">
-                  <img className="play"></img>
-                  <img className="stop"></img>
-                </div>
-                <div className="details flex-fill" role="button" data-bs-toggle="modal" data-bs-target="#song-details">
+                <img src="./images/play-circle.svg" alt="play" className="play-button" onClick="" role="button"/> 
+                <div className="details flex-grow-1" role="button" data-bs-toggle="modal" data-bs-target="#song-details">
                   <h4>{song.title}</h4>
                   <p>{song.artist}</p>
-                </div>
-                <div className="options flex-fill">
-                  <img className="next"></img>
-                  <img className="remove"></img>
                 </div>
               </div>
 
@@ -83,7 +76,7 @@ export function Playlist() {
                         <div className="modal-card-header d-flex">
                           <h4>{song.title}</h4>
                           <p className="song-length">({song.length})</p>
-                          <button className="" type="button"><img /></button>
+                          <img src="./images/play-circle.svg" alt="play" className="play-button" onClick="" role="button"/>
                         </div>
                         <p>Artist: {song.artist}</p>
                         <p>Album: {song.album}</p>
@@ -92,10 +85,9 @@ export function Playlist() {
                         <label className="form-label" htmlFor="textInput">
                           <h5 className="mt-5 mb-0">Refine Search:</h5>
                         </label>
-                        <div className="searchbox d-flex">
-                          <textarea className="form-control flex-grow-1" id="textInput" rows="1" onChange={handleChange} value={message} placeholder="" />
-                          <button className="btn btn-secondary" onClick={handleClick}>Q</button>
-                        </div>
+                        <div className="searchbox input-group">
+                          <input className="form-control input-group-text" id="textInput" type="text" onChange={handleChange} value={message} placeholder="" />
+                          <img src="./images/search.svg" alt="search" className="btn btn-info" onClick={handleClick} role="button"/>                        </div>
                       </div>
                     </div>
                     <div className="modal-footer">
