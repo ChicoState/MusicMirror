@@ -3,12 +3,13 @@ import AddSongs from './components/AddSongs';
 import Playlist from './components/Playlist';
 import SpotifyProfile from './components/SpotifyProfile';
 import { useState } from 'react';
+import { findSongs } from './playlist';
 
 function App() {
-  const [isShowing, setShowing] = useState(false);
+  const [list, setList] = useState();
   
-  const passData = (data) => {
-    setShowing(data);
+  const handleMsg = async (data) => {
+    setList(await findSongs(data));
   }
 
   return (
@@ -19,10 +20,10 @@ function App() {
       </header>
       <main className="App-main mx-0 px-5 py-4 container">
         <div className="row grid gap-5">
-          <AddSongs passData={passData} />
+          <AddSongs handleMsg={handleMsg}/>
           <div className="spotify-stuff p-4 col-12 col-md">
             <SpotifyProfile />
-            {isShowing && <Playlist />}
+            <Playlist list={list}/>
           </div>
         </div>
       </main>

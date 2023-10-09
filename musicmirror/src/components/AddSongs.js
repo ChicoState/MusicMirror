@@ -1,6 +1,5 @@
 import '../styles/AddSongs.css';
 import React from 'react';
-import { findSongs } from '../playlist';
 
 class AddSongs extends React.Component {
   constructor() {
@@ -18,15 +17,16 @@ class AddSongs extends React.Component {
 
   handleChange = event => {
     this.setState({message: event.target.value});
+    console.log(event.target.value);
+    console.log(this.state.message);
   };
 
   handleClick = async() => {
-    this.setState({list: await findSongs(this.message)});
-    this.setState({showPlaylist: true});
+    this.props.handleMsg(this.state.message);
+    console.log(`passing: ${this.state.message}`)
   };
 
   render() {
-    this.props.passData(this.showPlaylist);
     return (
       // add path to form-handler inside action attribute
       <div className="container p-4 col">
