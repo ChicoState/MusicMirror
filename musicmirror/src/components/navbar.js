@@ -14,7 +14,7 @@ export default function Navbar() {
                 <a href="/youtube">Youtube Login</a>
             </li>
             <li>
-                <a href="/spotify"> Spotify Login</a>
+                <a href="/spotify">Spotify Login</a>
             </li>
             <li>
                 <a href="/Usrlogin">User Login</a>

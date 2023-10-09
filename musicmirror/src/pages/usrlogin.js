@@ -1,10 +1,7 @@
-import React from 'react';
-const loging= ()=>{
+export default function  usrlogin(){
     return(
-        <div>
-            <h3> Userloging</h3>
-        </div>
+        <dive>
+            <h1>uSERS</h1>
+        </dive>
     );
 }
-export default loging;
-loging.js
