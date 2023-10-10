@@ -1,46 +1,43 @@
 import { genPlaylist } from '../playlist';
 import '../styles/Playlist.css';
-import {getPlaylist} from './AddSongs.js'
-import { useState, useEffect } from 'react';
+import React from 'react';
 
-export function Playlist() {
-  const [playlist, setPlaylist] = useState();
-
-    useEffect(() => {
-      const getData = async () => {
-        let obj = await getPlaylist();
-        let list = JSON.parse(obj);
-        setPlaylist(list);
-      }
-      getData();
-    }, []);
-    console.log("out of getPlaylist");
-
-  if(!playlist){
-    return(
-      <div className="Playlist-container mt-5">
-      <div className="list-container">
-        <h3>Add songs to preview playlist</h3>
-      </div>
-    </div>
-    );
+class Playlist extends React.Component{
+  constructor(){
+    super();
+    this.state = {
+      playlist: {},
+    };
   }
 
-  if(Object.keys(playlist.songs).length > 0){
-    console.log("in if statement");
-    return (
-      <div className="Playlist-container mt-5">
+  render() {
+    if(!this.props.list){
+      return (
+        <div className="Playlist-container mt-5">
         <div className="list-container">
-          <h3>{playlist.title}</h3>
-          <ol className="">
-              {playlist.songs.map((song) => (
-                <li className="">{song.title} | {song.artist} | {song.album} | {song.length}</li>
-              ))}
-            </ol>
+          <h3>Add songs to preview playlist</h3>
         </div>
-        <button className="btn btn-secondary" onClick={() => genPlaylist(playlist)}>Create Playlist</button>
       </div>
-    );
+      );
+    }
+      else if(this.props.list.songs && Object.keys(this.props.list.songs).length > 0){
+        return (
+          <div className="Playlist-container mt-5">
+            <div className="list-container">
+              <h3>{this.props.list.title}</h3>
+              <ol className="">
+                  {this.props.list.songs.map((song) => (
+                    <li className="">{song.title} | {song.artist} | {song.album} | {song.length}</li>
+                  ))}
+                </ol>
+            </div>
+            <button className="btn btn-secondary" onClick={() => genPlaylist(this.props.list)}>Create Playlist</button>
+          </div>
+        );
+      }
+      else{
+        return null;
+      }
   }
 }
 
