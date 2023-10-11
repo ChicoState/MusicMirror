@@ -2,7 +2,7 @@ export async function findSongs(input){
     console.log(input);
     const token = localStorage.getItem("token");
     //separate each query by line
-    let songs = input.split('\n');
+    let search = input.split('\n');
     //iterate over songs and search for song
     let playlist = {
         title: "Music Mirror Playlist",
@@ -10,9 +10,13 @@ export async function findSongs(input){
         uris: []
     };
     let url = "";
-    for(let i in songs){
-        url = "https://api.spotify.com/v1/search/?q=" + songs[i].replace(' ', '+') + "&type=track";
-        //search for songs[i]
+    for(let i in search){
+        //skip over empty lines
+        if(search[i] === '') {
+            continue;
+        }
+        url = "https://api.spotify.com/v1/search/?q=" + search[i].replace(' ', '+') + "&type=track";
+        //search for search[i]
         let resp = await fetch(url, {
             method: "GET", headers: { Authorization: `Bearer ${token}` }
         });
@@ -31,7 +35,8 @@ export async function findSongs(input){
                 title: obj.tracks.items[0].name,
                 artist: names,
                 album: obj.tracks.items[0].album.name,
-                length: `${time.getMinutes()}:${time.getSeconds()}`
+                length: `${time.getMinutes()}:${time.getSeconds()}`,
+                query: search[i],
             };
             playlist.songs.push(song);
         }
