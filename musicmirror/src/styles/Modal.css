@@ -9,3 +9,17 @@
 .btn-close {
   box-shadow: none;
 }
+
+.details-header h1 {
+  color: #ffffff;
+  font-size: calc(0.8rem + 0.8vw);
+}
+
+.details-header p {
+  font-size: calc(0.8rem + 0.8vw);
+}
+
+.modal-body p {
+  margin-bottom: 0;
+  text-align: left;
+}

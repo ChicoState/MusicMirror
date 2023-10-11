@@ -35,15 +35,19 @@ class SongDetailsModal extends React.Component{
             <button className="ms-2 btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div className="modal-body">
-            <div className="modal-card">
-              <div className="modal-card-header d-flex">
-                <h4>{song.title}</h4>
-                <p className="song-length">({song.length})</p>
-                <img src="./images/play-circle.svg" alt="play" className="play-button" onClick="" role="button"/>
-              </div>
-              <p>Artist: {song.artist}</p>
-              <p>Album: {song.album}</p>
+            <div className="mb-2 details-header d-flex align-items-center">
+              <img src="./images/play-circle.svg" alt="play" className="play-button" onClick="" role="button"/>
+              <h1 className="mx-2 mb-0">{song.title}</h1>
+              <p className="mb-0 song-length">({song.length})</p>
             </div>
+            <p className="d-flex justify-content-between">
+              <div>Artist:&nbsp;</div>
+              <div>{song.artist}</div>
+            </p>
+            <p className="d-flex justify-content-between">
+              <div>Album:&nbsp;</div>
+              <div>{song.album}</div>
+            </p>
           </div>
           <div className="modal-footer d-flex">
             <button type="button" className="btn btn-success flex-fill" data-bs-dismiss="modal">Confirm Selection</button>
