@@ -1,4 +1,28 @@
-.list-container ol {
-  padding-left: 0;
-  list-style-position: inside;
+.Playlist-container {
+  background-color: #282C34;
+  border-radius: 5px;
+  box-shadow: 2px 2px 10px #111111;
+}
+
+.Playlist-container h1 {
+  font-size: calc(1rem + 1vw);
+}
+
+.Playlist-container h2 {
+  color: #ffffff;
+  font-size: calc(0.8rem + 0.8vw);
+}
+
+.Playlist-container p {
+  color: #bbbbbb;
+}
+
+.song-card {
+  text-align: left;
+  background-color: #003d4c;
+  transition: background-color 0.25s;
+}
+
+.song-card:hover {
+  background-color: #004f63;
 }

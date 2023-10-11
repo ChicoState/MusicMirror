@@ -1,0 +1,11 @@
+.modal-header, .modal-body, .modal-footer {
+  background-color: #004f63;
+}
+
+.input-group-text {
+  text-align: left;
+}
+
+.btn-close {
+  box-shadow: none;
+}
