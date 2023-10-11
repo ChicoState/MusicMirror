@@ -11,6 +11,10 @@ export async function findSongs(input){
     };
     let url = "";
     for(let i in songs){
+        //skip over empty lines
+        if(songs[i] === '') {
+            continue;
+        }
         url = "https://api.spotify.com/v1/search/?q=" + songs[i].replace(' ', '+') + "&type=track";
         //search for songs[i]
         let resp = await fetch(url, {
