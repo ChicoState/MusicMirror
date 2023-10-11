@@ -29,7 +29,7 @@ class SongDetailsModal extends React.Component{
         <div className="modal-content">
           <div className="modal-header">
             <div className="searchbox input-group">
-              <input className="form-control input-group-text" id="textInput" type="search" aria-label="refine search" onChange={this.handleChange} value={this.message} placeholder="" />
+              <input className="form-control input-group-text" id="textInput" type="search" aria-label="refine search" placeholder={song.query} onChange={this.handleChange} value={this.message} />
               <img src="./images/search.svg" alt="search" className="btn btn-info" onClick={this.handleSubmit} role="button"/>
             </div>
             <button className="ms-2 btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
