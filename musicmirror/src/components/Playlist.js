@@ -7,10 +7,31 @@ class Playlist extends React.Component{
     super();
     this.state = {
       playlist: {},
+      isEditing: false,
+      currentTitle: "Music Mirror Playlist",
     };
   }
 
+  handleDoubleClick = () => {
+    this.setState({ isEditing: true });
+  };
+
+  handleBlur = () => {
+    this.setState({ isEditing: false });
+    // Call a function passed as a prop to update the list title
+    this.onTitleChange(this.state.currentTitle);
+  };
+
+  onTitleChange = (newTitle) => {
+    this.props.list.title = newTitle;
+  };
+
+  handleChange = (e) => {
+    this.setState({ currentTitle: e.target.value });
+  };
+
   render() {
+    const { currentTitle, isEditing } = this.state;
     if(!this.props.list){
       return (
         <div className="Playlist-container mt-5">
@@ -24,7 +45,9 @@ class Playlist extends React.Component{
         return (
           <div className="Playlist-container mt-5">
             <div className="list-container">
-              <h3>{this.props.list.title}</h3>
+              <div> 
+                {isEditing ? (<input type="text" value={currentTitle} onChange={this.handleChange} onBlur={this.handleBlur} autoFocus/>) : (<span onDoubleClick={this.handleDoubleClick}>{currentTitle}</span>)}
+              </div>
               <ol className="">
                   {this.props.list.songs.map((song) => (
                     <li className="">{song.title} | {song.artist} | {song.album} | {song.length}</li>
