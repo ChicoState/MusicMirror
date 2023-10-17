@@ -84,8 +84,9 @@ nav {
     margin-top: 2em; /* space from top of the menu */
 }
 
-.menu-links li {
+.menu-links li:nth-child(1) {
     /* Add styling for each list item if needed */
+    margin-top: 60px;
 }
 
 .menu-links a {
@@ -93,6 +94,8 @@ nav {
     color: #333;
     font-size: 1.5em;  /* make the links larger */
     padding: 0.5em 1em;  /* padding around links for a better click/tap area */
+    padding-top: 10px;
+    padding-bottom: 10px;
     border-radius: 8px;  /* rounded corners */
     transition: background-color 0.3s;  /* smooth transition for hover effect */
 }
