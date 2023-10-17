@@ -2,7 +2,7 @@ import { useYoutube } from 'react-youtube-music-player';
 
 export default function Youtube(){
   return(
-    <h1> Something here to return for test</h1>
+    <></>
   );
 }
 /* there is a youtube installation that has to be done to have a player on it
