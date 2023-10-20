@@ -9,7 +9,8 @@ function App() {
   const [list, setList] = useState();
   
   const handleMsg = async (data) => {
-    setList(await findSongs(data));
+    //change search result count (5) to a user input value later
+    setList(await findSongs(data, 5));
   }
 
   return (
