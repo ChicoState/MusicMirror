@@ -20,11 +20,16 @@ function App() {
       </header>
       <main className="App-main mx-0 px-5 py-4 container">
         <div className="row grid gap-5">
+
+          {/* Left column */}
           <AddSongs handleMsg={handleMsg}/>
-        <div className="spotify-stuff p-4 col-12 col-md">
-          <SpotifyProfile />
-          <Playlist list={list}/>
-        </div>
+
+          {/* Right column */}
+          <div className="spotify-stuff p-4 col-12 col-md">
+            <SpotifyProfile />
+            <Playlist list={list}/>
+          </div>
+
         </div>
       </main>
       <footer className="App-footer"></footer>
