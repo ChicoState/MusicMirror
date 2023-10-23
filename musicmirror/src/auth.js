@@ -14,6 +14,8 @@ export async function checkCode(){
         // console.log("we out");
         const profile = await fetchProfile(accessToken);
         populateUI(profile);
+        const currentUrl = window.location.href;
+        window.location.replace = cleanURL(currentUrl);
     }
 };
 
@@ -57,7 +59,9 @@ export async function generateCodeChallenge(codeVerifier) {
 export async function getAccessToken(clientId, code) {
     
     const verifier = localStorage.getItem("verifier");
-
+    
+    //Here we're appending our query to the URL then adding it to the URL
+    //Maybe we can append it to a string instead of the URL but lets see what URLSearchParams is doing first
     const params = new URLSearchParams();
     params.append("client_id", clientId);
     params.append("grant_type", "authorization_code");
@@ -92,4 +96,10 @@ export function populateUI(profile) {
     document.getElementById("uri").setAttribute("href", profile.external_urls.spotify);
     document.getElementById("url").innerText = profile.href;
     document.getElementById("url").setAttribute("href", profile.href);*/
+}
+
+export function cleanURL(url){
+    let newURL = url.split("?")[0];
+    console.log(newURL);
+    return newURL;
 }
