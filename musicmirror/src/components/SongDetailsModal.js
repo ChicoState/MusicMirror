@@ -25,7 +25,7 @@ class SongDetailsModal extends React.Component{
     const song = this.props.song;
 
     return (
-      <div className="modal-dialog">
+      <div className="modal-dialog modal-lg modal-fullscreen-sm-down">
         <div className="modal-content">
           <div className="modal-header">
             <div className="searchbox input-group">
@@ -34,21 +34,50 @@ class SongDetailsModal extends React.Component{
             </div>
             <button className="ms-2 btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-          <div className="modal-body">
-            <div className="mb-2 details-header d-flex align-items-center">
-              <img src="./images/play-circle.svg" alt="play" className="play-button" onClick="" role="button"/>
-              <h1 className="mx-2 mb-0">{song.title}</h1>
-              <p className="mb-0 song-length">({song.length})</p>
+
+          {/* This section handles search result slides */}
+          <div id="details-carousel" className="modal-body carousel slide">
+            <div className="carousel-indicators">
+              {song.tracks && song.tracks.map((track, index) => (
+                <button type="button" data-bs-target="#details-carousel" data-bs-slide-to={index} className={index === 0 ? "active" : ""} aria-current={index === 0 ? "true" : ""} aria-label={`Search Result ${index+1}`}></button>
+              ))}
             </div>
-            <p className="d-flex justify-content-between">
-              <div>Artist:&nbsp;</div>
-              <div>{song.artist}</div>
-            </p>
-            <p className="d-flex justify-content-between">
-              <div>Album:&nbsp;</div>
-              <div>{song.album}</div>
-            </p>
+            <div className="carousel-inner">
+              {song.tracks && song.tracks.map((track, index) => (
+                <div className={`carousel-item ${index === 0 ? "active" : ""}`}>
+                  <div className="mb-2 details-header d-flex align-items-center">
+                    {/* This img is where the song preview play/pause button 
+                    should go. Still needs input, handler, and formatting. */}
+                    <img src="./images/play-circle.svg" alt="play" className="play-button" onClick="" role="button"/>
+                    <h1 className="mx-2 mb-0">{track.title}</h1>
+                    <p className="mb-0 song-length">({track.length})</p>
+                  </div>
+                  <p className="d-flex justify-content-between">
+                    <div>Artist:&nbsp;</div>
+                    <div>{track.artist}</div>
+                  </p>
+                  <p className="d-flex justify-content-between">
+                    <div>Album:&nbsp;</div>
+                    <div>{track.album}</div>
+                  </p>
+                </div>
+              ))}
+            </div>
+            <button className="carousel-control-prev" type="button" data-bs-target="#details-carousel" data-bs-slide="prev">
+              <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span className="visually-hidden">Previous</span>
+            </button>
+            <button className="carousel-control-next" type="button" data-bs-target="#details-carousel" data-bs-slide="next">
+              <span className="carousel-control-next-icon" aria-hidden="true"></span>
+              <span className="visually-hidden">Next</span>
+            </button>
           </div>
+          {/* End search result slides */}
+
+          {/* These buttons need click handlers. The first button should
+          indicate that the currently displayed track is the one we want in
+          our playlist. The second button should remove the current song
+          and all of its tracks from the playlist entirely. */}
           <div className="modal-footer d-flex">
             <button type="button" className="btn btn-success flex-fill" data-bs-dismiss="modal">Confirm Selection</button>
             <button type="button" className="btn btn-danger flex-fill">Remove Song</button>

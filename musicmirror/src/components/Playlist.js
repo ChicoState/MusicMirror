@@ -14,16 +14,14 @@ class Playlist extends React.Component{
 
   handleSongSelection = (song) => {
     this.setState({selectedSong: song});
-    console.log(`selected song: ${song.title}`);
+    console.log(`selected song: ${song.tracks[0].title}`);
   };
 
   render() {
     if (!this.props.list) {
       return (
         <div className="Playlist-container mt-5">
-          <div className="list-container">
-            <h1>Add songs to preview playlist</h1>
-          </div>
+          <h1>Add songs to preview playlist</h1>
         </div>
       );
     } else if (this.props.list.songs && Object.keys(this.props.list.songs).length > 0) {
@@ -34,10 +32,12 @@ class Playlist extends React.Component{
           {/* List of song cards */}
           {this.props.list.songs.map((song) => (
             <div className="my-1 song-card d-flex">
+              {/* This img is where the song preview play/pause button 
+              should go. Still needs input, handler, and formatting. */}
               <img src="./images/play-circle.svg" alt="play" className="px-2 py-1 play-button" onClick="" role="button"/> 
               <div className="p-1 details flex-grow-1" role="button" onClick={() => this.handleSongSelection(song)} data-bs-toggle="modal" data-bs-target="#song-details">
-                <h2 className="m-0">{song.title}</h2>
-                <p className="m-0">{song.artist}</p>
+                <h2 className="m-0">{song.tracks[0].title}</h2>
+                <p className="m-0">{song.tracks[0].artist}</p>
               </div>
             </div>
           ))}

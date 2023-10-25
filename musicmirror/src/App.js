@@ -9,15 +9,18 @@ function App() {
   const [list, setList] = useState();
   
   const handleMsg = async (data) => {
-    setList(await findSongs(data));
+    //change search result count (5) to a user input value later
+    setList(await findSongs(data, 5));
   }
 
   return (
+ 
   <div className="App">
+     {/*start of main Div*/}
       <header className="App-header d-flex justify-content-center align-items-center">
         <h1>MusicMirror</h1>        
       </header>
-      {/*main wrapper, can be changed to a container as well, for now its a wrapper */}
+    {/*main wrapper, can be changed to a container as well, for now its a wrapper */}
     <div className='main-wrapper'>
 
       {/*Start of  window */}
@@ -70,12 +73,14 @@ function App() {
                     </Tabs>
                   </div>
           {/*End of second window  */}
+          
         </div>
         {/*End of  window  */}
 
     </div>
-    <footer className="App-footer"></footer>
 
+    <footer className="App-footer"></footer>
+     {/*Main div ends */}
   </div>
     
   );
