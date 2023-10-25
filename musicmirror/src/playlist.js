@@ -1,4 +1,4 @@
-export async function findSongs(input){
+export async function findSongs(input, resCount){
     console.log(input);
     const token = localStorage.getItem("token");
     //separate each query by line
@@ -7,7 +7,6 @@ export async function findSongs(input){
     let playlist = {
         title: "Music Mirror Playlist",
         songs: [],
-        uris: []
     };
     let url = "";
     for(let i in search){
@@ -22,32 +21,39 @@ export async function findSongs(input){
         });
         let obj = await resp.json();
         //if exists, add to playlist
-        if(Object.keys(obj.tracks.items).length > 0){
-            playlist.uris.push(obj.tracks.items[0].uri);
+        let results = {
+            query: "",
+            tracks: [],
+        }
+
+        let res = 0;
+        while(res < resCount && res < Object.keys(obj.tracks.items).length) {
             let names = "";
-            for(let i in obj.tracks.items[0].artists){
-                names += obj.tracks.items[0].artists[i].name + ", ";
+            for(let j in obj.tracks.items[res].artists){
+                names += obj.tracks.items[res].artists[j].name + ", ";
             }
             names = names.substring(0, names.length - 2)
-            let time = new Date(obj.tracks.items[0].duration_ms);
-            //console.log(`duration: ${duration}`);
-            let song = {
-                title: obj.tracks.items[0].name,
+
+            let time = new Date(obj.tracks.items[res].duration_ms);
+            let track = {
+                title: obj.tracks.items[res].name,
                 artist: names,
-                album: obj.tracks.items[0].album.name,
+                album: obj.tracks.items[res].album.name,
                 length: `${time.getMinutes()}:${time.getSeconds()}`,
-                query: search[i],
+                uri: obj.tracks.items[res].uri,
             };
-            playlist.songs.push(song);
+            results.tracks.push(track);
+            console.log(track);
+            res++;
         }
+        results.query = search[i];
+        playlist.songs.push(results);
     }
     console.log(playlist);
     return playlist;
 }
 
 export async function genPlaylist(list){
-    console.log("in gen");
-    console.log(list);
     const user_id = localStorage.getItem("user_id");
     const token = localStorage.getItem("token");
     // if list size > 0, create playlist (api req)

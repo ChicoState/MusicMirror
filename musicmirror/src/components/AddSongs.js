@@ -33,7 +33,7 @@ class AddSongs extends React.Component {
         <div className="">
           <label className="form-label" htmlFor="fileInput">
             <h3 className="mb-2">Click to upload files:</h3>
-            <img className="p-2" src="./images/upload.png" alt="upload area" />
+            <img className="p-2 upload" src="./images/upload.png" alt="upload area" />
             <input className="upload" type="file" id="fileInput" name="fileInput" accept="audio/*" multiple />
           </label>
         </div>
