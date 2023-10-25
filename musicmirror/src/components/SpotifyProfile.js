@@ -16,6 +16,7 @@ class SpotifyProfile extends React.Component {
         {/* <li className="d-flex justify-content-between">Profile Image:&nbsp;<div id="imgUrl"></div></li> */}
       </ul>
       <button className="btn btn-secondary" onClick={auth.checkCode}>Sign in to Spotify</button>
+      <button className="btn btn-secondary" onClick={auth.signOut}>Sign out</button>
     </section>
     );
   }

@@ -1,8 +1,10 @@
 const clientId = "950b5e4bacb54dc1ad9c2ce70e2a4d48";
 const params = new URLSearchParams(window.location.search);
 const code = params.get("code");
+let loggedIn = false;
 
 export async function checkCode(){
+    console.log("Ran checkCode");
     if (!code) {
         redirectToAuthCodeFlow(clientId);
         // console.log("if: " + code);
@@ -14,6 +16,7 @@ export async function checkCode(){
         // console.log("we out");
         const profile = await fetchProfile(accessToken);
         populateUI(profile);
+        loggedIn = true;
     }
 };
 
@@ -92,4 +95,15 @@ export function populateUI(profile) {
     document.getElementById("uri").setAttribute("href", profile.external_urls.spotify);
     document.getElementById("url").innerText = profile.href;
     document.getElementById("url").setAttribute("href", profile.href);*/
+}
+
+export function signOut(){
+    if(loggedIn){
+        let newUrl = window.location.href;
+        //https://accounts.spotify.com/en/logout <- this will actually sign them out of Spotify
+        //We'll save that for when we actually have a login.
+        newUrl = newUrl.split("?")[0];
+        window.location.href = newUrl;
+        localStorage.clear();
+    }
 }
