@@ -14,90 +14,67 @@ function App() {
 
   return (
   <div className="App">
-    <header className="App-header d-flex justify-content-center align-items-center">
-      <h1>MusicMirror</h1>        
-    </header>
-      {/*  <//"App-main mx-0 px-5 py-4 container"> */}
-    <div className= "App-main mx-0 px-5 py-4 container">
-      <div className='row grid gap-5'>
+      <header className="App-header d-flex justify-content-center align-items-center">
+        <h1>MusicMirror</h1>        
+      </header>
+      {/*main wrapper, can be changed to a container as well, for now its a wrapper */}
+    <div className='main-wrapper'>
 
-        <Tabs defaultAct="addSongs" id="tab">
-            <Tab eventKey={"add Songs"} title="Add Songs">
-              <AddSongs handleMsg={handleMsg}/>
-            </Tab>
-            <Tab eventKey={"spotify"} title ="Spotify">
-              <div className="spotify-stuff p-4 col-12 col-md">
-                <SpotifyProfile />
-                <Playlist list={list}/>
-              </div> 
-            </Tab>
-            <Tab eventKey="youtube" title="Youtube">
-                <div className='Youtube'>
-                  <h1>
-                    Signing into Youtube
-                  </h1>
-                    <button > Signing</button>
-                </div>
-            </Tab>
-        </Tabs>
-      {/**-------------------------------------------- */}
-        <Tabs className='p-4 col-12 col-md' defaultAct="addSongs" id="tab">
-            <Tab eventKey={"add Songs"} title="Add Songs">
-              <AddSongs handleMsg={handleMsg}/>
-            </Tab>
-            <Tab eventKey={"spotify"} title ="Spotify">
-              <div className="spotify-stuff p-4 col-12 col-md">
-                <SpotifyProfile />
-                <Playlist list={list}/>
-              </div> 
-            </Tab>
-            <Tab eventKey="youtube" title="Youtube">
-                <div className='Youtube'>
-                  <h1>
-                    Signing into Youtube
-                  </h1>
-                    <button > Signing</button>
-                </div>
-            </Tab>
-        </Tabs>
-
-
-
-
-
-
-
-
-
-
-      </div> 
-    </div>
-
-    <footer className="App-footer"></footer>
-
-    <div className='App-main mx-0 my-5 px-5 py-4 container'>
-      <div className='col-auto'>
-            <Tabs defaultAct="addSongs" id="tab">
-                <Tab eventKey={"add Songs"} title="Add Songs">
-                  <AddSongs handleMsg={handleMsg}/>
-                </Tab>
-                <Tab eventKey={"spotify"} title ="Spotify">
-                  <div className="spotify-stuff p-4 col-12 col-md">
-                    <SpotifyProfile />
-                    <Playlist list={list}/>
-                  </div> 
-                </Tab>
-                <Tab eventKey="youtube" title="Youtube">
-                    <div className='Youtube'>
-                      <h1>
-                        Signing into Youtube
-                      </h1>
-                        <button > Signing</button>
-                    </div>
-                </Tab>
+      {/*Start of  window */}
+        <div className= "App-main mx-1 px-5 py-4 row">
+          
+          {/*Start of the first tabs of the window*/}
+            <div className='row grid gap-5 col-md '>
+              <Tabs defaultAct="addSongs " id="tab">
+                  <Tab eventKey={"add Songs"} title="Add Songs">
+                    <AddSongs handleMsg={handleMsg}/>
+                  </Tab>
+                  <Tab eventKey={"spotify"} title ="Spotify">
+                    <div className="spotify-stuff p-4 col-12 col-md">
+                      <SpotifyProfile />
+                      <Playlist list={list}/>
+                    </div> 
+                  </Tab>
+                  <Tab eventKey="youtube" title="Youtube">
+                      <div className='Youtube'>
+                        <h1>
+                          Signing into Youtube
+                        </h1>
+                          <button > Signing</button>
+                      </div>
+                  </Tab>
               </Tabs>
+            </div> 
+          {/*End of first tabs */}
+          
+          {/*Start of second window */}
+                  <div className='row grid gap-5 col-md'>
+                    <Tabs defaultAct="addSongs " id="tab">
+                        <Tab eventKey={"add Songs"} title="Add Songs">
+                          <AddSongs handleMsg={handleMsg}/>
+                        </Tab>
+                        <Tab eventKey={"spotify"} title ="Spotify">
+                          <div className="spotify-stuff p-4 col-12 col-md">
+                            <SpotifyProfile />
+                            <Playlist list={list}/>
+                          </div> 
+                        </Tab>
+                        <Tab eventKey="youtube" title="Youtube">
+                            <div className='Youtube'>
+                              <h1>
+                                Signing into Youtube
+                              </h1>
+                                <button > Signing</button>
+                            </div>
+                        </Tab>
+                    </Tabs>
+                  </div>
+          {/*End of second window  */}
         </div>
+        {/*End of  window  */}
+
     </div>
+    <footer className="App-footer"></footer>
 
   </div>
     
