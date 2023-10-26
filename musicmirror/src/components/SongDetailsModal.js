@@ -10,8 +10,44 @@ class SongDetailsModal extends React.Component{
     };
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidMount() {
+    const modal = document.getElementById("song-details");
+    const indicators = document.querySelectorAll(".carousel-indicators > button");
+    const slides = document.querySelectorAll(".carousel-item");
+    
+    /* This resets the carousel to the first slide whenever the modal closes */
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.type === "attributes" && mutation.attributeName === "aria-hidden") {
+          if (modal.getAttribute("aria-hidden")){
+            indicators.forEach((indicator) => {
+              if (indicator.getAttribute("data-bs-slide-to") === "0"){
+                indicator.classList.add("active");
+                indicator.setAttribute("aria-current", "true");
+              } else {
+                indicator.classList.remove("active");
+                indicator.setAttribute("aria-current", "false");
+              }
+            });
+            slides.forEach((slide) => {
+              if (slide.getAttribute("data-index") === "0") {
+                slide.classList.add("active");
+              } else {
+                slide.classList.remove("active");
+              }
+            });
+          }
+        }
+      });
+    });
 
+    observer.observe(modal, {
+      attributes: true,
+      attributeFilter: ["aria-hidden"]
+    });
+  }
+
+  componentDidUpdate(prevProps) {
     /* Make sure the trackIndex resets whenever a new song is passed */
     if (prevProps.song !== this.props.song) {
       this.setState({trackIndex: 0});
@@ -93,7 +129,7 @@ class SongDetailsModal extends React.Component{
               </div>
               <div className="carousel-inner">
                 {song.tracks && song.tracks.map((track, index) => (
-                  <div className={`carousel-item ${index === 0 ? "active" : ""}`}>
+                  <div className={`carousel-item ${index === 0 ? "active" : ""}`} data-index={index}>
                     <div className="mb-2 details-header d-flex align-items-center">
                       {/* This img is where the song preview play/pause button 
                       should go. Still needs input, handler, and formatting. */}
