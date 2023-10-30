@@ -15,11 +15,7 @@ class SongDetailsModal extends React.Component{
 
   /* BUGS LIST:
 
-  1) The first time I click a song card after starting the npm process,
-  I get an error that means my modal has no data yet (more specifically, the
-  targeted Bootstrap div isn't rendered).
-
-  2) Attempting to remove a song now causes the program to hang.
+  1) Attempting to remove a song now causes the program to hang.
   */
 
   /*--- COMPONENT LIFECYCLE FUNCTIONS ----------------------------------------*/
@@ -29,7 +25,7 @@ class SongDetailsModal extends React.Component{
 
     /* Add a mutation observer after the DOM renders */
     if (Object.keys(prevState.song).length === 0 && 
-        Object.keys(this.state.song).length !== 0) {
+        Object.keys(this.state.song).length > 0) {
       this.addObserver();
     }
 
@@ -161,6 +157,17 @@ class SongDetailsModal extends React.Component{
 
     if (!this.state.song || Object.keys(this.state.song).length === 0) {
       this.setState({song: this.props.song});
+      return (
+        <div id="song-details" className="modal fade" tabIndex="-1" aria-hidden="true">
+          <div className="modal-dialog modal-lg modal-fullscreen-sm-down">
+            <div className="modal-content">
+              <div className="modal-header"></div>
+              <div className="modal-body"></div>
+              <div className="modal-footer"></div>
+            </div>
+          </div>
+        </div>
+      );
 
     } else {
       return (
