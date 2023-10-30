@@ -1,7 +1,7 @@
-import { genPlaylist } from '../playlist';
-import '../styles/Playlist.css';
-import React from 'react';
-import SongDetailsModal from './SongDetailsModal';
+import { genPlaylist } from "../playlist";
+import "../styles/Playlist.css";
+import React from "react";
+import SongDetailsModal from "./SongDetailsModal";
 
 class Playlist extends React.Component{
   constructor(){
@@ -13,12 +13,17 @@ class Playlist extends React.Component{
     };
   }
 
+  /*--- HANDLERS -------------------------------------------------------------*/
+
+  /* Note which song card was clicked on */
   handleSongSelection = (song, index) => {
     this.setState({selectedSong: song});
     this.setState({selectedIndex: index});
     console.log(`selected song: ${song.tracks[0].title}`);
   };
 
+
+  /* Update or delete a song card */
   handleUpdate = (updatedSong) => {
     let newList = this.props.list;
 
@@ -36,14 +41,19 @@ class Playlist extends React.Component{
     }
   };
 
+  /*--------------------------------------------------------------------------*/
+
   render() {
+
     if (!this.props.list) {
       return (
         <div className="Playlist-container mt-5">
           <h1>Add songs to preview playlist</h1>
         </div>
       );
-    } else if (this.props.list.songs && Object.keys(this.props.list.songs).length > 0) {
+
+    } else if (this.props.list.songs && 
+        Object.keys(this.props.list.songs).length > 0) {
       return (
         <div className="Playlist-container mt-5 py-2">
           <h1>{this.props.list.title}</h1>
@@ -53,8 +63,19 @@ class Playlist extends React.Component{
             <div className="my-1 song-card d-flex">
               {/* This img is where the song preview play/pause button 
               should go. Still needs input, handler, and formatting. */}
-              <img src="./images/play-circle.svg" alt="play" className="px-2 py-1 play-button" onClick="" role="button"/> 
-              <div className="p-1 details flex-grow-1" role="button" onClick={() => this.handleSongSelection(song, index)} data-bs-toggle="modal" data-bs-target="#song-details">
+              <img 
+                className="px-2 py-1 play-button"
+                src="./images/play-circle.svg" 
+                alt="play" 
+                role="button"
+              /> 
+              <div 
+                className="p-1 details flex-grow-1" 
+                role="button" 
+                data-bs-toggle="modal" 
+                data-bs-target="#song-details" 
+                onClick={() => this.handleSongSelection(song, index)}
+              >
                 <h2 className="m-0">{song.tracks[0].title}</h2>
                 <p className="m-0">{song.tracks[0].artist}</p>
               </div>
@@ -62,9 +83,17 @@ class Playlist extends React.Component{
           ))}
 
           {/* This modal pops up when you click on a song */}
-          <SongDetailsModal song={this.state.selectedSong} updatePlaylist={this.handleUpdate}/>
+          <SongDetailsModal 
+            song={this.state.selectedSong} 
+            updatePlaylist={this.handleUpdate}
+          />
 
-          <button className="m-2 px-5 btn btn-secondary" onClick={() => genPlaylist(this.props.list)}>Confirm Playlist</button>
+          <button 
+            className="m-2 px-5 btn btn-secondary" 
+            onClick={() => genPlaylist(this.props.list)}
+          >
+            Confirm Playlist
+          </button>
         </div>
       );
 
