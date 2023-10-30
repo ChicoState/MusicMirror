@@ -28,11 +28,10 @@ class Playlist extends React.Component{
 
     /* If passed nothing, remove the currently selected song */
     if (!updatedSong) {
-      // newList.songs.splice(this.state.selectedIndex, 1);
       newList.songs = newList.songs.filter((song, index) => 
         index !== this.state.selectedIndex
       );
-      this.setState({playlist: newList, selectedSong: {}, selectedIndex: null});
+      this.setState({playlist: newList});
 
     /* If passed a song, replace the currently selected song */
     } else {

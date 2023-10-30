@@ -13,11 +13,6 @@ class SongDetailsModal extends React.Component{
     this.observer = null;
   }
 
-  /* BUGS LIST:
-
-  1) Attempting to remove a song now causes the program to hang.
-  */
-
   /*--- COMPONENT LIFECYCLE FUNCTIONS ----------------------------------------*/
 
   /* Called every time the state or props change */
