@@ -153,7 +153,12 @@ class SongDetailsModal extends React.Component{
     if (!this.state.song || Object.keys(this.state.song).length === 0) {
       this.setState({song: this.props.song});
       return (
-        <div id="song-details" className="modal fade" tabIndex="-1" aria-hidden="true">
+        <div 
+          id="song-details" 
+          className="SongDetailsModal modal fade" 
+          tabIndex="-1" 
+          aria-hidden="true"
+        >
           <div className="modal-dialog modal-lg modal-fullscreen-sm-down">
             <div className="modal-content">
               <div className="modal-header"></div>
@@ -166,7 +171,12 @@ class SongDetailsModal extends React.Component{
 
     } else {
       return (
-        <div id="song-details" className="modal fade" tabIndex="-1" aria-hidden="true">
+        <div 
+          id="song-details" 
+          className="SongDetailsModal modal fade" 
+          tabIndex="-1" 
+          aria-hidden="true"
+        >
           <div className="modal-dialog modal-lg modal-fullscreen-sm-down">
             <div className="modal-content">
               <div className="modal-header">

@@ -66,8 +66,8 @@ class Playlist extends React.Component{
         this.state.playlist.songs.length === 0)) {
 
       return (
-        <div className="Playlist-container mt-5">
-          <h1>Add songs to preview playlist</h1>
+        <div className="Playlist mt-3">
+          <h1>Choose a playlist to preview, or create a new one.</h1>
         </div>
       );
     
@@ -75,7 +75,7 @@ class Playlist extends React.Component{
     } else if (this.state.playlist && 
         Object.keys(this.state.playlist).length > 0) {
       return (
-        <div className="Playlist-container mt-5 py-2">
+        <div className="Playlist mt-3">
           <h1>{this.state.playlist.title}</h1>
 
           {/* List of song cards */}
@@ -111,7 +111,7 @@ class Playlist extends React.Component{
           />
 
           <button 
-            className="m-2 px-5 btn btn-secondary" 
+            className="mt-3 btn btn-secondary" 
             onClick={() => genPlaylist(this.state.playlist)}
           >
             Confirm Playlist

@@ -28,15 +28,14 @@ class AddSongs extends React.Component {
 
   render() {
     return (
-      // add path to form-handler inside action attribute
-      <div className="container p-4 col-md-6">
+      <div className="AddSongs container p-0">
         <div className="">
           <label className="form-label" htmlFor="textInput" >
-            <h3 className="mt-5 mb-0">Search for songs to create a playlist:</h3>
+            <h3 className="m-0">Search for songs to create a playlist:</h3>
           </label>
           <textarea className="form-control" id="textInput" rows="5" onChange={this.handleChange} value={this.message} placeholder="Type each song on its own line."></textarea>
         </div>
-        <button className="mt-5 btn btn-secondary" onClick={this.handleClick}>Find Songs</button>
+        <button className="mt-3 btn btn-secondary" onClick={this.handleClick}>Find Songs</button>
       </div>
     );
   };

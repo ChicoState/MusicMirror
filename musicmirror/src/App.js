@@ -30,40 +30,46 @@ function App() {
       {/* Page body */}
       <div className="main-wrapper">
         {/* Wrapper to help with columns */}
-        <div className="App-main mx-1 px-5 py-4 row grid gap-5">
+        <div className="App-main mx-1 p-5 row grid gap-5">
           
           {/* Start of the first window */}
-          <div className="tab-window col-12 col-md">
-            <h2>Your Playlists:</h2>
+          <div className="tab-window p-3 col-12 col-md">
+            <h2 className="mb-3">Your Playlists:</h2>
             <Tabs defaultAct="addSongs" id="tab" justify>
-              <Tab eventKey={"add Songs"} title="New">
-                <AddSongs handleMsg={handleMsg}/>
+              <Tab tabClassName="tab tab-addsongs" eventKey={"add Songs"} title="New">
+                <div className="tab-body p-3 d-flex flex-column">
+                  <AddSongs handleMsg={handleMsg}/>
+                </div>
               </Tab>
-              <Tab eventKey={"spotify"} title="Spotify">
-                <div className="spotify-stuff p-4">
+              <Tab tabClassName="tab tab-spotify" eventKey={"spotify"} title="Spotify">
+                <div className="tab-body p-3">
                   <SpotifyProfile />
-                  <Playlist list={list} search={search}/>
                 </div> 
               </Tab>
-              <Tab eventKey={"youtube"} title="YT Music">
-                <YouTube/>
+              <Tab tabClassName="tab tab-youtube" eventKey={"youtube"} title="YT Music">
+                <div className="tab-body p-3">
+                  <YouTube />
+                </div> 
               </Tab>
             </Tabs>
           </div> 
           {/* End of the first window */}
           
           {/* Start of the second window */}
-          <div className="tab-window col-12 col-md">
-            <h2>Preview:</h2>
+          <div className="tab-window p-3 col-12 col-md">
+            <h2 className="mb-3">Preview:</h2>
             <Tabs defaultAct="addSongs" id="tab" justify>
-              <Tab eventKey={"spotify"} title="Spotify">
-                <div className="spotify-stuff p-4 col-12 col-md">
+              <Tab tabClassName="tab tab-spotify" eventKey={"spotify"} title="Spotify">
+                <div className="tab-body p-3">
                   <SpotifyProfile />
                   <Playlist list={list} search={search}/>
                 </div> 
               </Tab>
-              <Tab eventKey={"youtube"} title="YT Music">
-                <YouTube/>
+              <Tab tabClassName="tab tab-youtube" eventKey={"youtube"} title="YT Music">
+                <div className="tab-body p-3">
+                  <YouTube />
+                  <Playlist list={list} search={search}/>
+                </div> 
               </Tab>
             </Tabs>
           </div>

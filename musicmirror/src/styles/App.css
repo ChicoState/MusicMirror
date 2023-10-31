@@ -1,8 +1,9 @@
-@import "~bootstrap/dist/css/bootstrap.min.css";
+/* @import "~bootstrap/dist/css/bootstrap.min.css"; */
 
+/*--- App Styling ------------------------------------------------------------*/
 
 .App {
-  text-align: center;
+  width: 100vw;
   background-image: url("~/public/images/soundbackground.jpg");
   background-color: #282c34;
   background-position: center;
@@ -11,14 +12,18 @@
 
 .App-header {
   height: 15vh;
+  width: 100%;
   margin: 0;
   font-size: calc(10px + 2vmin);
+  text-align: center;
   color: white;
-  background-color: #111111;
+  background-color: rgba(20, 20, 20, 1);
+  box-shadow: 2px 2px 10px #ffffff;
 }
 
 .App-main {
   height: 80vh;
+  width: 100%;
   font-size: calc(10px + 1vmin);
   color: #61dafb;
   background-color: rgba(0, 0, 0, 0.5);
@@ -26,15 +31,12 @@
 
 .App-footer {
   height: 5vh;
-  background-color: #111111;
+  width: 100%;
+  background-color: rgba(20, 20, 20, 1);
+  box-shadow: -2px -2px 10px #ffffff;
 }
 
-.spotify-stuff {
-  background-color: rgba(255, 255, 255, 0.05);
-  border-radius: 5px;
-  box-shadow: 2px 2px 10px #111111;
-}
-/*Used to modify the wrapper, which contains the windows*/
+/* Used to modify the wrapper, which contains the windows */
 .main-wrapper {
   display: flex;
   justify-content: space-between;
@@ -43,8 +45,114 @@
 
 .tab-window {
   height: 100%;
-  background-color: rgba(20, 20, 20, 0.96);
+  background-color: rgba(20, 20, 20, 0.90);
   border-radius: 5px;
   box-shadow: 2px 2px 10px #000000;
+}
+
+/* Tab (the actual tab bit at the top) */
+/* .nav-tabs {} */
+
+/* Tab label */
+/* .nav-link {
+  color: #003d4c;
+  transition: color 0.25s;
+}
+
+.nav-link:hover {
+  color: #004f63;
+} */
+
+/* Tab body */
+.tab {
+  height: 100%;
+  border: none;
+}
+
+.tab-body {
+  height: 50vh;
+  border: 1px solid white;
+  border-radius: 0 0 5px 5px;
   overflow-y: scroll;
+}
+
+/*--- AddSongs Styling -------------------------------------------------------*/
+
+.AddSongs textarea {
+  box-shadow: 2px 2px 10px #111111;
+}
+
+/*--- Playlist Styling -------------------------------------------------------*/
+
+.Playlist h1 {
+  font-size: calc(0.9rem + 0.9vw);
+}
+
+.Playlist h2 {
+  color: #ffffff;
+  font-size: calc(0.7rem + 0.7vw);
+}
+
+.Playlist p {
+  color: #bbbbbb;
+}
+
+.song-card {
+  text-align: left;
+  background-color: #003d4c;
+  transition: background-color 0.25s;
+}
+
+.song-card:hover {
+  background-color: #004f63;
+}
+
+/*--- SongDetailsModal Styling -----------------------------------------------*/
+
+.modal-header, .modal-body, .modal-footer {
+  background-color: #004f63;
+}
+
+.input-group-text {
+  text-align: left;
+}
+
+.details-header h1 {
+  color: #ffffff;
+  font-size: calc(0.8rem + 0.8vw);
+}
+
+.details-header p {
+  font-size: calc(0.8rem + 0.8vw);
+}
+
+.modal-body p {
+  margin-bottom: 0;
+  text-align: left;
+}
+
+.carousel-item {
+  height: 40vh;
+  padding: 5% 15%;
+}
+
+/*--- Spotify Styling --------------------------------------------------------*/
+
+.SpotifyProfile {
+  border-bottom: 1px solid #ffffff;
+}
+
+.profile-info {
+  color: limegreen;
+}
+
+.SpotifyProfile ul {
+  padding-left: 0;
+  list-style: none inside;
+}
+
+/*--- YouTube Music Styling --------------------------------------------------*/
+
+.YouTube {
+  border-bottom: 1px solid #ffffff;
 }

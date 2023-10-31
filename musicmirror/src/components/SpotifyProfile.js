@@ -23,20 +23,20 @@ class SpotifyProfile extends React.Component {
 
     if (!this.state.connected) {
       return (
-        <section id="profile">
+        <div className="SpotifyProfile">
           <h3 className="">
             Looks like you haven't connected to Spotify yet. Please Sign In.
           </h3>
-          <button className="btn btn-secondary" onClick={this.handleAuth}>
+          <button className="my-3 btn btn-secondary" onClick={this.handleAuth}>
             Sign in with Spotify!
           </button>
-        </section>
+        </div>
       )
     }
 
     else {
       return (
-        <section id="profile">
+        <div className="SpotifyProfile">
           <h3 className="">Spotify Connected!</h3>
           <ul>
             <li className="d-flex justify-content-between">
@@ -53,7 +53,7 @@ class SpotifyProfile extends React.Component {
             </li>
             {/* If profile image gets added later, id="imgUrl". */}
           </ul>
-        </section>
+        </div>
       );
     }
   }
