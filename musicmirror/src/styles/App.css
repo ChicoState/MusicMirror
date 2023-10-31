@@ -3,11 +3,14 @@
 
 .App {
   text-align: center;
+  background-image: url("~/public/images/soundbackground.jpg");
   background-color: #282c34;
+  background-position: center;
+  background-size: cover;
 }
 
 .App-header {
-  min-height: 15vh;
+  height: 15vh;
   margin: 0;
   font-size: calc(10px + 2vmin);
   color: white;
@@ -15,14 +18,14 @@
 }
 
 .App-main {
-  min-height: 80vh;
-  min-width: 20vw;
+  height: 80vh;
   font-size: calc(10px + 1vmin);
   color: #61dafb;
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 .App-footer {
-  min-height: 5vh;
+  height: 5vh;
   background-color: #111111;
 }
 
@@ -32,8 +35,16 @@
   box-shadow: 2px 2px 10px #111111;
 }
 /*Used to modify the wrapper, which contains the windows*/
-.main-wrapper{
+.main-wrapper {
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
+}
+
+.tab-window {
+  height: 100%;
+  background-color: rgba(20, 20, 20, 0.96);
+  border-radius: 5px;
+  box-shadow: 2px 2px 10px #000000;
+  overflow-y: scroll;
 }

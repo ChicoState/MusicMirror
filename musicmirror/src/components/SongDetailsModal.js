@@ -1,4 +1,4 @@
-import "../styles/Modal.css";
+// import "../styles/Modal.css";
 import React from "react";
 import { findSongs } from "../playlist";
 

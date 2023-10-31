@@ -1,5 +1,5 @@
 import { genPlaylist } from "../playlist";
-import "../styles/Playlist.css";
+// import "../styles/Playlist.css";
 import React from "react";
 import SongDetailsModal from "./SongDetailsModal";
 

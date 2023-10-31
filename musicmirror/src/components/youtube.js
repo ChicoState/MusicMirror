@@ -1,15 +1,61 @@
-import React, { Component } from 'react'
+import React from "react";
 
-export default class Youtube extends Component {
+class YouTube extends React.Component {
+  constructor(){
+    super();
+    this.state = {
+      connected: false,
+    };
+  }
+
+  /*--- HANDLERS -------------------------------------------------------------*/
+
+  handleAuth = async() => {
+    // auth.checkCode();
+    // this.setState({connected: true});
+    console.log("calling YouTube handleAuth");
+  }
+
+  /*--------------------------------------------------------------------------*/
+
   render() {
-    return (
+
+    if (!this.state.connected) {
+      return (
         <section id="profile">
-            <h3 className="d-flex justify-content-center"> 
-                Loging To Youtube:
-            </h3>
-            {/*The link can be removed, was trying to see if it'll just take you to youtube  */}
-            <button className="" onClick={"https://accounts.google.com/ServiceLogin?service=youtube&uilel=3&passive=true&continue=https%3A%2F%2Fwww.youtube.com%2Fsignin%3Faction_handle_signin%3Dtrue%26app%3Ddesktop%26hl%3Den%26next%3Dhttps%253A%252F%252Fwww.youtube.com%252F&hl=en&ec=65620"}>Signing</button>
+          <h3 className="">
+            Looks like you haven't connected to YouTube Music yet. Please Sign In.
+          </h3>
+          <button className="btn btn-secondary" onClick={this.handleAuth}>
+            Sign in with YouTube Music!
+          </button>
         </section>
-    )
+      )
+    }
+
+    else {
+      return (
+        <section id="profile">
+          <h3 className="">YouTube Music Connected!</h3>
+          <ul>
+            <li className="d-flex justify-content-between">
+              Username:&nbsp;
+              <div id="displayName" className="profile-info"></div>
+            </li>
+            <li className="d-flex justify-content-between">
+              User ID:&nbsp;
+              <div id="id" className="profile-info"></div>
+            </li>
+            <li className="d-flex justify-content-between">
+              Email:&nbsp;
+              <div id="email" className="profile-info"></div>
+            </li>
+            {/* If profile image gets added later, id="imgUrl". */}
+          </ul>
+        </section>
+      );
+    }
   }
 }
+
+export default YouTube;
