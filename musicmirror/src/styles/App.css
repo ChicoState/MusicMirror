@@ -1,3 +1,6 @@
+@import "~bootstrap/dist/css/bootstrap.min.css";
+
+
 .App {
   text-align: center;
   background-color: #282c34;
@@ -13,7 +16,7 @@
 
 .App-main {
   min-height: 80vh;
-  min-width: 100vw;
+  min-width: 20vw;
   font-size: calc(10px + 1vmin);
   color: #61dafb;
 }
@@ -27,4 +30,10 @@
   background-color: rgba(255, 255, 255, 0.05);
   border-radius: 5px;
   box-shadow: 2px 2px 10px #111111;
+}
+/*Used to modify the wrapper, which contains the windows*/
+.main-wrapper{
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
 }

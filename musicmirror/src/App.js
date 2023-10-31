@@ -4,7 +4,7 @@ import Playlist from './components/Playlist';
 import SpotifyProfile from './components/SpotifyProfile';
 import { useState } from 'react';
 import { findSongs } from './playlist';
-
+import {Tabs, Tab} from 'react-bootstrap';
 function App() {
   const [list, setList] = useState();
   const [search, setSearch] = useState(0);
@@ -17,26 +17,75 @@ function App() {
   }
 
   return (
-    <div className="App">
+ 
+  <div className="App">
+     {/*start of main Div*/}
       <header className="App-header d-flex justify-content-center align-items-center">
         <h1>MusicMirror</h1>        
       </header>
-      <main className="App-main mx-0 px-5 py-4 container">
-        <div className="row grid gap-5">
+    {/*main wrapper, can be changed to a container as well, for now its a wrapper */}
+    <div className='main-wrapper'>
 
-          {/* Left column */}
-          <AddSongs handleMsg={handleMsg}/>
-
-          {/* Right column */}
-          <div className="spotify-stuff p-4 col-12 col-md">
-            <SpotifyProfile />
-            <Playlist list={list} search={search}/>
-          </div>
-
+      {/*Start of  window */}
+        <div className= "App-main mx-1 px-5 py-4 row">
+          
+          {/*Start of the first tabs of the window*/}
+            <div className='row grid gap-5 col-md '>
+              <Tabs defaultAct="addSongs " id="tab">
+                  <Tab eventKey={"add Songs"} title="Add Songs">
+                    <AddSongs handleMsg={handleMsg}/>
+                  </Tab>
+                  <Tab eventKey={"spotify"} title ="Spotify">
+                    <div className="spotify-stuff p-4 col-12 col-md">
+                      <SpotifyProfile />
+                      <Playlist list={list}/>
+                    </div> 
+                  </Tab>
+                  <Tab eventKey="youtube" title="Youtube">
+                      <div className='Youtube'>
+                        <h1>
+                          Signing into Youtube
+                        </h1>
+                          <button > Signing</button>
+                      </div>
+                  </Tab>
+              </Tabs>
+            </div> 
+          {/*End of first tabs */}
+          
+          {/*Start of second window */}
+                  <div className='row grid gap-5 col-md'>
+                    <Tabs defaultAct="addSongs " id="tab">
+                        <Tab eventKey={"add Songs"} title="Add Songs">
+                          <AddSongs handleMsg={handleMsg}/>
+                        </Tab>
+                        <Tab eventKey={"spotify"} title ="Spotify">
+                          <div className="spotify-stuff p-4 col-12 col-md">
+                            <SpotifyProfile />
+                            <Playlist list={list}/>
+                          </div> 
+                        </Tab>
+                        <Tab eventKey="youtube" title="Youtube">
+                            <div className='Youtube'>
+                              <h1>
+                                Signing into Youtube
+                              </h1>
+                                <button > Signing</button>
+                            </div>
+                        </Tab>
+                    </Tabs>
+                  </div>
+          {/*End of second window  */}
+          
         </div>
-      </main>
-      <footer className="App-footer"></footer>
+        {/*End of  window  */}
+
     </div>
+
+    <footer className="App-footer"></footer>
+     {/*Main div ends */}
+  </div>
+    
   );
 }
 
