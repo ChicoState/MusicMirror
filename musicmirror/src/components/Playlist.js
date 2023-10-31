@@ -8,6 +8,8 @@ class Playlist extends React.Component{
     super();
     this.state = {
       playlist: {},
+      isEditing: false,
+      currentTitle: "Music Mirror Playlist",
       selectedSong: {},
       selectedIndex: null,
       search: 1,
@@ -16,10 +18,44 @@ class Playlist extends React.Component{
 
   /*--- HANDLERS -------------------------------------------------------------*/
 
+  handleBlur = () => {
+    console.log("handleBlur");
+    this.setState({ isEditing: false });
+    // Call a function passed as a prop to update the list title
+    this.onTitleChange(this.state.currentTitle);
+  };
+
+
+  handleChange = (e) => {
+    console.log("handleChange");
+    this.setState({ currentTitle: e.target.value });
+  };
+
+
+  handleDoubleClick = () => {
+    console.log("handleDoubleClick");
+    if (!this.state.isEditing) {
+      this.setState({ isEditing: true }, () => {
+        console.log("Now editing!");
+      });
+    }
+  };
+
+
   /* Note which song card was clicked on */
   handleSongSelection = (song, index) => {
     this.setState({selectedSong: song, selectedIndex: index});
     console.log(`selected song: ${song.tracks[0].title}`);
+  };
+
+
+  onTitleChange = (newTitle) => {
+    console.log("onTitleChange");
+    const newList = {...this.state.playlist};
+    newList.title = this.state.currentTitle;
+    this.setState({playlist: newList});
+    console.log("Title has been changed!");
+    // this.props.list.title = newTitle;
   };
 
 
@@ -47,15 +83,15 @@ class Playlist extends React.Component{
 
   render() {
 
-      /* Update state.playlist if a new search occurred.
-      This should technically be handled in componentDidUpdate(), but for the
-      life of me I couldn't get it to work without spawning an infinite loop. */
-      if (this.props.list &&
-          this.state.playlist &&
-          this.props.search === this.state.search) {
-        console.log("New search, updating state!");
-        this.setState({playlist: this.props.list, search: this.props.search+1});
-      }
+    /* Update state.playlist if a new search occurred.
+    This should technically be handled in componentDidUpdate(), but for the
+    life of me I couldn't get it to work without spawning an infinite loop. */
+    if (this.props.list &&
+        this.state.playlist &&
+        this.props.search === this.state.search) {
+      console.log("New search, updating state!");
+      this.setState({playlist: this.props.list, search: this.props.search+1});
+    }
 
       
     /* If there are no songs to display, instruct users to add songs */
@@ -76,7 +112,12 @@ class Playlist extends React.Component{
         Object.keys(this.state.playlist).length > 0) {
       return (
         <div className="Playlist mt-3">
-          <h1>{this.state.playlist.title}</h1>
+          <h1>
+            {/* {this.state.isEditing ? 
+            (<input type="text" value={this.state.currentTitle} onChange={this.handleChange} onBlur={this.handleBlur} autoFocus/>) : 
+            (<span onDoubleClick={this.handleDoubleClick}>{this.state.currentTitle}</span>)} */}
+            {this.state.isEditing? (<span>Editing!</span>) : (<span onDoubleClick={this.handleDoubleClick}>Not Editing!</span>)}
+          </h1>
 
           {/* List of song cards */}
           {this.state.playlist.songs.map((song, index) => (
@@ -110,6 +151,7 @@ class Playlist extends React.Component{
             updatePlaylist={this.handleUpdate}
           />
 
+          {/* Upload the playlist to Spotify */}
           <button 
             className="mt-3 btn btn-secondary" 
             onClick={() => genPlaylist(this.state.playlist)}
