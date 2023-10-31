@@ -30,7 +30,7 @@ function App() {
       {/* Page body */}
       <div className="main-wrapper">
         {/* Wrapper to help with columns */}
-        <div className="App-main mx-1 p-5 row grid gap-5">
+        <div className="App-main mx-0 p-5 row grid gap-5">
           
           {/* Start of the first window */}
           <div className="tab-window p-3 col-12 col-md">

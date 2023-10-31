@@ -202,7 +202,7 @@ class SongDetailsModal extends React.Component{
                   />
                 </div>
                 <button 
-                  className="ms-2 btn-close" 
+                  className="ms-2 btn-close btn-close-white" 
                   type="button" 
                   data-bs-dismiss="modal" 
                   aria-label="Close"
@@ -279,7 +279,7 @@ class SongDetailsModal extends React.Component{
 
               <div className="modal-footer d-flex">
                 <button 
-                  className="btn btn-success flex-fill"
+                  className="confirm-button btn btn-secondary flex-fill"
                   type="button" 
                   data-bs-dismiss="modal" 
                   onClick={() => this.handleConfirm()}
@@ -287,7 +287,7 @@ class SongDetailsModal extends React.Component{
                   Confirm Selection
                 </button>
                 <button 
-                  className="btn btn-danger flex-fill"
+                  className="remove-button btn btn-secondary flex-fill"
                   type="button" 
                   data-bs-dismiss="modal" 
                   onClick={() => this.props.updatePlaylist(null)}
