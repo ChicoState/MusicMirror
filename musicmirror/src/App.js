@@ -7,10 +7,13 @@ import { findSongs } from './playlist';
 
 function App() {
   const [list, setList] = useState();
+  const [search, setSearch] = useState(0);
   
   const handleMsg = async (data) => {
     //change search result count (5) to a user input value later
     setList(await findSongs(data, 5));
+    console.log(`Searching! This is search number ${search+1}.`)
+    setSearch(search+1);
   }
 
   return (
@@ -27,7 +30,7 @@ function App() {
           {/* Right column */}
           <div className="spotify-stuff p-4 col-12 col-md">
             <SpotifyProfile />
-            <Playlist list={list}/>
+            <Playlist list={list} search={search}/>
           </div>
 
         </div>

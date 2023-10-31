@@ -179,7 +179,7 @@ class SongDetailsModal extends React.Component{
                     placeholder={this.props.song.query} 
                     value={this.state.message} 
                     onChange={this.handleChange} 
-                    onKeyDown={this.handleKeyUp}
+                    onKeyDown={this.handleKeyDown}
                   />
                   <img 
                     className="btn btn-info"
@@ -233,14 +233,14 @@ class SongDetailsModal extends React.Component{
                         <h1 className="mx-2 mb-0">{track.title}</h1>
                         <p className="mb-0 song-length">({track.length})</p>
                       </div>
-                      <p className="d-flex justify-content-between">
-                        <div>Artist:&nbsp;</div>
-                        <div>{track.artist}</div>
-                      </p>
-                      <p className="d-flex justify-content-between">
-                        <div>Album:&nbsp;</div>
-                        <div>{track.album}</div>
-                      </p>
+                      <div className="d-flex justify-content-between">
+                        <p>Artist:&nbsp;</p>
+                        <p>{track.artist}</p>
+                      </div>
+                      <div className="d-flex justify-content-between">
+                        <p>Album:&nbsp;</p>
+                        <p>{track.album}</p>
+                      </div>
                     </div>
                   ))}
                 </div>

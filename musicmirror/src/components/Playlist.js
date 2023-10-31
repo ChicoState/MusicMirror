@@ -10,6 +10,7 @@ class Playlist extends React.Component{
       playlist: {},
       selectedSong: {},
       selectedIndex: null,
+      search: 1,
     };
   }
 
@@ -32,6 +33,8 @@ class Playlist extends React.Component{
         index !== this.state.selectedIndex
       );
       this.setState({playlist: newList});
+      console.log("REMOVED LIST ITEM");
+      console.log(newList);
 
     /* If passed a song, replace the currently selected song */
     } else {
@@ -44,23 +47,31 @@ class Playlist extends React.Component{
 
   render() {
 
-    if (!this.props.list) {
-      return (
-        <div className="Playlist-container mt-5">
-          <h1>Add songs to preview playlist</h1>
-        </div>
-      );
-    }
-    
-    else if (!this.state.playlist || 
-        Object.keys(this.state.playlist).length === 0) {
-      this.setState({playlist: this.props.list});
-      return (
-        <div className="Playlist-container mt-5">
-          <h1>Add songs to preview playlist</h1>
-        </div>
-      );
+      /* Update state.playlist if a new search occurred.
+      This should technically be handled in componentDidUpdate(), but for the
+      life of me I couldn't get it to work without spawning an infinite loop. */
+      if (this.props.list &&
+          this.state.playlist &&
+          this.props.search === this.state.search) {
+        console.log("New search, updating state!");
+        this.setState({playlist: this.props.list, search: this.props.search+1});
+      }
 
+      
+    /* If there are no songs to display, instruct users to add songs */
+    if (!this.props.list || 
+        !this.state.playlist ||
+        Object.keys(this.state.playlist).length === 0 ||
+        (Object.keys(this.state.playlist).length > 0 &&
+        this.state.playlist.songs.length === 0)) {
+
+      return (
+        <div className="Playlist-container mt-5">
+          <h1>Add songs to preview playlist</h1>
+        </div>
+      );
+    
+    /* If there are songs to display, render song cards */
     } else if (this.state.playlist && 
         Object.keys(this.state.playlist).length > 0) {
       return (
