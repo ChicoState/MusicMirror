@@ -96,6 +96,11 @@
   color: #bbbbbb;
 }
 
+.bi-pencil-square {
+  color: white;
+  font-size: 20px;
+}
+
 .song-card {
   text-align: left;
   background-color: #003d4c;
