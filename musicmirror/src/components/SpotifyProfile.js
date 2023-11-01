@@ -1,5 +1,4 @@
 import * as auth from "../auth";
-// import "../styles/SpotifyProfile.css";
 import React from "react";
 
 class SpotifyProfile extends React.Component {
