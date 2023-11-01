@@ -7,7 +7,6 @@ class AddSongs extends React.Component {
     this.state = {
       list: { title: "Music Mirror Playlist", songs: [] },
       message: '',
-      showPlaylist: true,
     }
   }
 

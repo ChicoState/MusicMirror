@@ -1,14 +1,16 @@
 const clientId = "950b5e4bacb54dc1ad9c2ce70e2a4d48";
 const params = new URLSearchParams(window.location.search);
 const code = params.get("code");
-let loggedIn = false;
+let hasCode = false;
 
 export async function checkCode(){
     console.log("Ran checkCode");
     if (!code) {
         redirectToAuthCodeFlow(clientId);
+        console.log("After everything code: " + code);
+        hasCode = true;
         // console.log("if: " + code);
-    } else {
+    /*} else {
         // console.log("above");
         // console.log(code);
         const accessToken = await getAccessToken(clientId, code);
@@ -16,9 +18,24 @@ export async function checkCode(){
         // console.log("we out");
         const profile = await fetchProfile(accessToken);
         populateUI(profile);
-        loggedIn = true;
+        hasCode = true;
+        */
     }
 };
+
+export async function signIn(loggedIn){
+    console.log("code at signIn:" + code);
+    if(code){
+        console.log("In logged in");
+        const accessToken = await getAccessToken(clientId, code);
+        localStorage.setItem("token", accessToken);
+        // console.log("we out");
+        const profile = await fetchProfile(accessToken);
+        populateUI(profile);
+        console.log("PopulatedUI");
+        hasCode = true;
+    }
+}
 
 export async function redirectToAuthCodeFlow(clientId) {
     const verifier = generateCodeVerifier(128);
@@ -35,6 +52,7 @@ export async function redirectToAuthCodeFlow(clientId) {
     params.append("code_challenge", challenge);
 
     document.location = `https://accounts.spotify.com/authorize?${params.toString()}`;
+    
 }
 
 export function generateCodeVerifier(length) {
@@ -45,6 +63,7 @@ export function generateCodeVerifier(length) {
     for (let i = 0; i < length; i++) {
         text += possible.charAt(Math.floor(Math.random() * possible.length));
     }
+    
     return text;
 }
 
@@ -58,7 +77,6 @@ export async function generateCodeChallenge(codeVerifier) {
 }
 
 export async function getAccessToken(clientId, code) {
-    
     const verifier = localStorage.getItem("verifier");
 
     const params = new URLSearchParams();
@@ -68,6 +86,7 @@ export async function getAccessToken(clientId, code) {
     params.append("redirect_uri", "http://localhost:3000");
     params.append("code_verifier", verifier);
 
+    console.log("Get access token: " + code);
     const result = await fetch("https://accounts.spotify.com/api/token", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -79,6 +98,7 @@ export async function getAccessToken(clientId, code) {
 }
 
 export async function fetchProfile(token) {
+    console.log("token: " + token);
     const result = await fetch("https://api.spotify.com/v1/me", {
         method: "GET", headers: { Authorization: `Bearer ${token}` }
     });
@@ -88,22 +108,19 @@ export async function fetchProfile(token) {
 }
 
 export function populateUI(profile) {
+    console.log(profile);
+    /*
     document.getElementById("displayName").innerText = profile.display_name;
     document.getElementById("id").innerText = profile.id;
     document.getElementById("email").innerText = profile.email;
-    /*document.getElementById("uri").innerText = profile.uri;
-    document.getElementById("uri").setAttribute("href", profile.external_urls.spotify);
-    document.getElementById("url").innerText = profile.href;
-    document.getElementById("url").setAttribute("href", profile.href);*/
+    */
 }
 
 export function signOut(){
-    if(loggedIn){
-        let newUrl = window.location.href;
-        //https://accounts.spotify.com/en/logout <- this will actually sign them out of Spotify
-        //We'll save that for when we actually have a login.
-        newUrl = newUrl.split("?")[0];
-        window.location.href = newUrl;
-        localStorage.clear();
-    }
+    let newUrl = window.location.href;
+    //https://accounts.spotify.com/en/logout <- this will actually sign them out of Spotify
+    //We'll save that for when we actually have a login.
+    newUrl = newUrl.split("?")[0];
+    window.location.href = newUrl;
+    localStorage.clear();
 }

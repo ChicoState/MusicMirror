@@ -4,13 +4,20 @@ import Playlist from './components/Playlist';
 import SpotifyProfile from './components/SpotifyProfile';
 import { useState } from 'react';
 import { findSongs } from './playlist';
+import * as auth from './auth';
 
 function App() {
   const [list, setList] = useState();
+  const [loggedIn, setLog] = useState();
   
   const handleMsg = async (data) => {
     //change search result count (5) to a user input value later
     setList(await findSongs(data, 5));
+  }
+
+  const handleLogin = async (data) => {
+    console.log("handleLogin");
+    await setLog(await auth.signIn(data));
   }
 
   return (
@@ -26,7 +33,7 @@ function App() {
 
           {/* Right column */}
           <div className="spotify-stuff p-4 col-12 col-md">
-            <SpotifyProfile />
+            <SpotifyProfile handleLogin={handleLogin}/>
             <Playlist list={list}/>
           </div>
 
