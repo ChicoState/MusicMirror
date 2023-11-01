@@ -25,7 +25,9 @@ class SongDetailsModal extends React.Component{
 
     /* Make sure the trackIndex resets for each song */
     if (prevProps.song !== this.props.song) {
-      this.setState({song: this.props.song, trackIndex: 0});
+      this.setState({song: this.props.song, trackIndex: 0}, () => {
+        console.log("MODAL STATE UPDATE COMPLETE {song: this.props.song, trackIndex: 0}");
+      });
     }
   }
 
@@ -41,16 +43,14 @@ class SongDetailsModal extends React.Component{
 
   /* Updates the search bar value */
   handleChange = event => {
-    this.setState({message: event.target.value});
+    this.setState({message: event.target.value}, () => {
+      console.log("MODAL STATE UPDATE COMPLETE {message: event.target.value}")
+    });
   };
 
 
   /* Updates the track selection */
   handleConfirm = () => {
-    if (!this.state.song) {
-      this.setState({song: this.props.song});
-    }
-
     if (this.state.trackIndex !== 0) {
       let updatedSong = this.state.song;
       let chosenTrack = updatedSong.tracks[this.state.trackIndex];
@@ -59,7 +59,9 @@ class SongDetailsModal extends React.Component{
         ...updatedSong.tracks.slice(0, this.state.trackIndex),
         ...updatedSong.tracks.slice(this.state.trackIndex + 1)
       ];
-      this.setState({song: updatedSong});
+      this.setState({song: updatedSong}, () => {
+        console.log("MODAL STATE UPDATE COMPLETE, TRACK CONFIRMED {song: updatedSong}");
+      });
     } 
     this.props.updatePlaylist(this.state.song);
   };
@@ -79,10 +81,14 @@ class SongDetailsModal extends React.Component{
     const newList = await findSongs(this.state.message, 5);
     if (newList.songs) {
       console.log("search successful");
-      this.setState({song: newList.songs[0], trackIndex: 0});
+      this.setState({song: newList.songs[0], trackIndex: 0}, () => {
+        console.log("MODAL STATE UPDATE COMPLETE, SEARCH SUCCESSFUL {song: newList.songs[0], trackIndex: 0}");
+      });
     } else {
       console.log("could not perform search");
-      this.setState({trackIndex: 0});
+      this.setState({trackIndex: 0}, () => {
+        console.log("MODAL STATE UPDATE COMPLETE, SEARCH NOT SUCCESSFUL {trackIndex: 0}");
+      });
     }
   };
 
@@ -91,15 +97,25 @@ class SongDetailsModal extends React.Component{
   handleTrackIter = (index) => {
     if (index === "next" && 
         this.state.trackIndex === this.props.song.tracks.length-1) {
-      this.setState({trackIndex: 0});
+      this.setState({trackIndex: 0}, () => {
+        console.log("TRACKITER STATE UPDATE COMPLETE {trackIndex: 0}");
+      });
     } else if (index === "next") {
-      this.setState({trackIndex: this.state.trackIndex+1});
+      this.setState({trackIndex: this.state.trackIndex+1}, () => {
+        console.log("TRACKITER STATE UPDATE COMPLETE {trackIndex: this.state.trackIndex+1}");
+      });
     } else if (index === "prev" && this.state.trackIndex === 0) {
-      this.setState({trackIndex: this.props.song.tracks.length-1});
+      this.setState({trackIndex: this.props.song.tracks.length-1}, () => {
+        console.log("TRACKITER STATE UPDATE COMPLETE {trackIndex: this.props.song.tracks.length-1}");
+      });
     } else if (index === "prev") {
-      this.setState({trackIndex: this.state.trackIndex-1});
+      this.setState({trackIndex: this.state.trackIndex-1}, () => {
+        console.log("TRACKITER STATE UPDATE COMPLETE {trackIndex: this.state.trackIndex-1}");
+      });
     } else {
-      this.setState({trackIndex: index});
+      this.setState({trackIndex: index}, () => {
+        console.log("TRACKITER STATE UPDATE COMPLETE {trackIndex: index}");
+      });
     }
   }
 
@@ -133,7 +149,9 @@ class SongDetailsModal extends React.Component{
                 slide.classList.remove("active");
               }
             });
-            this.setState({message: "", song: this.props.song, trackIndex: 0});
+            this.setState({message: "", song: this.props.song, trackIndex: 0}, () => {
+              console.log('MUTATION OBSERVER STATE UPDATE COMPLETE {message: "", song: this.props.song, trackIndex: 0}');
+            });
           }
         }
       });
@@ -150,7 +168,6 @@ class SongDetailsModal extends React.Component{
   render() {
 
     if (!this.state.song || Object.keys(this.state.song).length === 0) {
-      this.setState({song: this.props.song});
       return (
         <div 
           id="song-details" 

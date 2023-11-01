@@ -19,7 +19,9 @@ class Playlist extends React.Component{
 
   handleBlur = () => {
     console.log("handleBlur");
-    this.setState({ isEditing: false });
+    this.setState({ isEditing: false }, () => {
+      console.log("PLAYLIST STATE UPDATE COMPLETE { isEditing: false }");
+    });
     // Call a function passed as a prop to update the list title
     this.onTitleChange(this.state.currentTitle);
   };
@@ -27,15 +29,17 @@ class Playlist extends React.Component{
 
   handleChange = (e) => {
     console.log("handleChange");
-    this.setState({ currentTitle: e.target.value });
+    this.setState({ currentTitle: e.target.value }, () => {
+      console.log("PLAYLIST STATE UPDATE COMPLETE { currentTitle: e.target.value }");
+    });
   };
 
 
   handleDoubleClick = (two) => {
     console.log("handleDoubleClick");
-    if (two === 2) {
+    if (!this.state.isEditing) {
       this.setState({ isEditing: true }, () => {
-        console.log("Now editing!");
+        console.log("PLAYLIST STATE UPDATE COMPLETE {isEditing: true}");
       });
     }
   };
@@ -43,7 +47,9 @@ class Playlist extends React.Component{
 
   /* Note which song card was clicked on */
   handleSongSelection = (song, index) => {
-    this.setState({selectedSong: song, selectedIndex: index});
+    this.setState({selectedSong: song, selectedIndex: index}, () => {
+      console.log("PLAYLIST STATE UPDATE COMPLETE {electedSong: song, selectedIndex: index}");
+    });
     console.log(`selected song: ${song.tracks[0].title}`);
   };
 
@@ -52,8 +58,9 @@ class Playlist extends React.Component{
     console.log("onTitleChange");
     const newList = {...this.state.playlist};
     newList.title = this.state.currentTitle;
-    this.setState({playlist: newList});
-    console.log("Title has been changed!");
+    this.setState({playlist: newList}, () => {
+      console.log("PLAYLIST STATE UPDATE COMPLETE {playlist: newList}");
+    });
     // this.props.list.title = newTitle;
   };
 
@@ -67,14 +74,18 @@ class Playlist extends React.Component{
       newList.songs = newList.songs.filter((song, index) => 
         index !== this.state.selectedIndex
       );
-      this.setState({playlist: newList});
+      this.setState({playlist: newList}, () => {
+        console.log("STATE UPDATE COMPLETE, REMOVED SONG {playlist: newList}");
+      });
       console.log("REMOVED LIST ITEM");
       console.log(newList);
 
     /* If passed a song, replace the currently selected song */
     } else {
       newList.songs[this.state.selectedIndex] = updatedSong;
-      this.setState({playlist: newList, selectedSong: updatedSong});
+      this.setState({playlist: newList, selectedSong: updatedSong}, () => {
+        console.log("STATE UPDATE COMPLETE, CHANGED SONG {playlist: newList, selectedSong: updatedSong}");
+      });
     }
   };
 
@@ -89,7 +100,9 @@ class Playlist extends React.Component{
         this.state.playlist &&
         this.props.search === this.state.search) {
       console.log("New search, updating state!");
-      this.setState({playlist: this.props.list, search: this.props.search+1});
+      this.setState({playlist: this.props.list, search: this.props.search+1}, () => {
+        console.log("PLAYLIST STATE UPDATE COMPLETE {playlist: this.props.list, search: this.props.search+1}")
+      });
     }
 
       
@@ -111,17 +124,25 @@ class Playlist extends React.Component{
         Object.keys(this.state.playlist).length > 0) {
       return (
         <div className="Playlist mt-3">
-          <h1 className="d-flex justify-content-between align-items-center">
-            {/* {this.state.isEditing ? 
-            (<input type="text" value={this.state.currentTitle} onChange={this.handleChange} onBlur={this.handleBlur} autoFocus/>) : 
-            (<span className="d-flex justify-content-between" onDoubleClick={this.handleDoubleClick}>{this.state.currentTitle}</span>)} */}
-            {this.state.currentTitle}
-            {/* Pencil icon: If we get the commented code above to work,
-            this should be moved inside the span. */}
-            <svg className="bi bi-pencil-square" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-              <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-              <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
-            </svg>
+          <h1>
+            {this.state.isEditing ? 
+            (<input 
+              type="text" 
+              value={this.state.currentTitle} 
+              onChange={this.handleChange} 
+              onBlur={this.handleBlur} 
+              autoFocus
+            />) : 
+            (<span 
+              className="d-flex justify-content-between align-items-center" 
+              onDoubleClick={this.handleDoubleClick}
+            >
+              {this.state.currentTitle}
+              <svg className="bi bi-pencil-square" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+              </svg>
+            </span>)}
           </h1>
 
           {/* List of song cards */}

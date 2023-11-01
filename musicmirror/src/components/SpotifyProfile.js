@@ -13,7 +13,9 @@ class SpotifyProfile extends React.Component {
 
   handleAuth = async() => {
     auth.checkCode();
-    this.setState({connected: true});
+    this.setState({connected: true}, () => {
+      console.log("SPOTIFY STATE UPDATE COMPLETE {connected: true}");
+    });
   }
 
   /*--------------------------------------------------------------------------*/
