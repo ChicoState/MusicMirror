@@ -1,4 +1,4 @@
-/* @import "~bootstrap/dist/css/bootstrap.min.css"; */
+/* cursor: "wait" or cursor: "progress" might be useful later */
 
 /*--- App Styling ------------------------------------------------------------*/
 
@@ -97,8 +97,18 @@
   color: #bbbbbb;
 }
 
+.list-title {
+  transition: color 0.25s;
+}
+
+.list-title:hover {
+  color: #ffffff;
+  cursor: text;
+}
+
 .bi-pencil-square {
-  color: white;
+  color: #ffffff;
+  font-size: calc(0.9rem + 0.9vw);
 }
 
 .song-card {
@@ -150,7 +160,7 @@
 
 .confirm-button, .remove-button {
   border: none;
-  transition: background-color 0.5s;
+  transition: background-color 0.4s;
 }
 
 .confirm-button:hover {
