@@ -15,6 +15,22 @@ class Playlist extends React.Component{
     };
   }
 
+  /*--- COMPONENT LIFECYCLE FUNCTIONS ----------------------------------------*/
+
+  componentDidUpdate() {
+
+    /* Update state.playlist if a new search occurred. */
+    if (this.props.list &&
+        this.state.playlist &&
+        this.props.search === this.state.search) {
+
+      console.log("New search, updating state!");
+      this.setState({playlist: this.props.list, search: this.props.search+1}, () => {
+        console.log("PLAYLIST STATE UPDATE COMPLETE {playlist: this.props.list, search: this.props.search+1}")
+      });
+    }
+  }
+
   /*--- HANDLERS -------------------------------------------------------------*/
 
   handleBlur = () => {
@@ -61,7 +77,6 @@ class Playlist extends React.Component{
     this.setState({playlist: newList}, () => {
       console.log("PLAYLIST STATE UPDATE COMPLETE {playlist: newList}");
     });
-    // this.props.list.title = newTitle;
   };
 
 
@@ -74,7 +89,7 @@ class Playlist extends React.Component{
       newList.songs = newList.songs.filter((song, index) => 
         index !== this.state.selectedIndex
       );
-      this.setState({playlist: newList}, () => {
+      this.setState({playlist: newList, selectedIndex: null}, () => {
         console.log("STATE UPDATE COMPLETE, REMOVED SONG {playlist: newList}");
       });
       console.log("REMOVED LIST ITEM");
@@ -92,19 +107,6 @@ class Playlist extends React.Component{
   /*--------------------------------------------------------------------------*/
 
   render() {
-
-    /* Update state.playlist if a new search occurred.
-    This should technically be handled in componentDidUpdate(), but for the
-    life of me I couldn't get it to work without spawning an infinite loop. */
-    if (this.props.list &&
-        this.state.playlist &&
-        this.props.search === this.state.search) {
-      console.log("New search, updating state!");
-      this.setState({playlist: this.props.list, search: this.props.search+1}, () => {
-        console.log("PLAYLIST STATE UPDATE COMPLETE {playlist: this.props.list, search: this.props.search+1}")
-      });
-    }
-
       
     /* If there are no songs to display, instruct users to add songs */
     if (!this.props.list || 

@@ -67,9 +67,13 @@ class SongDetailsModal extends React.Component{
   };
 
 
-  /* If the enter key is pressed inside the searchbox, perform a search */
-  handleKeyDown = event => {
+  /* If the enter key is pressed inside the searchbox, 
+  return to the first carousel slide and perform a search */
+  handleKeyDown = (event) => {
     if (event.key === "Enter") {
+      event.target.setAttribute("data-bs-target", "#details-carousel");
+      event.target.click();
+      event.target.setAttribute("data-bs-target", "");
       this.handleSearch();
     }
   }
@@ -204,6 +208,9 @@ class SongDetailsModal extends React.Component{
                     aria-label="refine search" 
                     placeholder={this.props.song.query} 
                     value={this.state.message} 
+                    // data-bs-target="#details-carousel" 
+                    data-bs-target="" 
+                    data-bs-slide-to="0"
                     onChange={this.handleChange} 
                     onKeyDown={this.handleKeyDown}
                   />
