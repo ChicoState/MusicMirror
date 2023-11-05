@@ -28,7 +28,9 @@ export async function signIn(loggedIn){
     if(code){
         console.log("In logged in");
         const accessToken = await getAccessToken(clientId, code);
-        localStorage.setItem("token", accessToken);
+        if(!localStorage.getItem("token")){
+            localStorage.setItem("token", accessToken);
+        }
         // console.log("we out");
         const profile = await fetchProfile(accessToken);
         populateUI(profile);
@@ -41,7 +43,9 @@ export async function redirectToAuthCodeFlow(clientId) {
     const verifier = generateCodeVerifier(128);
     const challenge = await generateCodeChallenge(verifier);
     
-    localStorage.setItem("verifier", verifier);
+    if(!localStorage.getItem("verifier")){
+        localStorage.setItem("verifier", verifier);
+    }
 
     const params = new URLSearchParams();
     params.append("client_id", clientId);
@@ -103,7 +107,9 @@ export async function fetchProfile(token) {
         method: "GET", headers: { Authorization: `Bearer ${token}` }
     });
     let res = await result.json();
-    localStorage.setItem("user_id", res.id);
+    if(!localStorage.getItem("user_id")){
+        localStorage.setItem("user_id", res.id);
+    }
     return res;
 }
 
