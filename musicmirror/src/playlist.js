@@ -53,7 +53,8 @@ export async function findSongs(input, resCount){
     return playlist;
 }
 
-export async function genPlaylist(list){
+export async function genPlaylist(list) {
+    console.log(list);
     const user_id = localStorage.getItem("user_id");
     const token = localStorage.getItem("token");
     // if list size > 0, create playlist (api req)
@@ -66,11 +67,15 @@ export async function genPlaylist(list){
         });
         let obj = await resp.json();
         let p_id = obj.id;
+        let uris = [];
+        for (let i in list.songs) {
+            uris.push(list.songs[i].tracks[0].uri);
+        }
 
         // Iterate through list of matches and add each song to the playlist (api req)
         resp = await fetch("https://api.spotify.com/v1/playlists/" + p_id + "/tracks", {
             method: "POST",
-            body: JSON.stringify({uris: list.uris}),
+            body: JSON.stringify({uris}),
             headers: { Authorization: `Bearer ${token}` }
         }).then((response) => response.json())
         .then((json) => console.log(json));

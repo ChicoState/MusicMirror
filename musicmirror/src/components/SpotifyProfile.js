@@ -1,6 +1,5 @@
-import * as auth from '../auth';
-import '../styles/SpotifyProfile.css';
-import React from 'react';
+import * as auth from "../auth";
+import React from "react";
 
 class SpotifyProfile extends React.Component {
   constructor() {
@@ -8,6 +7,7 @@ class SpotifyProfile extends React.Component {
     const loggedIn = localStorage.getItem("loggedIn") === "true";
     this.state = {
       loggedIn: loggedIn,
+      connected: false,
       //loggedIn: false,
     }
   }
@@ -26,6 +26,17 @@ class SpotifyProfile extends React.Component {
     });
     */
   };
+
+  /*--- HANDLERS -------------------------------------------------------------*/
+
+  handleAuth = async() => {
+    auth.checkCode();
+    this.setState({connected: true}, () => {
+      console.log("SPOTIFY STATE UPDATE COMPLETE {connected: true}");
+    });
+  }
+
+  /*--------------------------------------------------------------------------*/
 
   render() {
     if(!this.state.loggedIn){
@@ -53,19 +64,3 @@ class SpotifyProfile extends React.Component {
 }
 
 export default SpotifyProfile;
-
-/*
-export function SpotifyProfile() {
-  return (
-    <section id="profile">
-      <h3 className="d-flex justify-content-center">Logged into Spotify as&nbsp;<div id="displayName"></div></h3>
-      <ul>
-        <li className="d-flex justify-content-between">User ID:&nbsp;<div id="id" className="profile-info"></div></li>
-        <li className="d-flex justify-content-between">Email:&nbsp;<div id="email" className="profile-info"></div></li>
-        //{ <li className="d-flex justify-content-between">Profile Image:&nbsp;<div id="imgUrl"></div></li> }
-      </ul>
-      <button className="btn btn-secondary" onClick={auth.checkCode}>Sign in to Spotify</button>
-    </section>
-  );
-}
-*/

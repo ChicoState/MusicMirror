@@ -1,30 +1,193 @@
+/* cursor: "wait" or cursor: "progress" might be useful later */
+
+/*--- App Styling ------------------------------------------------------------*/
+
 .App {
-  text-align: center;
-  background-color: #282c34;
+  width: 100vw;
+  /* If we use this image, we need to put this citation in our page footer: <a href="https://www.freepik.com/free-vector/sound-wave-equalizer-vector-design_3439283.htm#query=music%20texture&position=8&from_view=keyword&track=ais">Image by rawpixel.com</a> on Freepik */
+  /* background-image: url("~/public/images/soundbackground.jpg"); */
+  background-color: #666666;
+  background-position: center;
+  background-size: cover;
 }
 
 .App-header {
-  min-height: 15vh;
+  height: 15vh;
+  width: 100%;
   margin: 0;
   font-size: calc(10px + 2vmin);
+  text-align: center;
   color: white;
-  background-color: #111111;
+  background-color: rgba(20, 20, 20, 1);
+  box-shadow: 2px 2px 10px #ffffff;
 }
 
 .App-main {
-  min-height: 80vh;
-  min-width: 100vw;
+  height: 80vh;
+  width: 100%;
   font-size: calc(10px + 1vmin);
   color: #61dafb;
+  background-color: rgba(0, 0, 0, 0.5);
+  overflow-y: scroll;
 }
 
 .App-footer {
-  min-height: 5vh;
-  background-color: #111111;
+  height: 5vh;
+  width: 100%;
+  background-color: rgba(20, 20, 20, 1);
+  box-shadow: -2px -2px 10px #ffffff;
 }
 
-.spotify-stuff {
-  background-color: rgba(255, 255, 255, 0.05);
+/* Used to modify the wrapper, which contains the windows */
+.main-wrapper {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.tab-window {
+  height: 100%;
+  background-color: rgba(20, 20, 20, 0.90);
   border-radius: 5px;
-  box-shadow: 2px 2px 10px #111111;
+  box-shadow: 2px 2px 10px #000000;
+}
+
+/* Tab (the actual tab bit at the top) */
+/* .nav-tabs {} */
+
+/* Tab label */
+/* .nav-link {
+  color: #003d4c;
+  transition: color 0.25s;
+}
+
+.nav-link:hover {
+  color: #004f63;
+} */
+
+/* Tab body */
+.tab {
+  height: 100%;
+  border: none;
+}
+
+.tab-body {
+  height: 45vh;
+  border: 1px solid white;
+  border-radius: 0 0 5px 5px;
+  overflow-y: scroll;
+}
+
+/*--- AddSongs Styling -------------------------------------------------------*/
+
+
+
+/*--- Playlist Styling -------------------------------------------------------*/
+
+.Playlist h1 {
+  font-size: calc(0.9rem + 0.9vw);
+}
+
+.Playlist h2 {
+  color: #ffffff;
+  font-size: calc(0.7rem + 0.7vw);
+}
+
+.Playlist p {
+  color: #bbbbbb;
+}
+
+.list-title {
+  transition: color 0.25s;
+}
+
+.list-title:hover {
+  color: #ffffff;
+  cursor: text;
+}
+
+.bi-pencil-square {
+  color: #ffffff;
+  font-size: calc(0.9rem + 0.9vw);
+}
+
+.song-card {
+  text-align: left;
+  background-color: #003d4c;
+  transition: background-color 0.25s;
+}
+
+.song-card:hover {
+  background-color: #004f63;
+}
+
+/*--- SongDetailsModal Styling -----------------------------------------------*/
+
+.modal-header, .modal-footer {
+  background-color: #002f43;
+}
+
+.modal-body {
+  background-color: #004f63;
+}
+
+.input-group-text {
+  text-align: left;
+}
+
+.btn-close {
+  color: hotpink;
+}
+
+.details-header h1 {
+  color: #ffffff;
+  font-size: calc(0.8rem + 0.8vw);
+}
+
+.details-header p {
+  font-size: calc(0.8rem + 0.8vw);
+}
+
+.modal-body p {
+  margin-bottom: 0;
+  text-align: left;
+}
+
+.carousel-item {
+  height: 30vh;
+  padding: 5% 15%;
+}
+
+.confirm-button, .remove-button {
+  border: none;
+  transition: background-color 0.4s;
+}
+
+.confirm-button:hover {
+  background-color: #3ea315;
+}
+
+.remove-button:hover {
+  background-color: #e24005;
+}
+
+/*--- Spotify Styling --------------------------------------------------------*/
+
+.SpotifyProfile {
+  border-bottom: 1px solid #ffffff;
+}
+
+.profile-info {
+  color: limegreen;
+}
+
+.SpotifyProfile ul {
+  padding-left: 0;
+  list-style: none inside;
+}
+
+/*--- YouTube Music Styling --------------------------------------------------*/
+
+.YouTube {
+  border-bottom: 1px solid #ffffff;
 }
