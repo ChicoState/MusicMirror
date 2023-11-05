@@ -1,38 +1,89 @@
-import './styles/App.css';
-import AddSongs from './components/AddSongs';
-import Playlist from './components/Playlist';
-import SpotifyProfile from './components/SpotifyProfile';
-import { useState } from 'react';
-import { findSongs } from './playlist';
+import "./styles/App.css";
+import AddSongs from "./components/AddSongs";
+import SpotifyProfile from "./components/SpotifyProfile";
+import YouTube from "./components/YouTube";
+import Playlist from "./components/Playlist";
+import { useState } from "react";
+import { findSongs } from "./playlist";
+import {Tabs, Tab} from "react-bootstrap";
 
 function App() {
   const [list, setList] = useState();
+  const [search, setSearch] = useState(0);
   
   const handleMsg = async (data) => {
+    console.log(`Searching! This is search number ${search+1}.`)
     //change search result count (5) to a user input value later
     setList(await findSongs(data, 5));
+    setSearch(search+1);
   }
 
   return (
     <div className="App">
+
+      {/* Page header */}
       <header className="App-header d-flex justify-content-center align-items-center">
         <h1>MusicMirror</h1>        
       </header>
-      <main className="App-main mx-0 px-5 py-4 container">
-        <div className="row grid gap-5">
+      {/* End of page header */}
 
-          {/* Left column */}
-          <AddSongs handleMsg={handleMsg}/>
-
-          {/* Right column */}
-          <div className="spotify-stuff p-4 col-12 col-md">
-            <SpotifyProfile />
-            <Playlist list={list}/>
+      {/* Page body */}
+      <div className="main-wrapper">
+        {/* Wrapper to help with columns */}
+        <div className="App-main mx-0 p-5 row grid gap-5">
+          
+          {/* Start of the first window */}
+          <div className="tab-window p-3 col-12 col-md">
+            <h2 className="mb-3">Your Playlists:</h2>
+            <Tabs defaultAct="addSongs" id="tab" justify>
+              <Tab tabClassName="tab tab-addsongs" eventKey={"add Songs"} title="New">
+                <div className="tab-body p-3 d-flex flex-column">
+                  <AddSongs handleMsg={handleMsg}/>
+                </div>
+              </Tab>
+              <Tab tabClassName="tab tab-spotify" eventKey={"spotify"} title="Spotify">
+                <div className="tab-body p-3">
+                  <SpotifyProfile />
+                </div> 
+              </Tab>
+              <Tab tabClassName="tab tab-youtube" eventKey={"youtube"} title="YT Music">
+                <div className="tab-body p-3">
+                  <YouTube />
+                </div> 
+              </Tab>
+            </Tabs>
+          </div> 
+          {/* End of the first window */}
+          
+          {/* Start of the second window */}
+          <div className="tab-window p-3 col-12 col-md">
+            <h2 className="mb-3">Preview:</h2>
+            <Tabs defaultAct="addSongs" id="tab" justify>
+              <Tab tabClassName="tab tab-spotify" eventKey={"spotify"} title="Spotify">
+                <div className="tab-body p-3">
+                  <SpotifyProfile />
+                  <Playlist list={list} search={search}/>
+                </div> 
+              </Tab>
+              <Tab tabClassName="tab tab-youtube" eventKey={"youtube"} title="YT Music">
+                <div className="tab-body p-3">
+                  <YouTube />
+                  <Playlist list={list} search={search}/>
+                </div> 
+              </Tab>
+            </Tabs>
           </div>
+          {/*End of the second window */}
 
         </div>
-      </main>
+        {/* End of column wrapper */}
+      </div>
+      {/* End of page body */}
+
+      {/* Page footer */}
       <footer className="App-footer"></footer>
+      {/* End of page footer */}
+
     </div>
   );
 }

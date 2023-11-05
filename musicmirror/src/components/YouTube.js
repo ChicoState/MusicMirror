@@ -1,7 +1,6 @@
-import * as auth from "../auth";
 import React from "react";
 
-class SpotifyProfile extends React.Component {
+class YouTube extends React.Component {
   constructor(){
     super();
     this.state = {
@@ -12,10 +11,9 @@ class SpotifyProfile extends React.Component {
   /*--- HANDLERS -------------------------------------------------------------*/
 
   handleAuth = async() => {
-    auth.checkCode();
-    this.setState({connected: true}, () => {
-      console.log("SPOTIFY STATE UPDATE COMPLETE {connected: true}");
-    });
+    // auth.checkCode();
+    // this.setState({connected: true});
+    console.log("calling YouTube handleAuth");
   }
 
   /*--------------------------------------------------------------------------*/
@@ -24,12 +22,12 @@ class SpotifyProfile extends React.Component {
 
     if (!this.state.connected) {
       return (
-        <div className="SpotifyProfile">
+        <div className="YouTube">
           <h3 className="">
-            Looks like you haven't connected to Spotify yet. Please Sign In.
+            Looks like you haven't connected to YouTube Music yet. Please Sign In.
           </h3>
           <button className="my-3 btn btn-secondary" onClick={this.handleAuth}>
-            Sign in with Spotify!
+            Sign in with YouTube Music!
           </button>
         </div>
       )
@@ -37,8 +35,8 @@ class SpotifyProfile extends React.Component {
 
     else {
       return (
-        <div className="SpotifyProfile">
-          <h3 className="">Spotify Connected!</h3>
+        <div className="YouTube">
+          <h3 className="">YouTube Music Connected!</h3>
           <ul>
             <li className="d-flex justify-content-between">
               Username:&nbsp;
@@ -60,4 +58,4 @@ class SpotifyProfile extends React.Component {
   }
 }
 
-export default SpotifyProfile;
+export default YouTube;
