@@ -24,7 +24,7 @@ class YouTube extends React.Component {
       return (
         <div className="YouTube">
           <h3 className="">
-            Looks like you haven't connected to YouTube Music yet. Please Sign In.
+            Looks like you haven't connected to YouTube Music yet. Please sign in.
           </h3>
           <button className="my-3 btn btn-secondary" onClick={this.handleAuth}>
             Sign in with YouTube Music!
