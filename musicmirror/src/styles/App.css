@@ -78,10 +78,6 @@
   overflow-y: scroll;
 }
 
-button {
-  width: 100%;
-}
-
 /*--- AddSongs Styling -------------------------------------------------------*/
 
 
@@ -162,10 +158,6 @@ button {
   padding: 5% 15%;
 }
 
-.modal-footer button {
-  width: auto;
-}
-
 .confirm-button, .remove-button {
   border: none;
   transition: background-color 0.4s;
@@ -185,17 +177,14 @@ button {
   border-bottom: 1px solid #ffffff;
 }
 
-.profile-info, .logged-in {
+.profile-info {
   color: limegreen;
 }
-
-/* Used for profile info, if it gets added again
 
 .SpotifyProfile ul {
   padding-left: 0;
   list-style: none inside;
-} 
-*/
+}
 
 /*--- YouTube Music Styling --------------------------------------------------*/
 
