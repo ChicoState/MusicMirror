@@ -6,16 +6,23 @@ import Playlist from "./components/Playlist";
 import { useState } from "react";
 import { findSongs } from "./playlist";
 import {Tabs, Tab} from "react-bootstrap";
+import * as auth from './auth';
 
 function App() {
   const [list, setList] = useState();
   const [search, setSearch] = useState(0);
+  const [loggedIn, setLog] = useState();
   
   const handleMsg = async (data) => {
     console.log(`Searching! This is search number ${search+1}.`)
     //change search result count (5) to a user input value later
     setList(await findSongs(data, 5));
     setSearch(search+1);
+  }
+
+  const handleLogin = async (data) => {
+    console.log("handleLogin");
+    await setLog(await auth.signIn(data));
   }
 
   return (
@@ -43,7 +50,7 @@ function App() {
               </Tab>
               <Tab tabClassName="tab tab-spotify" eventKey={"spotify"} title="Spotify">
                 <div className="tab-body p-3">
-                  <SpotifyProfile />
+                  <SpotifyProfile handleLogin={handleLogin}/>
                 </div> 
               </Tab>
               <Tab tabClassName="tab tab-youtube" eventKey={"youtube"} title="YT Music">
@@ -61,7 +68,7 @@ function App() {
             <Tabs defaultAct="addSongs" id="tab" justify>
               <Tab tabClassName="tab tab-spotify" eventKey={"spotify"} title="Spotify">
                 <div className="tab-body p-3">
-                  <SpotifyProfile />
+                  <SpotifyProfile handleLogin={handleLogin}/>
                   <Playlist list={list} search={search}/>
                 </div> 
               </Tab>
