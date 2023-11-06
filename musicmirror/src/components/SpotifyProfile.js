@@ -41,22 +41,22 @@ class SpotifyProfile extends React.Component {
   render() {
     if(!this.state.loggedIn){
       return (
-        <section id="profile" className="SpotifyProfile">
-        <h3>Looks like you haven't connected to Spotify yet. Please sign in.</h3>
+        <section id="profile">
+        <h3 className="d-flex justify-content-center">Log into Spotify&nbsp;<div id="displayName"></div></h3>
         {/*
         <ul>
           <li className="d-flex justify-content-between">User ID:&nbsp;<div id="id" className="profile-info"></div></li>
           <li className="d-flex justify-content-between">Email:&nbsp;<div id="email" className="profile-info"></div></li>
            <li className="d-flex justify-content-between">Profile Image:&nbsp;<div id="imgUrl"></div></li>
         </ul>*/}
-        <button className="my-3 btn btn-secondary" onClick={this.handleChange}>Sign in with Spotify!</button>
+        <button className="btn btn-secondary" onClick={this.handleChange}>Sign In</button>
       </section>
       );
     }else{
       return (
-        <section id="profile" className="SpotifyProfile">
-        <h3 className="logged-in">Spotify Connected!</h3>
-        <button className="my-3 btn btn-secondary" onClick={auth.signOut}>Sign out</button>
+        <section id="profile">
+        <h3 className="d-flex justify-content-center">Logged into Spotify&nbsp;<div id="displayName"></div></h3>
+        <button className="btn btn-secondary" onClick={auth.signOut}>Sign out</button>
       </section>
       );
     }
