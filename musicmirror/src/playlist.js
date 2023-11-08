@@ -95,3 +95,11 @@ export async function getPlaylists() {
     console.log(obj);
     return obj;
 }
+
+export async function searchPlaylists(query) {
+    url = "https://api.spotify.com/v1/search/?q=" + query.replace(' ', '+') + "&type=playlist";
+    let resp = await fetch(url, {
+        method: "GET", headers: { Authorization: `Bearer ${token}` }
+    });
+    return await resp.json();
+}
