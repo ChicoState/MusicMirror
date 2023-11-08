@@ -93,4 +93,5 @@ export async function getPlaylists() {
     let obj = await resp.json();
 
     console.log(obj);
+    return obj;
 }
