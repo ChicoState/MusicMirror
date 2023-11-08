@@ -97,7 +97,9 @@ export async function getPlaylists() {
 }
 
 export async function searchPlaylists(query) {
-    url = "https://api.spotify.com/v1/search/?q=" + query.replace(' ', '+') + "&type=playlist";
+    const token = localStorage.getItem("token");
+
+    let url = "https://api.spotify.com/v1/search/?q=" + query.replace(' ', '+') + "&type=playlist";
     let resp = await fetch(url, {
         method: "GET", headers: { Authorization: `Bearer ${token}` }
     });
