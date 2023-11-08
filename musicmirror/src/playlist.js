@@ -81,3 +81,16 @@ export async function genPlaylist(list) {
         .then((json) => console.log(json));
     }
 }
+
+export async function getPlaylists() {
+    const user_id = localStorage.getItem("user_id");
+    const token = localStorage.getItem("token");
+
+    let resp = await fetch("https://api.spotify.com/v1/users/" + user_id + "/playlists", {
+        method: "GET",
+        headers: { Authorization: `Bearer ${token}` }
+    });
+    let obj = await resp.json();
+
+    console.log(obj);
+}

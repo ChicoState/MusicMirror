@@ -1,3 +1,5 @@
+import { getPlaylists } from "./playlist";
+
 const clientId = "950b5e4bacb54dc1ad9c2ce70e2a4d48";
 const params = new URLSearchParams(window.location.search);
 const code = params.get("code");
@@ -36,6 +38,8 @@ export async function signIn(loggedIn){
         populateUI(profile);
         console.log("PopulatedUI");
         hasCode = true;
+
+        getPlaylists();
     }
 }
 
