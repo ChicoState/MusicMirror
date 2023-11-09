@@ -1,5 +1,6 @@
 import "./styles/App.css";
 import AddSongs from "./components/AddSongs";
+import SavedPlaylists from "./components/SavedPlaylists";
 import SpotifyProfile from "./components/SpotifyProfile";
 import YouTube from "./components/YouTube";
 import Playlist from "./components/Playlist";
@@ -12,6 +13,7 @@ function App() {
   const [list, setList] = useState();
   const [search, setSearch] = useState(0);
   const [loggedIn, setLog] = useState();
+  const [spotifyConnection, setSpotifyConnection] = useState(false);
   
   const handleMsg = async (data) => {
     console.log(`Searching! This is search number ${search+1}.`)
@@ -23,6 +25,7 @@ function App() {
   const handleLogin = async (data) => {
     console.log("handleLogin");
     await setLog(await auth.signIn(data));
+    setSpotifyConnection(true);
   }
 
   return (
@@ -48,14 +51,21 @@ function App() {
                   <AddSongs handleMsg={handleMsg}/>
                 </div>
               </Tab>
+              <Tab tabClassName="tab tab-musicmirror" eventKey={"musicmirror"} title="MusicMirror">
+                <div className="tab-body p-3">
+                  <SavedPlaylists service="musicmirror" connected="false"/>
+                </div> 
+              </Tab>
               <Tab tabClassName="tab tab-spotify" eventKey={"spotify"} title="Spotify">
                 <div className="tab-body p-3">
                   <SpotifyProfile handleLogin={handleLogin}/>
+                  <SavedPlaylists service="spotify" connected={spotifyConnection}/>
                 </div> 
               </Tab>
               <Tab tabClassName="tab tab-youtube" eventKey={"youtube"} title="YT Music">
                 <div className="tab-body p-3">
                   <YouTube />
+                  <SavedPlaylists service="youtube" connected="false"/>
                 </div> 
               </Tab>
             </Tabs>
@@ -66,6 +76,11 @@ function App() {
           <div className="tab-window p-3 col-12 col-md">
             <h2 className="mb-3">Preview:</h2>
             <Tabs defaultAct="addSongs" id="tab" justify>
+              <Tab tabClassName="tab tab-musicmirror" eventKey={"musicmirror"} title="MusicMirror">
+                <div className="tab-body p-3">
+                  <Playlist list={list} search={search}/>
+                </div> 
+              </Tab>
               <Tab tabClassName="tab tab-spotify" eventKey={"spotify"} title="Spotify">
                 <div className="tab-body p-3">
                   <SpotifyProfile handleLogin={handleLogin}/>

@@ -41,7 +41,7 @@ class SpotifyProfile extends React.Component {
   render() {
     if(!this.state.loggedIn){
       return (
-        <section id="profile" className="SpotifyProfile">
+        <section id="profile" className="SpotifyProfile mb-3">
         <h3>Looks like you haven't connected to Spotify yet. Please sign in.</h3>
         {/*
         <ul>
@@ -54,7 +54,7 @@ class SpotifyProfile extends React.Component {
       );
     }else{
       return (
-        <section id="profile" className="SpotifyProfile">
+        <section id="profile" className="SpotifyProfile mb-3">
         <h3 className="logged-in">Spotify Connected!</h3>
         <button className="my-3 btn btn-secondary" onClick={auth.signOut}>Sign out</button>
       </section>

@@ -22,7 +22,7 @@ class YouTube extends React.Component {
 
     if (!this.state.connected) {
       return (
-        <div className="YouTube">
+        <div className="YouTube mb-3">
           <h3 className="">
             Looks like you haven't connected to YouTube Music yet. Please sign in.
           </h3>
@@ -35,7 +35,7 @@ class YouTube extends React.Component {
 
     else {
       return (
-        <div className="YouTube">
+        <div className="YouTube mb-3">
           <h3 className="">YouTube Music Connected!</h3>
           <ul>
             <li className="d-flex justify-content-between">

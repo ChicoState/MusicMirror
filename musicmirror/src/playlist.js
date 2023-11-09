@@ -27,7 +27,8 @@ export async function findSongs(input, resCount){
         }
 
         let res = 0;
-        while(res < resCount && res < Object.keys(obj.tracks.items).length) {
+        // added obj.tracks check to prevent "reading props of undefined" runtime error
+        while(res < resCount && obj.tracks && res < Object.keys(obj.tracks.items).length) {
             let names = "";
             for(let j in obj.tracks.items[res].artists){
                 names += obj.tracks.items[res].artists[j].name + ", ";

@@ -116,7 +116,7 @@ class Playlist extends React.Component{
         this.state.playlist.songs.length === 0)) {
 
       return (
-        <div className="Playlist mt-3">
+        <div className="Playlist">
           <h1>Choose a playlist to preview, or create a new one.</h1>
         </div>
       );
@@ -125,7 +125,7 @@ class Playlist extends React.Component{
     } else if (this.state.playlist && 
         Object.keys(this.state.playlist).length > 0) {
       return (
-        <div className="Playlist mt-3">
+        <div className="Playlist">
           <h1 className="list-title">
             {this.state.isEditing? 
             (<div className="d-flex justify-content-between align-items-center">
