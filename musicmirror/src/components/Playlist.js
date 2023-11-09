@@ -26,7 +26,7 @@ class Playlist extends React.Component{
 
       console.log("New search, updating state!");
       this.setState({playlist: this.props.list, search: this.props.search+1}, () => {
-        console.log("PLAYLIST STATE UPDATE COMPLETE {playlist: this.props.list, search: this.props.search+1}")
+        console.log("PLAYLIST STATE UPDATE COMPLETE: playlist, search")
       });
     }
   }
@@ -36,7 +36,7 @@ class Playlist extends React.Component{
   handleBlur = () => {
     console.log("handleBlur");
     this.setState({ isEditing: false }, () => {
-      console.log("PLAYLIST STATE UPDATE COMPLETE { isEditing: false }");
+      console.log("PLAYLIST STATE UPDATE COMPLETE: isEditing:false");
     });
     // Call a function passed as a prop to update the list title
     this.onTitleChange(this.state.currentTitle);
@@ -46,7 +46,7 @@ class Playlist extends React.Component{
   handleChange = (e) => {
     console.log("handleChange");
     this.setState({ currentTitle: e.target.value }, () => {
-      console.log("PLAYLIST STATE UPDATE COMPLETE { currentTitle: e.target.value }");
+      console.log("PLAYLIST STATE UPDATE COMPLETE: currentTitle");
     });
   };
 
@@ -55,16 +55,22 @@ class Playlist extends React.Component{
     console.log("handleDoubleClick");
     if (!this.state.isEditing) {
       this.setState({ isEditing: true }, () => {
-        console.log("PLAYLIST STATE UPDATE COMPLETE {isEditing: true}");
+        console.log("PLAYLIST STATE UPDATE COMPLETE: isEditing:true");
       });
     }
   };
 
 
+  handleSave = async() => {
+    await genPlaylist(this.state.playlist);
+    this.props.save();
+  }
+
+
   /* Note which song card was clicked on */
   handleSongSelection = (song, index) => {
     this.setState({selectedSong: song, selectedIndex: index}, () => {
-      console.log("PLAYLIST STATE UPDATE COMPLETE {electedSong: song, selectedIndex: index}");
+      console.log("PLAYLIST STATE UPDATE COMPLETE: selectedSong, selectedIndex");
     });
     console.log(`selected song: ${song.tracks[0].title}`);
   };
@@ -75,7 +81,7 @@ class Playlist extends React.Component{
     const newList = {...this.state.playlist};
     newList.title = this.state.currentTitle;
     this.setState({playlist: newList}, () => {
-      console.log("PLAYLIST STATE UPDATE COMPLETE {playlist: newList}");
+      console.log("PLAYLIST STATE UPDATE COMPLETE: playlist");
     });
   };
 
@@ -90,7 +96,7 @@ class Playlist extends React.Component{
         index !== this.state.selectedIndex
       );
       this.setState({playlist: newList, selectedIndex: null}, () => {
-        console.log("STATE UPDATE COMPLETE, REMOVED SONG {playlist: newList}");
+        console.log("STATE UPDATE COMPLETE, REMOVED SONG");
       });
       console.log("REMOVED LIST ITEM");
       console.log(newList);
@@ -99,7 +105,7 @@ class Playlist extends React.Component{
     } else {
       newList.songs[this.state.selectedIndex] = updatedSong;
       this.setState({playlist: newList, selectedSong: updatedSong}, () => {
-        console.log("STATE UPDATE COMPLETE, CHANGED SONG {playlist: newList, selectedSong: updatedSong}");
+        console.log("STATE UPDATE COMPLETE, CHANGED SONG");
       });
     }
   };
@@ -189,9 +195,9 @@ class Playlist extends React.Component{
           {/* Upload the playlist to Spotify */}
           <button 
             className="mt-3 btn btn-secondary" 
-            onClick={() => genPlaylist(this.state.playlist)}
+            onClick={this.handleSave}
           >
-            Confirm Playlist
+            Save Playlist
           </button>
         </div>
       );

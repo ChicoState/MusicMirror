@@ -14,22 +14,58 @@ class SavedPlaylists extends React.Component{
   /*--- COMPONENT LIFECYCLE FUNCTIONS ----------------------------------------*/
 
   componentDidMount() {
-    if (this.props.service === "musicmirror" && this.props.connected && Object.keys(this.state.MusicMirrorLists).length === 0) {
+    if (this.props.service === "musicmirror" && 
+        this.props.connected && 
+        Object.keys(this.state.MusicMirrorLists).length === 0) {
+
       this.getMusicMirrorLists();
-    } else if (this.props.service === "spotify" && this.props.connected && Object.keys(this.state.SpotifyLists).length === 0) {
+
+    } else if (this.props.service === "spotify" && 
+        this.props.connected && 
+        Object.keys(this.state.SpotifyLists).length === 0) {
+
       this.getSpotifyLists();
-    } else if (this.props.service === "youtube" && this.props.connected && Object.keys(this.state.YouTubeLists).length === 0) {
+
+    } else if (this.props.service === "youtube" && 
+        this.props.connected && 
+        Object.keys(this.state.YouTubeLists).length === 0) {
+
       this.getYouTubeLists();
     }
   }
   
   componentDidUpdate(prevProps, prevState) {
-    if (this.props.service === "musicmirror" && this.props.connected && Object.keys(this.state.MusicMirrorLists).length === 0) {
+
+    // Retrieve playlists on service login
+        if (this.props.service === "musicmirror" && 
+        this.props.connected && 
+        Object.keys(this.state.MusicMirrorLists).length === 0) {
+          
       this.getMusicMirrorLists();
-    } else if (this.props.service === "spotify" && this.props.connected && Object.keys(this.state.SpotifyLists).length === 0) {
+
+    } else if (this.props.service === "spotify" && 
+        this.props.connected && 
+        Object.keys(this.state.SpotifyLists).length === 0) {
+
       this.getSpotifyLists();
-    } else if (this.props.service === "youtube" && this.props.connected && Object.keys(this.state.YouTubeLists).length === 0) {
+
+    } else if (this.props.service === "youtube" && 
+        this.props.connected && 
+        Object.keys(this.state.YouTubeLists).length === 0) {
+
       this.getYouTubeLists();
+    }
+
+    // Refresh playlists when a new list is added to a service
+    if (!prevProps.refresh && this.props.refresh) {
+      this.props.confirm();
+      if (this.props.service === "musicmirror") {
+        this.getMusicMirrorLists();
+      } else if (this.props.service === "spotify") {
+        this.getSpotifyLists();
+      } else if (this.props.service === "youtube") {
+        this.getYouTubeLists();
+      }
     }
   }
 
@@ -84,7 +120,10 @@ class SavedPlaylists extends React.Component{
               <h1 className="m-0 px-2 py-1 list-index">{index}</h1>
               <div className="p-1 list-data flex-grow-1">
                 <h2 className="m-0">{playlist.name}</h2>
-                <p className="m-0">{playlist.description? playlist.description : "No description provided"}</p>
+                <p className="m-0">
+                  {playlist.description? 
+                  playlist.description : "No description provided"}
+                </p>
               </div>
             </div>
           ))}
