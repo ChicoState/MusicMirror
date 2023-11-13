@@ -117,13 +117,12 @@ class SavedPlaylists extends React.Component{
           {/* List of playlists */}
           {lists.items.map((playlist, index) => (
             <div className="my-1 list-card d-flex align-items-center">
-              <h1 className="m-0 px-2 py-1 list-index">{index}</h1>
+              <h1 className="m-0 px-2 py-1 list-index">{index+1}</h1>
               <div className="p-1 list-data flex-grow-1">
                 <h2 className="m-0">{playlist.name}</h2>
-                <p className="m-0">
-                  {playlist.description? 
-                  playlist.description : "No description provided"}
-                </p>
+                {playlist.description?
+                  <p className="m-0">{playlist.description}</p> : null
+                }
               </div>
             </div>
           ))}
