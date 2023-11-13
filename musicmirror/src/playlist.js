@@ -41,9 +41,9 @@ export async function findSongs(input, resCount){
                 album: obj.tracks.items[res].album.name,
                 length: `${time.getMinutes()}:${time.getSeconds()}`,
                 uri: obj.tracks.items[res].uri,
+                url: obj.tracks.items[res].external_urls['spotify'],
             };
             results.tracks.push(track);
-            console.log(track);
             res++;
         }
         results.query = search[i];
