@@ -178,7 +178,7 @@ class Playlist extends React.Component{
                 className="p-1 details flex-grow-1" 
                 role="button" 
                 data-bs-toggle="modal" 
-                data-bs-target="#song-details" 
+                data-bs-target={"#song-details-"+this.props.service} 
               >
                 <h2 className="m-0">{song.tracks[0].title}</h2>
                 <p className="m-0">{song.tracks[0].artist}</p>
@@ -188,6 +188,7 @@ class Playlist extends React.Component{
 
           {/* This modal pops up when you click on a song */}
           <SongDetailsModal 
+            service={this.props.service}
             song={this.state.selectedSong} 
             updatePlaylist={this.handleUpdate}
           />

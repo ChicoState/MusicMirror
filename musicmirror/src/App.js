@@ -125,19 +125,19 @@ function App() {
             <Tabs id="tab" defaultActiveKey="musicmirrorRight" justify>
               <Tab tabClassName="tab tab-musicmirror" eventKey="musicmirrorRight" title="MusicMirror">
                 <div className="tab-body p-3">
-                  <Playlist list={list} search={search} save={handleListAdded}/>
+                  <Playlist service="musicmirror" list={list} search={search} save={handleListAdded}/>
                 </div> 
               </Tab>
               <Tab tabClassName="tab tab-spotify" eventKey="spotifyRight" title="Spotify">
                 <div className="tab-body p-3">
                   <SpotifyProfile handleLogin={handleLogin}/>
-                  <Playlist list={list} search={search} save={handleListAdded}/>
+                  <Playlist service="spotify" list={list} search={search} save={handleListAdded}/>
                 </div> 
               </Tab>
               <Tab tabClassName="tab tab-youtube" eventKey="youtubeRight" title="YT Music">
                 <div className="tab-body p-3">
                   <YouTube />
-                  <Playlist list={list} search={search} save={handleListAdded}/>
+                  <Playlist service="youtube" list={list} search={search} save={handleListAdded}/>
                 </div> 
               </Tab>
             </Tabs>

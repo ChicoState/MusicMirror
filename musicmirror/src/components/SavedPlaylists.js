@@ -11,13 +11,6 @@ class SavedPlaylists extends React.Component{
     };
   }
 
-  /* Undefined tokens no longer count as logged in, seems to be working well
-  mostly, except if the token is expired. Find a way to handle expired token. */
-
-  /* New problem: Occasionally the modal will freeze and darken the screen
-  without displaying modal or allowing click to close. Modal state update
-  fires (song = props, index = 0). */
-
   /*--- COMPONENT LIFECYCLE FUNCTIONS ----------------------------------------*/
 
   componentDidMount() {
