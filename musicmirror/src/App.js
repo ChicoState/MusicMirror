@@ -4,7 +4,7 @@ import SavedPlaylists from "./components/SavedPlaylists";
 import SpotifyProfile from "./components/SpotifyProfile";
 import YouTube from "./components/YouTube";
 import Playlist from "./components/Playlist";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { findSongs } from "./playlist";
 import {Tabs, Tab} from "react-bootstrap";
 import * as auth from './auth';
@@ -13,8 +13,26 @@ function App() {
   const [list, setList] = useState();
   const [search, setSearch] = useState(0);
   const [loggedIn, setLog] = useState();
-  const [spotifyConnection, setSpotifyConnection] = useState(false);
+  const [spotifyConnection, setSpotifyConnection] = useState(localStorage.getItem("loggedIn") === "true");
   const [needsListRefresh, setListRefresh] = useState(false);
+
+  //----------------------------------------------------------------------------
+
+  useEffect(() => {
+    const handleStorageUpdate = (event) => {
+      if (event.key === "loggedIn") {
+        setSpotifyConnection(localStorage.getItem("loggedIn") === "true");
+      }
+    };
+
+    window.addEventListener('storage', handleStorageUpdate);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageUpdate);
+    }
+  }, []);
+
+  //----------------------------------------------------------------------------
   
   const handleMsg = async (data) => {
     console.log(`Searching! This is search number ${search+1}.`)
@@ -36,6 +54,8 @@ function App() {
   const handleConfirmRefresh = () => {
     setListRefresh(false);
   }
+
+  //----------------------------------------------------------------------------
 
   return (
     <div className="App">

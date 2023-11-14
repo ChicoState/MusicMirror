@@ -37,7 +37,7 @@ class SavedPlaylists extends React.Component{
   componentDidUpdate(prevProps, prevState) {
 
     // Retrieve playlists on service login
-        if (this.props.service === "musicmirror" && 
+    if (this.props.service === "musicmirror" && 
         this.props.connected && 
         Object.keys(this.state.MusicMirrorLists).length === 0) {
           
@@ -54,6 +54,26 @@ class SavedPlaylists extends React.Component{
         Object.keys(this.state.YouTubeLists).length === 0) {
 
       this.getYouTubeLists();
+    }
+
+    // Remove playlists on logout
+    if (this.props.service === "musicmirror" && 
+        !this.props.connected && 
+        Object.keys(this.state.MusicMirrorLists).length > 0) {
+          
+      this.setState({MusicMirrorLists: {}});
+
+    } else if (this.props.service === "spotify" && 
+        !this.props.connected && 
+        Object.keys(this.state.SpotifyLists).length > 0) {
+
+      this.setState({SpotifyLists: {}});
+
+    } else if (this.props.service === "youtube" && 
+        !this.props.connected && 
+        Object.keys(this.state.YouTubeLists).length > 0) {
+
+      this.setState({YouTubeLists: {}});
     }
 
     // Refresh playlists when a new list is added to a service
@@ -130,6 +150,10 @@ class SavedPlaylists extends React.Component{
       );
 
     } else {
+      console.log("WHY AREN'T LISTS SHOWING UP??????");
+      console.log("this.props.service: ", this.props.service);
+      console.log("this.props.connected: ", this.props.connected);
+      console.log("this.state.SpotifyLists: ", this.state.SpotifyLists);
       return (
         <div className="SavedPlaylists">
           <p>No playlists yet!</p>
