@@ -13,7 +13,10 @@ function App() {
   const [list, setList] = useState();
   const [search, setSearch] = useState(0);
   const [loggedIn, setLog] = useState();
-  const [spotifyConnection, setSpotifyConnection] = useState(localStorage.getItem("loggedIn") === "true");
+  const [spotifyConnection, setSpotifyConnection] = useState(
+    localStorage.getItem("token") && 
+    localStorage.getItem("token") !== null
+  );
   const [needsListRefresh, setListRefresh] = useState(false);
 
   //----------------------------------------------------------------------------

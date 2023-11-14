@@ -11,24 +11,30 @@ class SavedPlaylists extends React.Component{
     };
   }
 
+  /* Undefined tokens no longer count as logged in, seems to be working well
+  mostly, except if the token is expired. Find a way to handle expired token. */
+
+  /* New problem: Occasionally the modal will freeze and darken the screen
+  without displaying modal or allowing click to close. Modal state update
+  fires (song = props, index = 0). */
+
   /*--- COMPONENT LIFECYCLE FUNCTIONS ----------------------------------------*/
 
   componentDidMount() {
     if (this.props.service === "musicmirror" && 
-        this.props.connected && 
-        Object.keys(this.state.MusicMirrorLists).length === 0) {
+        this.props.connected) {
 
       this.getMusicMirrorLists();
 
     } else if (this.props.service === "spotify" && 
-        this.props.connected && 
-        Object.keys(this.state.SpotifyLists).length === 0) {
+        this.props.connected) {
 
+      console.log("UPDATING PLAYLISTS ON MOUNT");
+      console.log("token: ", localStorage.getItem("token"));
       this.getSpotifyLists();
 
     } else if (this.props.service === "youtube" && 
-        this.props.connected && 
-        Object.keys(this.state.YouTubeLists).length === 0) {
+        this.props.connected) {
 
       this.getYouTubeLists();
     }
@@ -39,19 +45,21 @@ class SavedPlaylists extends React.Component{
     // Retrieve playlists on service login
     if (this.props.service === "musicmirror" && 
         this.props.connected && 
-        Object.keys(this.state.MusicMirrorLists).length === 0) {
+        !prevProps.connected) {
           
       this.getMusicMirrorLists();
 
     } else if (this.props.service === "spotify" && 
         this.props.connected && 
-        Object.keys(this.state.SpotifyLists).length === 0) {
+        !prevProps.connected) {
 
+      console.log("UPDATING PLAYLISTS ON LOGIN");
+      console.log("token: ", localStorage.getItem("token"));
       this.getSpotifyLists();
 
     } else if (this.props.service === "youtube" && 
         this.props.connected && 
-        Object.keys(this.state.YouTubeLists).length === 0) {
+        !prevProps.connected) {
 
       this.getYouTubeLists();
     }
@@ -59,19 +67,21 @@ class SavedPlaylists extends React.Component{
     // Remove playlists on logout
     if (this.props.service === "musicmirror" && 
         !this.props.connected && 
-        Object.keys(this.state.MusicMirrorLists).length > 0) {
+        prevProps.connected) {
           
       this.setState({MusicMirrorLists: {}});
 
     } else if (this.props.service === "spotify" && 
         !this.props.connected && 
-        Object.keys(this.state.SpotifyLists).length > 0) {
+        prevProps.connected) {
 
+      console.log("UPDATING PLAYLISTS ON LOGOUT");
+      console.log("token: ", localStorage.getItem("token"));
       this.setState({SpotifyLists: {}});
 
     } else if (this.props.service === "youtube" && 
         !this.props.connected && 
-        Object.keys(this.state.YouTubeLists).length > 0) {
+        prevProps.connected) {
 
       this.setState({YouTubeLists: {}});
     }
@@ -154,6 +164,7 @@ class SavedPlaylists extends React.Component{
       console.log("this.props.service: ", this.props.service);
       console.log("this.props.connected: ", this.props.connected);
       console.log("this.state.SpotifyLists: ", this.state.SpotifyLists);
+      console.log("localStorage.getItem('token'): ", localStorage.getItem("token"));
       return (
         <div className="SavedPlaylists">
           <p>No playlists yet!</p>
