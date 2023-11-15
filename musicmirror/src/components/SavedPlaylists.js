@@ -157,6 +157,7 @@ class SavedPlaylists extends React.Component{
       console.log("this.props.service: ", this.props.service);
       console.log("this.props.connected: ", this.props.connected);
       console.log("this.state.SpotifyLists: ", this.state.SpotifyLists);
+      console.log("localStorage.getItem('user_id'): ", localStorage.getItem("user_id"));
       console.log("localStorage.getItem('token'): ", localStorage.getItem("token"));
       return (
         <div className="SavedPlaylists">
