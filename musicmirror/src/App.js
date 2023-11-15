@@ -3,14 +3,18 @@ import AddSongs from "./components/AddSongs";
 import SavedPlaylists from "./components/SavedPlaylists";
 import SpotifyProfile from "./components/SpotifyProfile";
 import YouTube from "./components/YouTube";
-import Playlist from "./components/Playlist";
+import PlaylistMM from "./components/PlaylistMM";
+import PlaylistSpot from "./components/PlaylistSpot";
+import PlaylistYT from "./components/PlaylistYT";
 import { useEffect, useState } from "react";
 import { findSongs } from "./playlist";
 import {Tabs, Tab} from "react-bootstrap";
 import * as auth from './auth';
 
 function App() {
-  const [list, setList] = useState();
+  const [MMList, setMMList] = useState();
+  const [SpotList, setSpotList] = useState();
+  const [YTList, setYTList] = useState();
   const [search, setSearch] = useState(0);
   const [loggedIn, setLog] = useState();
   const [spotifyConnection, setSpotifyConnection] = useState(
@@ -40,7 +44,10 @@ function App() {
   const handleMsg = async (data) => {
     console.log(`Searching! This is search number ${search+1}.`)
     //change search result count (5) to a user input value later
-    setList(await findSongs(data, 5));
+    let list = await findSongs(data, 5)
+    setMMList(list);
+    setSpotList(list);
+    setYTList(list);
     setSearch(search+1);
   }
 
@@ -125,19 +132,19 @@ function App() {
             <Tabs id="tab" defaultActiveKey="musicmirrorRight" justify>
               <Tab tabClassName="tab tab-musicmirror" eventKey="musicmirrorRight" title="MusicMirror">
                 <div className="tab-body p-3">
-                  <Playlist service="musicmirror" list={list} search={search} save={handleListAdded}/>
+                  <PlaylistMM service="musicmirror" list={MMList} search={search} save={handleListAdded}/>
                 </div> 
               </Tab>
               <Tab tabClassName="tab tab-spotify" eventKey="spotifyRight" title="Spotify">
                 <div className="tab-body p-3">
                   <SpotifyProfile handleLogin={handleLogin}/>
-                  <Playlist service="spotify" list={list} search={search} save={handleListAdded}/>
+                  <PlaylistSpot service="spotify" list={SpotList} search={search} save={handleListAdded}/>
                 </div> 
               </Tab>
               <Tab tabClassName="tab tab-youtube" eventKey="youtubeRight" title="YT Music">
                 <div className="tab-body p-3">
                   <YouTube />
-                  <Playlist service="youtube" list={list} search={search} save={handleListAdded}/>
+                  <PlaylistYT service="youtube" list={YTList} search={search} save={handleListAdded}/>
                 </div> 
               </Tab>
             </Tabs>

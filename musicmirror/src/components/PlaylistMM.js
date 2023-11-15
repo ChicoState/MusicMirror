@@ -8,7 +8,7 @@ class Playlist extends React.Component{
     this.state = {
       playlist: {},
       isEditing: false,
-      currentTitle: "Music Mirror Playlist",
+      currentTitle: "New Music Mirror Playlist",
       selectedSong: {},
       selectedIndex: null,
       search: 1,
@@ -22,7 +22,7 @@ class Playlist extends React.Component{
     /* Update state.playlist if a new search occurred. */
     if (this.props.list &&
         this.state.playlist &&
-        this.props.search === this.state.search) {
+        this.props.search >= this.state.search) {
 
       console.log("New search, updating state!");
       this.setState({playlist: this.props.list, search: this.props.search+1}, () => {
