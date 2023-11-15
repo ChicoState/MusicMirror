@@ -9,17 +9,6 @@ export async function checkCode(){
         redirectToAuthCodeFlow(clientId);
         console.log("After everything code: " + code);
         hasCode = true;
-        // console.log("if: " + code);
-    /*} else {
-        // console.log("above");
-        // console.log(code);
-        const accessToken = await getAccessToken(clientId, code);
-        localStorage.setItem("token", accessToken);
-        // console.log("we out");
-        const profile = await fetchProfile(accessToken);
-        populateUI(profile);
-        hasCode = true;
-        */
     }
 };
 
@@ -28,13 +17,12 @@ export async function signIn(loggedIn){
     if(code){
         console.log("In logged in");
         const accessToken = await getAccessToken(clientId, code);
-        if(!localStorage.getItem("token")){
+        if(!localStorage.getItem("token") && localStorage.getItem("token") !== "undefined"){
             localStorage.setItem("token", accessToken);
         }
         // console.log("we out");
         const profile = await fetchProfile(accessToken);
         populateUI(profile);
-        console.log("PopulatedUI");
         hasCode = true;
     }
 }
@@ -103,12 +91,16 @@ export async function getAccessToken(clientId, code) {
 
 export async function fetchProfile(token) {
     console.log("token: " + token);
+    
     const result = await fetch("https://api.spotify.com/v1/me", {
         method: "GET", headers: { Authorization: `Bearer ${token}` }
     });
     let res = await result.json();
+    console.log("MFFRRPPHHH: " + token);
+    console.log("Before user_id" + res.id);
     if(!localStorage.getItem("user_id")){
         localStorage.setItem("user_id", res.id);
+        console.log("user_id" + res.id);
     }
     return res;
 }
