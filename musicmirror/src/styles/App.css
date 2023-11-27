@@ -15,7 +15,7 @@
   height: 15vh;
   width: 100%;
   margin: 0;
-  font-size: calc(10px + 2vmin);
+  font-size: calc(10px + 2vw);
   text-align: center;
   color: white;
   background-color: rgba(20, 20, 20, 1);
@@ -36,6 +36,14 @@
   width: 100%;
   background-color: rgba(20, 20, 20, 1);
   box-shadow: -2px -2px 10px #ffffff;
+}
+
+.login {
+  min-width: 50vw;
+}
+
+.login-heading {
+  text-align: center;
 }
 
 /* Used to modify the wrapper, which contains the windows */
