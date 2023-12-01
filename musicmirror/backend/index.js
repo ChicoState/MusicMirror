@@ -3,8 +3,6 @@ const express = require('express');
 const app = express();
 const cors = require("cors");
 const uri = "mongodb+srv://carobles:Du1UYVCn02jkYmaD@musicmirrorcluster.ke9uina.mongodb.net/?retryWrites=true&w=majority";
-const querystring = require('querystring');
-const url = require('url');
 
 mongoose.connect(uri);
 
