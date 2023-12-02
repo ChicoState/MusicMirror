@@ -1,5 +1,4 @@
 import React from "react";
-import { run } from "../mongo";
 
 class AddSongs extends React.Component {
   constructor() {
@@ -22,8 +21,7 @@ class AddSongs extends React.Component {
   };
 
   handleClick = async () => {
-    run();
-    //this.props.handleMsg(this.state.message);
+    this.props.handleMsg(this.state.message);
     console.log(`passing: ${this.state.message}`)
   };
 
