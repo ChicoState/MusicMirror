@@ -1,8 +1,9 @@
 import { genPlaylist } from "../playlist";
+// import { run } from "../mongo";
 import React from "react";
 import SongDetailsModal from "./SongDetailsModal";
 
-class Playlist extends React.Component{
+class PlaylistMM extends React.Component{
   constructor(){
     super();
     this.state = {
@@ -209,4 +210,4 @@ class Playlist extends React.Component{
   }
 }
 
-export default Playlist;
+export default PlaylistMM;

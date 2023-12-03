@@ -20,7 +20,7 @@ class AddSongs extends React.Component {
     });
   };
 
-  handleClick = async() => {
+  handleClick = async () => {
     this.props.handleMsg(this.state.message);
     console.log(`passing: ${this.state.message}`)
   };

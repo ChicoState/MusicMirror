@@ -2,7 +2,7 @@ import { genPlaylist } from "../playlist";
 import React from "react";
 import SongDetailsModal from "./SongDetailsModal";
 
-class Playlist extends React.Component{
+class PlaylistYT extends React.Component{
   constructor(){
     super();
     this.state = {
@@ -209,4 +209,4 @@ class Playlist extends React.Component{
   }
 }
 
-export default Playlist;
+export default PlaylistYT;
