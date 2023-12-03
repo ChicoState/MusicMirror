@@ -1,4 +1,4 @@
-import { genPlaylist } from "../playlist";
+import { genPlaylist, savePlaylist } from "../playlist";
 // import { run } from "../mongo";
 import React from "react";
 import SongDetailsModal from "./SongDetailsModal";
@@ -196,6 +196,15 @@ class Playlist extends React.Component{
             }
           >
             Confirm Playlist
+          </button>
+          {/* Upload the playlist to Music Mirror */}
+          <button 
+            className="mt-3 btn btn-secondary"
+            onClick={() => {
+              savePlaylist(this.state.playlist);
+            }}
+          >
+            Save Playlist
           </button>
         </div>
       );

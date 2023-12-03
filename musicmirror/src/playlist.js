@@ -85,16 +85,34 @@ export async function genPlaylist(list) {
     }
 }
 
-// export async function savePlaylist(list) {
-//     const uri = "mongodb+srv://carobles:Du1UYVCn02jkYmaD@musicmirrorcluster.ke9uina.mongodb.net/?retryWrites=true&w=majority";
-//     const client = new MongoClient(uri, {
-//         useNewUrlParser: true,
-//         useUnifiedTopology: true,
-//     });
-    
-//     await client.connect();
-//     await client.db("admin").command({ ping: 1 });
-//     console.log("Pinged your deployment. You successfully connected to MongoDB!");
-  
-//     const res = await client.db("users").collection("playlists").insertOne(list);
-//   }
+export async function savePlaylist(list) {
+    //change later to get current user's id
+    let uid = "656822bfe9f57013d3b46c2e"
+
+    let q_body = {
+        playlist: {
+            p_name: list.title,
+            songs: []
+        }
+    }
+    for (let i in list.songs) {
+        q_body.playlist.songs.push({
+            title: list.songs[i].tracks[0].title,
+            artist: list.songs[i].tracks[0].artist
+        });
+    }
+    console.log(q_body);
+
+    try {
+        let resp = await fetch("http://localhost:5000/playlist/" + uid, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(q_body),
+        });
+    } catch (err) {
+        console.error(err);
+        throw err;
+    }
+  }
