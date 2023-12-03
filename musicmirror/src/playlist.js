@@ -1,4 +1,7 @@
-export async function findSongs(input, resCount){
+//import MongoClient from 'mongodb';
+// const uri = "mongodb+srv://carobles:Du1UYVCn02jkYmaD@musicmirrorcluster.ke9uina.mongodb.net/?retryWrites=true&w=majority";
+
+export async function findSongs(input, resCount) {
     console.log(input);
     const token = localStorage.getItem("token");
     //separate each query by line
@@ -81,3 +84,17 @@ export async function genPlaylist(list) {
         .then((json) => console.log(json));
     }
 }
+
+// export async function savePlaylist(list) {
+//     const uri = "mongodb+srv://carobles:Du1UYVCn02jkYmaD@musicmirrorcluster.ke9uina.mongodb.net/?retryWrites=true&w=majority";
+//     const client = new MongoClient(uri, {
+//         useNewUrlParser: true,
+//         useUnifiedTopology: true,
+//     });
+    
+//     await client.connect();
+//     await client.db("admin").command({ ping: 1 });
+//     console.log("Pinged your deployment. You successfully connected to MongoDB!");
+  
+//     const res = await client.db("users").collection("playlists").insertOne(list);
+//   }

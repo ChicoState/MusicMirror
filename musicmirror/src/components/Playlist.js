@@ -1,4 +1,5 @@
 import { genPlaylist } from "../playlist";
+// import { run } from "../mongo";
 import React from "react";
 import SongDetailsModal from "./SongDetailsModal";
 
@@ -188,8 +189,11 @@ class Playlist extends React.Component{
 
           {/* Upload the playlist to Spotify */}
           <button 
-            className="mt-3 btn btn-secondary" 
-            onClick={() => genPlaylist(this.state.playlist)}
+            className="mt-3 btn btn-secondary"
+            onClick={() => {
+              genPlaylist(this.state.playlist);
+            }
+            }
           >
             Confirm Playlist
           </button>
