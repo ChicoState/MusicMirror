@@ -12,6 +12,7 @@ import {Tabs, Tab} from "react-bootstrap";
 import * as auth from './auth';
 
 function App() {
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
@@ -82,6 +83,11 @@ function App() {
   const handleConfirmRefresh = () => {
     setListRefresh(false);
   }
+
+  const handleUsername = event => {
+    console.log("Handling username!");
+    setUsername(event.target.value);
+  };
 
   const handleEmail = event => {
     console.log("Handling email!");
@@ -177,6 +183,18 @@ function App() {
             <h1 className="login-heading">MusicMirror New Account</h1>
             <div className="login">
               <div className="my-3">
+                <label for="signup-username" className="form-label">
+                  Username
+                </label>
+                <input 
+                  type="text" 
+                  className="form-control" 
+                  id="signup-username" 
+                  onChange={handleUsername} 
+                  value={username}
+                />
+              </div>
+              <div className="mb-3">
                 <label for="signup-email" className="form-label">
                   Email Address
                 </label>
