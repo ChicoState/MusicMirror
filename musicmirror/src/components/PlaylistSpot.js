@@ -198,7 +198,7 @@ class PlaylistSpot extends React.Component{
             className="mt-3 btn btn-secondary" 
             onClick={this.handleSave}
           >
-            Save Playlist
+            Save Spotify Playlist
           </button>
         </div>
       );

@@ -94,14 +94,7 @@ class SavedPlaylists extends React.Component{
 
   /*--- HANDLERS -------------------------------------------------------------*/
 
-  getMusicMirrorLists = async() => {
-    // let playlists = await getPlaylists();
-    // if (playlists && Object.keys(playlists).length > 0) {
-    //   this.setState({MusicMirrorLists: playlists}, () => {
-    //     console.log("SAVEDPLAYLIST STATE UPDATED: MusicMirrorLists");
-    //   });
-    // }
-  }
+  getMusicMirrorLists = async() => {}
 
   getSpotifyLists = async() => {
 
@@ -119,14 +112,7 @@ class SavedPlaylists extends React.Component{
     });
   }
 
-  getYouTubeLists = async() => {
-    // let playlists = await getPlaylists();
-    // if (playlists && Object.keys(playlists).length > 0) {
-    //   this.setState({YouTubeLists: playlists}, () => {
-    //     console.log("SAVEDPLAYLIST STATE UPDATED: YouTubeLists");
-    //   });
-    // }
-  }
+  getYouTubeLists = async() => {}
 
   /*--------------------------------------------------------------------------*/
 

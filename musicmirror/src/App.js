@@ -47,7 +47,7 @@ function App() {
     let list = await findSongs(data, 5)
     setMMList(list);
     setSpotList(list);
-    setYTList(list);
+    // setYTList(list);
     setSearch(search+1);
   }
 
@@ -84,12 +84,7 @@ function App() {
           {/* Start of the first window */}
           <div className="tab-window p-3 col-12 col-md">
             <h2 className="mb-3">Your Playlists:</h2>
-            <Tabs id="tab" defaultActiveKey="addsongs" justify>
-              <Tab tabClassName="tab tab-addsongs" eventKey="addsongs" title="New">
-                <div className="tab-body p-3 d-flex flex-column">
-                  <AddSongs handleMsg={handleMsg}/>
-                </div>
-              </Tab>
+            <Tabs id="tab" defaultActiveKey="musicmirrorLeft" justify>
               <Tab tabClassName="tab tab-musicmirror" eventKey="musicmirrorLeft" title="MusicMirror">
                 <div className="tab-body p-3">
                   <SavedPlaylists 
@@ -121,6 +116,11 @@ function App() {
                     confirm={handleConfirmRefresh}
                   />
                 </div> 
+              </Tab>
+              <Tab tabClassName="tab tab-addsongs" eventKey="addsongs" title="New">
+                <div className="tab-body p-3 d-flex flex-column">
+                  <AddSongs handleMsg={handleMsg}/>
+                </div>
               </Tab>
             </Tabs>
           </div> 
