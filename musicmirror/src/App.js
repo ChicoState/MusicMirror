@@ -53,7 +53,7 @@ function App() {
 
   const handleLogin = async (data) => {
     console.log("handleLogin");
-    await setLog(await auth.signIn(data));
+    setLog(await auth.signIn(data));
     setSpotifyConnection(true);
   }
 
