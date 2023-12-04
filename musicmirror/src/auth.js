@@ -17,10 +17,19 @@ export async function signIn(loggedIn){
     console.log("code at signIn:" + code);
     //const bingo = params.get("code");
     //console.log("bingo: ", bingo);
-    if(code && !localStorage.getItem("accessToken")){
+    //if(code && !localStorage.getItem("accessToken")){
+    if(code && !sessionStorage.getItem("accessToken")){
 
-        const verifier = localStorage.getItem("verifier");
+        //const verifier = localStorage.getItem("verifier");
+        const verifier = sessionStorage.getItem("verifier");
+        if (!verifier) {
+            // Handle the case where verifier is not available in localStorage
+            console.error("Verifier not found in localStorage. Redirecting to login flow...");
+            // You might want to redirect the user to the login flow here
+            return;
+        }
         console.log("verifier before token request:", verifier);
+        console.log("WHAT");
 
         const accessToken = await getAccessToken(clientId, code);
 
@@ -29,6 +38,11 @@ export async function signIn(loggedIn){
             populateUI(profile);
         }
         hasCode = true;
+        //localStorage.setItem("loggedIn", true);
+        sessionStorage.setItem("loggedIn", true);
+    } else {
+        //localStorage.setItem("loggedIn", false);
+        sessionStorage.setItem("loggedIn", false);
     }
 }
 
@@ -36,9 +50,14 @@ export async function redirectToAuthCodeFlow(clientId) {
     const verifier = generateCodeVerifier(128);
     const challenge = await generateCodeChallenge(verifier);
     
+    /*
     if(!localStorage.getItem("verifier")){
         localStorage.setItem("verifier", verifier);
     }
+    */
+   if(!sessionStorage.getItem("verifier")){
+        sessionStorage.setItem("verifier", verifier);
+   }
 
     const params = new URLSearchParams();
     params.append("client_id", clientId);
@@ -132,7 +151,8 @@ export async function getAccessToken(clientId, code) {
     isTokenExchangeInProgress = true;
 
     try {
-        const verifier = localStorage.getItem("verifier");
+        //const verifier = localStorage.getItem("verifier");
+        const verifier = sessionStorage.getItem("verifier");
 
         console.log("verifier before token request: ", verifier);
         console.log("Code before token request:", code);
@@ -164,7 +184,8 @@ export async function getAccessToken(clientId, code) {
         const { access_token } = await result.json();
         console.log("Access token:", access_token);
 
-        localStorage.setItem("token", access_token);
+        //localStorage.setItem("token", access_token);
+        sessionStorage.setItem("token", access_token);
 
         return access_token;
     } finally {
@@ -181,10 +202,16 @@ export async function fetchProfile(token) {
     });
     let res = await result.json();
     console.log("Before user_id" + res.id);
+    if(!sessionStorage.getItem("user_id")){
+        sessionStorage.setItem("user_id", res.id);
+        console.log("user_id" + res.id);
+    }
+    /*
     if(!localStorage.getItem("user_id")){
         localStorage.setItem("user_id", res.id);
         console.log("user_id" + res.id);
     }
+    */
     return res;
 }
 
@@ -204,4 +231,5 @@ export function signOut(){
     newUrl = newUrl.split("?")[0];
     window.location.href = newUrl;
     localStorage.clear();
+    sessionStorage.clear();
 }

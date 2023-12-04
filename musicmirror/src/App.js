@@ -11,7 +11,8 @@ import * as auth from './auth';
 function App() {
   const [list, setList] = useState();
   const [search, setSearch] = useState(0);
-  const [loggedIn, setLog] = useState();
+  const [loggedIn, setLog] = useState(false);
+  //const [setLog] = useState();
   
   const handleMsg = async (data) => {
     console.log(`Searching! This is search number ${search+1}.`)
