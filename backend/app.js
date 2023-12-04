@@ -9,7 +9,13 @@ mongoose.connect(uri);
 const userSchema = new mongoose.Schema({
     name: String,
     password: String,
-    playlists: [String],
+    playlists: [{
+        p_name: String,
+        songs: [{
+            title: String,
+            artist: String
+        }]
+    }],
 });
 const User = mongoose.model('User', userSchema);
 
@@ -17,7 +23,8 @@ app.use(express.json());
 app.use(cors());
 console.log("app listening at port 5000");
 
-app.get("/healthcheck", (req, res) => {
+//healtheck endpoint
+app.get("/", (req, res) => {
     try {
         res.send("App is working");
     } catch (err) {
@@ -25,6 +32,7 @@ app.get("/healthcheck", (req, res) => {
     }
 });
 
+//get user via filters in query string params
 app.get("/user", async (req, res) => {
     try {
         const query = User.findOne(req.query);
@@ -38,6 +46,7 @@ app.get("/user", async (req, res) => {
     }
 });
 
+//post user to db
 app.post("/register", async (req, res) => {
     try {
         const user = new User(req.body);
@@ -55,6 +64,7 @@ app.post("/register", async (req, res) => {
     }
 });
 
+//post playlist to user via user id
 app.post("/playlist/:id", async (req, res) => {
     try {
         let query = await User.findByIdAndUpdate(
