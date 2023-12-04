@@ -7,16 +7,19 @@ import { useState } from "react";
 import { findSongs } from "./playlist";
 import {Tabs, Tab} from "react-bootstrap";
 import * as auth from './auth';
+import YoutubeSearch from "./components/YoutubeSearch";
 
 function App() {
   const [list, setList] = useState();
   const [search, setSearch] = useState(0);
   const [loggedIn, setLog] = useState();
+  const [youtubeSearchTerm, setYoutubeSearchTerm] = useState('');
   
   const handleMsg = async (data) => {
     console.log(`Searching! This is search number ${search+1}.`)
     //change search result count (5) to a user input value later
     setList(await findSongs(data, 5));
+    setYoutubeSearchTerm(data);
     setSearch(search+1);
   }
 
@@ -43,11 +46,13 @@ function App() {
           <div className="tab-window p-3 col-12 col-md">
             <h2 className="mb-3">Your Playlists:</h2>
             <Tabs defaultAct="addSongs" id="tab" justify>
+
               <Tab tabClassName="tab tab-addsongs" eventKey={"add Songs"} title="New">
                 <div className="tab-body p-3 d-flex flex-column">
                   <AddSongs handleMsg={handleMsg}/>
                 </div>
               </Tab>
+
               <Tab tabClassName="tab tab-spotify" eventKey={"spotify"} title="Spotify">
                 <div className="tab-body p-3">
                   <SpotifyProfile handleLogin={handleLogin}/>
@@ -74,8 +79,7 @@ function App() {
               </Tab>
               <Tab tabClassName="tab tab-youtube" eventKey={"youtube"} title="YT Music">
                 <div className="tab-body p-3">
-                  <YouTube />
-                  <Playlist list={list} search={search}/>
+                 <YouTube searchTerm={youtubeSearchTerm}/>
                 </div> 
               </Tab>
             </Tabs>

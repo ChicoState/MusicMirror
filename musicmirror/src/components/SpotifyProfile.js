@@ -8,6 +8,7 @@ class SpotifyProfile extends React.Component {
     this.state = {
       loggedIn: loggedIn,
       connected: false,
+      
       //loggedIn: false,
     }
   }

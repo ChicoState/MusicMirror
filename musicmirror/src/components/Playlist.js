@@ -23,7 +23,6 @@ class Playlist extends React.Component{
     if (this.props.list &&
         this.state.playlist &&
         this.props.search === this.state.search) {
-
       console.log("New search, updating state!");
       this.setState({playlist: this.props.list, search: this.props.search+1}, () => {
         console.log("PLAYLIST STATE UPDATE COMPLETE {playlist: this.props.list, search: this.props.search+1}")
