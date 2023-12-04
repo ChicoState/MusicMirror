@@ -1,8 +1,9 @@
-import { genPlaylist } from "../playlist";
+import { savePlaylist } from "../playlist";
+// import { run } from "../mongo";
 import React from "react";
 import SongDetailsModal from "./SongDetailsModal";
 
-class Playlist extends React.Component{
+class PlaylistMM extends React.Component{
   constructor(){
     super();
     this.state = {
@@ -62,7 +63,7 @@ class Playlist extends React.Component{
 
 
   handleSave = async() => {
-    await genPlaylist(this.state.playlist);
+    await savePlaylist(this.state.playlist);
     this.props.save();
   }
 
@@ -193,12 +194,12 @@ class Playlist extends React.Component{
             updatePlaylist={this.handleUpdate}
           />
 
-          {/* Upload the playlist to Spotify */}
+          {/* Upload the playlist to Music Mirror */}
           <button 
-            className="mt-3 btn btn-secondary" 
+            className="mt-3 btn btn-secondary"
             onClick={this.handleSave}
           >
-            Save Playlist
+            Save MusicMirror Playlist
           </button>
         </div>
       );
@@ -209,4 +210,4 @@ class Playlist extends React.Component{
   }
 }
 
-export default Playlist;
+export default PlaylistMM;

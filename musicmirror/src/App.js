@@ -50,13 +50,13 @@ function App() {
     let list = await findSongs(data, 5)
     setMMList(list);
     setSpotList(list);
-    setYTList(list);
+    // setYTList(list);
     setSearch(search+1);
   }
 
   const handleLogin = async (data) => {
     console.log("handleLogin");
-    await setLog(await auth.signIn(data));
+    setLog(await auth.signIn(data));
     setSpotifyConnection(true);
   }
 
@@ -86,7 +86,7 @@ function App() {
   //----------------------------------------------------------------------------
 
   // Default view when not logged in
-  if (true) {
+  if (false) {
     return (
       <div className="App">
 
@@ -141,7 +141,7 @@ function App() {
     );
 
   // View for creating a new account
-  } else if (true && true) {
+  } else if (true && false) {
     return (
       <div className="App">
 
@@ -210,13 +210,13 @@ function App() {
   } else {
     return (
       <div className="App">
-
+  
         {/* Page header */}
         <header className="App-header d-flex justify-content-center align-items-center">
           <h1>MusicMirror</h1>        
         </header>
         {/* End of page header */}
-
+  
         {/* Page body */}
         <div className="main-wrapper">
           {/* Wrapper to help with columns */}
@@ -225,12 +225,7 @@ function App() {
             {/* Start of the first window */}
             <div className="tab-window p-3 col-12 col-md">
               <h2 className="mb-3">Your Playlists:</h2>
-              <Tabs id="tab" defaultActiveKey="addsongs" justify>
-                <Tab tabClassName="tab tab-addsongs" eventKey="addsongs" title="New">
-                  <div className="tab-body p-3 d-flex flex-column">
-                    <AddSongs handleMsg={handleMsg}/>
-                  </div>
-                </Tab>
+              <Tabs id="tab" defaultActiveKey="musicmirrorLeft" justify>
                 <Tab tabClassName="tab tab-musicmirror" eventKey="musicmirrorLeft" title="MusicMirror">
                   <div className="tab-body p-3">
                     <SavedPlaylists 
@@ -263,6 +258,11 @@ function App() {
                     />
                   </div> 
                 </Tab>
+                <Tab tabClassName="tab tab-addsongs" eventKey="addsongs" title="New">
+                  <div className="tab-body p-3 d-flex flex-column">
+                    <AddSongs handleMsg={handleMsg}/>
+                  </div>
+                </Tab>
               </Tabs>
             </div> 
             {/* End of the first window */}
@@ -290,17 +290,13 @@ function App() {
                 </Tab>
               </Tabs>
             </div>
-            {/*End of the second window */}
-
           </div>
-          {/* End of column wrapper */}
+          {/* End of page body */}
+  
+          {/* Page footer */}
+          <footer className="App-footer"></footer>
+          {/* End of page footer */}
         </div>
-        {/* End of page body */}
-
-        {/* Page footer */}
-        <footer className="App-footer"></footer>
-        {/* End of page footer */}
-
       </div>
     );
   }

@@ -94,32 +94,25 @@ class SavedPlaylists extends React.Component{
 
   /*--- HANDLERS -------------------------------------------------------------*/
 
-  getMusicMirrorLists = async() => {
-    // let playlists = await getPlaylists();
-    // if (playlists && Object.keys(playlists).length > 0) {
-    //   this.setState({MusicMirrorLists: playlists}, () => {
-    //     console.log("SAVEDPLAYLIST STATE UPDATED: MusicMirrorLists");
-    //   });
-    // }
-  }
+  getMusicMirrorLists = async() => {}
 
   getSpotifyLists = async() => {
-    let playlists = await getPlaylists();
-    if (playlists && Object.keys(playlists).length > 0) {
-      this.setState({SpotifyLists: playlists}, () => {
-        console.log("SAVEDPLAYLIST STATE UPDATED: SpotifyLists");
-      });
+
+    let playlists = {};
+    while (Object.keys(playlists).length < 2) {
+      let test = await getPlaylists();
+      if (Object.keys(test).length > 2 && 
+          test.href !== "https://api.spotify.com/v1/users/null/playlists?offset=0&limit=20") {
+
+        playlists = test;
+      }
     }
+    this.setState({SpotifyLists: playlists}, () => {
+      console.log("SAVEDPLAYLIST STATE UPDATED: SpotifyLists");
+    });
   }
 
-  getYouTubeLists = async() => {
-    // let playlists = await getPlaylists();
-    // if (playlists && Object.keys(playlists).length > 0) {
-    //   this.setState({YouTubeLists: playlists}, () => {
-    //     console.log("SAVEDPLAYLIST STATE UPDATED: YouTubeLists");
-    //   });
-    // }
-  }
+  getYouTubeLists = async() => {}
 
   /*--------------------------------------------------------------------------*/
 

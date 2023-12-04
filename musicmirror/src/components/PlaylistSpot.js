@@ -2,7 +2,7 @@ import { genPlaylist } from "../playlist";
 import React from "react";
 import SongDetailsModal from "./SongDetailsModal";
 
-class Playlist extends React.Component{
+class PlaylistSpot extends React.Component{
   constructor(){
     super();
     this.state = {
@@ -198,7 +198,7 @@ class Playlist extends React.Component{
             className="mt-3 btn btn-secondary" 
             onClick={this.handleSave}
           >
-            Save Playlist
+            Save Spotify Playlist
           </button>
         </div>
       );
@@ -209,4 +209,4 @@ class Playlist extends React.Component{
   }
 }
 
-export default Playlist;
+export default PlaylistSpot;
