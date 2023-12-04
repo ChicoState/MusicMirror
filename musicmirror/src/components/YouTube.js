@@ -36,6 +36,7 @@ function Youtube({searchTerm}){
       setAccessToken(token);
       console.log("GOt the fucker", token);
       setAccessToken(token);
+      
     }else{
      console.log("Yeaaaah");
     }

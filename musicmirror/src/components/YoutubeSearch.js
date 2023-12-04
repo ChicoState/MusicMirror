@@ -216,8 +216,8 @@ function YoutubeSearch({searchTearm, API_KEY,MAXRESULTS, accessToken}){
     };
     if(!singleSearch){
       return <div>
+         {renderTabsWithThumbnails()}
         {selectedVideoId && renderPlayer()}
-        {renderTabsWithThumbnails()}
       </div>;
     }else{
         return (
