@@ -25,6 +25,8 @@ function App() {
     localStorage.getItem("user_id") && localStorage.getItem("user_id") !== null
   );
   const [needsListRefresh, setListRefresh] = useState(false);
+  const [viewSignIn, setViewSignIn] = useState(true);
+  const [viewSignUp, setViewSignUp] = useState(false);
 
   //----------------------------------------------------------------------------
 
@@ -60,6 +62,19 @@ function App() {
     setSpotifyConnection(true);
   }
 
+  const handleMMLogin = async (data) => {
+    setViewSignUp(false);
+    setViewSignIn(false);
+  }
+
+  const handleMMLogout = async () => {
+    setViewSignIn(true);
+  }
+
+  const handleNewAccount = async (data) => {
+    handleMMLogin(data);
+  }
+
   const handleListAdded = () => {
     setListRefresh(true);
   }
@@ -85,22 +100,28 @@ function App() {
 
   //----------------------------------------------------------------------------
 
-  // Default view when not logged in
-  if (false) {
-    return (
-      <div className="App">
+  const goToSignIn = () => {
+    setViewSignIn(true);
+    setViewSignUp(false);
+  }
 
-        {/* Page header */}
-        <header className="App-header d-flex justify-content-center align-items-center">
-          <h1>MusicMirror</h1>        
-        </header>
-        {/* End of page header */}
+  const goToSignUp = () => {
+    setViewSignUp(true);
+    setViewSignIn(false);
+  }
+
+  //----------------------------------------------------------------------------
+
+  // Default view when not logged in
+  if (viewSignIn) {
+    return (
+      <div className="App sign-in">
 
         {/* Page body */}
         <div className="main-wrapper">
           <div className="App-main mx-0 p-5 d-flex flex-column justify-content-between align-items-center">
+            <h1 className="login-heading">MusicMirror Sign In</h1>
             <div className="login">
-              <h2 className="login-heading">Log in to access your account</h2>
               <div className="my-3">
                 <label for="login-email" className="form-label">
                   Email Address
@@ -125,37 +146,36 @@ function App() {
                   value={password}
                 />
               </div>
-              <button className="mt-3 btn btn-secondary">Log In!</button>
+              <button className="mt-3 btn btn-secondary" onClick={handleMMLogin}>
+                Sign In!
+              </button>
             </div>
             {/* Double-check this href and update the href for the signup section */}
-            <p>Don't have an account yet? <a href="./index.js">Create one here!</a></p>
+            <p className="m-0">
+              Don't have an account yet?&nbsp;
+              <button className="redirect" onClick={goToSignUp}>
+                Sign up!
+              </button>
+            </p>
           </div>
         </div>
         {/* End of page body */}
 
-        {/* Page footer */}
-        <footer className="App-footer"></footer>
-        {/* End of page footer */}
-
       </div>
     );
 
-  // View for creating a new account
-  } else if (true && false) {
-    return (
-      <div className="App">
+  //----------------------------------------------------------------------------
 
-        {/* Page header */}
-        <header className="App-header d-flex justify-content-center align-items-center">
-          <h1>MusicMirror</h1>        
-        </header>
-        {/* End of page header */}
+  // View for creating a new account
+  } else if (viewSignUp) {
+    return (
+      <div className="App sign-up">
 
         {/* Page body */}
         <div className="main-wrapper">
           <div className="App-main mx-0 p-5 d-flex flex-column justify-content-between align-items-center">
+            <h1 className="login-heading">MusicMirror New Account</h1>
             <div className="login">
-              <h2 className="login-heading">Create a new account</h2>
               <div className="my-3">
                 <label for="signup-email" className="form-label">
                   Email Address
@@ -192,19 +212,24 @@ function App() {
                   value={passwordConfirm}
                 />
               </div>
-              <button className="mt-3 btn btn-secondary">Create Account!</button>
+              <button className="mt-3 btn btn-secondary" onClick={handleNewAccount}>
+                Create Account!
+              </button>
             </div>
-            <p>Already have an account? <a href=".">Log in!</a></p>
+            <p className="m-0">
+              Already have an account?&nbsp;
+              <button className="redirect" onClick={goToSignIn}>
+                Sign in!
+              </button>
+            </p>
           </div>
         </div>
         {/* End of page body */}
 
-        {/* Page footer */}
-        <footer className="App-footer"></footer>
-        {/* End of page footer */}
-
       </div>
     );
+
+  //----------------------------------------------------------------------------
 
   // View when logged in
   } else {
@@ -220,7 +245,7 @@ function App() {
         {/* Page body */}
         <div className="main-wrapper">
           {/* Wrapper to help with columns */}
-          <div className="App-main mx-0 p-5 row grid gap-5">
+          <div className="App-main mx-0 px-5 row grid gap-5">
             
             {/* Start of the first window */}
             <div className="tab-window p-3 col-12 col-md">
@@ -294,7 +319,10 @@ function App() {
           {/* End of page body */}
   
           {/* Page footer */}
-          <footer className="App-footer"></footer>
+          <footer className="App-footer px-3 d-flex justify-content-between align-items-center">
+            <p className="m-0">Current User: username here</p>
+            <p className="m-0 mm-logout" onClick={handleMMLogout}>Log Out of MusicMirror</p>
+          </footer>
           {/* End of page footer */}
         </div>
       </div>

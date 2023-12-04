@@ -4,8 +4,6 @@
 
 .App {
   width: 100vw;
-  /* If we use this image, we need to put this citation in our page footer: <a href="https://www.freepik.com/free-vector/sound-wave-equalizer-vector-design_3439283.htm#query=music%20texture&position=8&from_view=keyword&track=ais">Image by rawpixel.com</a> on Freepik */
-  /* background-image: url("~/public/images/soundbackground.jpg"); */
   background-color: #666666;
   background-position: center;
   background-size: cover;
@@ -19,11 +17,19 @@
   text-align: center;
   color: white;
   background-color: rgba(20, 20, 20, 1);
-  box-shadow: 2px 2px 10px #ffffff;
+  box-shadow: 0px 0px 10px #aaaaaa;
+  position: fixed;
+  z-index: 10;
+}
+
+.main-wrapper {
+  height: 100vh;
 }
 
 .App-main {
-  height: 80vh;
+  padding-top: 20vh;
+  padding-bottom: 10vh;
+  height: 100%;
   width: 100%;
   font-size: calc(10px + 1vmin);
   color: #61dafb;
@@ -34,8 +40,27 @@
 .App-footer {
   height: 5vh;
   width: 100%;
+  color: white;
   background-color: rgba(20, 20, 20, 1);
-  box-shadow: -2px -2px 10px #ffffff;
+  box-shadow: 0px 0px 10px #aaaaaa;
+  position: fixed;
+  bottom: 0;
+}
+
+.mm-logout {
+  transition: color 0.25s;
+}
+
+.mm-logout:hover {
+  color: #aaaaaa;
+}
+
+.App.sign-in .App-main, .App.sign-up .App-main {
+  min-height: 100vh;
+  width: 100vw;
+  margin: 0;
+  color: white;
+  background-color: rgba(20, 20, 20, 1);
 }
 
 .login {
@@ -46,7 +71,18 @@
   text-align: center;
 }
 
-/* Used to modify the wrapper, which contains the windows */
+button.redirect {
+  color: limegreen;
+  background-color: transparent;
+  border: none;
+  transition: color 0.25s;
+}
+
+button.redirect:hover {
+  color: rgb(117, 255, 117);
+}
+
+/* Used to modify the wrapper, which contains the left/right tab windows */
 .main-wrapper {
   display: flex;
   justify-content: space-between;
@@ -60,18 +96,14 @@
   box-shadow: 2px 2px 10px #000000;
 }
 
-/* Tab (the actual tab bit at the top) */
-/* .nav-tabs {} */
-
 /* Tab label */
-/* .nav-link {
-  color: #003d4c;
-  transition: color 0.25s;
+.nav-link {
+  color: #aaaaaa;
 }
 
 .nav-link:hover {
-  color: #004f63;
-} */
+  color: white;
+}
 
 /* Tab body */
 .tab {
@@ -85,10 +117,6 @@
   border-radius: 0 0 5px 5px;
   overflow-y: scroll;
 }
-
-/* button {
-  width: 100%;
-} */
 
 /*--- SavedPlaylists Styling -------------------------------------------------*/
 
@@ -212,14 +240,6 @@
 .profile-info, .logged-in {
   color: limegreen;
 }
-
-/* Used for profile info, currently irrelevant
-
-.SpotifyProfile ul {
-  padding-left: 0;
-  list-style: none inside;
-}
-*/
 
 /*--- YouTube Music Styling --------------------------------------------------*/
 
