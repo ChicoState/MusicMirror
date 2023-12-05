@@ -19,8 +19,7 @@ function App() {
   const [loggedIn, setLog] = useState(false);
   //const [setLog] = useState();
   const [spotifyConnection, setSpotifyConnection] = useState(
-    sessionStorage.getItem("token") && sessionStorage.getItem("token") !== null &&
-    sessionStorage.getItem("user_id") && sessionStorage.getItem("user_id") !== null
+    sessionStorage.getItem("loggedIn") === "true"
   );
   const [needsListRefresh, setListRefresh] = useState(false);
 
