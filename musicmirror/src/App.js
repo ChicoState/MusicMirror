@@ -86,6 +86,11 @@ function App() {
     }
   }
 
+  const handleDeleteAccount = async () => {
+    handleMMLogout();
+    // needs a func to remove the user from the database
+  }
+
   const handleListAdded = () => {
     setListRefresh(true);
   }
@@ -348,9 +353,67 @@ function App() {
           {/* Page footer */}
           <footer className="App-footer px-3 d-flex justify-content-between align-items-center">
             <p className="m-0">Current User: {username !== ""? username : "no username provided"}</p>
-            <p className="m-0 mm-logout" onClick={handleMMLogout}>Log Out of MusicMirror</p>
+            <div className="d-flex">
+              <p className="m-0 mm-logout" onClick={handleMMLogout}>Log Out of MusicMirror</p>
+              <p className="my-0 mx-2">|</p>
+              <p 
+                className="m-0 mm-delete" 
+                data-bs-toggle="modal" 
+                data-bs-target="#confirm-delete-account"
+              >
+                Delete my Account
+              </p>
+            </div>
           </footer>
           {/* End of page footer */}
+
+          {/* Account deletion confirmation modal */}
+          <div 
+            id="confirm-delete-account" 
+            className="modal fade" 
+            tabIndex="-1" 
+            aria-hidden="true"
+          >
+            <div className="modal-dialog modal-lg modal-fullscreen-sm-down">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h1 className="modal-title">Are you sure you want to delete this account?</h1>
+                  <button 
+                    className="ms-2 btn-close btn-close-white" 
+                    type="button" 
+                    data-bs-dismiss="modal" 
+                    aria-label="Close"
+                  ></button>
+                </div>
+                <div className="modal-body">
+                  <p>Username and email go here.</p>
+                  <p className="warning">
+                    WARNING: If you delete your account, all playlists saved to
+                    MusicMirror will be lost.
+                  </p>
+                </div>
+                <div className="modal-footer d-flex">
+                  <button 
+                    className="nevermind-button btn btn-secondary flex-fill"
+                    type="button" 
+                    data-bs-dismiss="modal" 
+                  >
+                    No, keep my account.
+                  </button>
+                  <button 
+                    className="delete-button btn btn-secondary flex-fill"
+                    type="button" 
+                    data-bs-dismiss="modal"
+                    onClick={handleDeleteAccount}
+                  >
+                    Yes, delete my account.
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          {/* End of account deletion modal */}
+
         </div>
       </div>
     );

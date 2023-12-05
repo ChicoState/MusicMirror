@@ -47,11 +47,11 @@
   bottom: 0;
 }
 
-.mm-logout {
+.mm-logout, .mm-delete {
   transition: color 0.25s;
 }
 
-.mm-logout:hover {
+.mm-logout:hover, .mm-delete:hover {
   color: #aaaaaa;
   cursor: pointer;
 }
@@ -178,10 +178,19 @@ button.redirect:hover {
   background-color: #004f63;
 }
 
-/*--- SongDetailsModal Styling -----------------------------------------------*/
+/*--- Modal Styling ----------------------------------------------------------*/
+
+#confirm-delete-account {
+  color: #ffffff;
+}
 
 .modal-header, .modal-footer {
   background-color: #002f43;
+}
+
+.modal-title {
+  color: #ffffff;
+  font-size: calc(1rem + 1vw);
 }
 
 .modal-body {
@@ -192,11 +201,7 @@ button.redirect:hover {
   text-align: left;
 }
 
-.btn-close {
-  color: hotpink;
-}
-
-.details-header h1 {
+.details-header h1  {
   color: #ffffff;
   font-size: calc(0.8rem + 0.8vw);
 }
@@ -215,7 +220,7 @@ button.redirect:hover {
   padding: 5% 15%;
 }
 
-.confirm-button, .remove-button {
+.confirm-button, .remove-button, .nevermind-button, .delete-button {
   border: none;
   transition: background-color 0.4s;
 }
@@ -224,11 +229,11 @@ button.redirect:hover {
   width: auto;
 }
 
-.confirm-button:hover {
+.confirm-button:hover, .nevermind-button:hover {
   background-color: #3ea315;
 }
 
-.remove-button:hover {
+.remove-button:hover, .delete-button:hover {
   background-color: #e24005;
 }
 
