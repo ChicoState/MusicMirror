@@ -1,15 +1,14 @@
-import { genPlaylist, savePlaylist } from "../playlist";
-// import { run } from "../mongo";
+import { genPlaylist } from "../playlist";
 import React from "react";
 import SongDetailsModal from "./SongDetailsModal";
 
-class Playlist extends React.Component{
+class PlaylistSpot extends React.Component{
   constructor(){
     super();
     this.state = {
       playlist: {},
       isEditing: false,
-      currentTitle: "Music Mirror Playlist",
+      currentTitle: "New Music Mirror Playlist",
       selectedSong: {},
       selectedIndex: null,
       search: 1,
@@ -23,11 +22,11 @@ class Playlist extends React.Component{
     /* Update state.playlist if a new search occurred. */
     if (this.props.list &&
         this.state.playlist &&
-        this.props.search === this.state.search) {
+        this.props.search >= this.state.search) {
 
       console.log("New search, updating state!");
       this.setState({playlist: this.props.list, search: this.props.search+1}, () => {
-        console.log("PLAYLIST STATE UPDATE COMPLETE {playlist: this.props.list, search: this.props.search+1}")
+        console.log("PLAYLIST STATE UPDATE COMPLETE: playlist, search")
       });
     }
   }
@@ -37,7 +36,7 @@ class Playlist extends React.Component{
   handleBlur = () => {
     console.log("handleBlur");
     this.setState({ isEditing: false }, () => {
-      console.log("PLAYLIST STATE UPDATE COMPLETE { isEditing: false }");
+      console.log("PLAYLIST STATE UPDATE COMPLETE: isEditing:false");
     });
     // Call a function passed as a prop to update the list title
     this.onTitleChange(this.state.currentTitle);
@@ -47,7 +46,7 @@ class Playlist extends React.Component{
   handleChange = (e) => {
     console.log("handleChange");
     this.setState({ currentTitle: e.target.value }, () => {
-      console.log("PLAYLIST STATE UPDATE COMPLETE { currentTitle: e.target.value }");
+      console.log("PLAYLIST STATE UPDATE COMPLETE: currentTitle");
     });
   };
 
@@ -56,16 +55,22 @@ class Playlist extends React.Component{
     console.log("handleDoubleClick");
     if (!this.state.isEditing) {
       this.setState({ isEditing: true }, () => {
-        console.log("PLAYLIST STATE UPDATE COMPLETE {isEditing: true}");
+        console.log("PLAYLIST STATE UPDATE COMPLETE: isEditing:true");
       });
     }
   };
 
 
+  handleSave = async() => {
+    await genPlaylist(this.state.playlist);
+    this.props.save();
+  }
+
+
   /* Note which song card was clicked on */
   handleSongSelection = (song, index) => {
     this.setState({selectedSong: song, selectedIndex: index}, () => {
-      console.log("PLAYLIST STATE UPDATE COMPLETE {electedSong: song, selectedIndex: index}");
+      console.log("PLAYLIST STATE UPDATE COMPLETE: selectedSong, selectedIndex");
     });
     console.log(`selected song: ${song.tracks[0].title}`);
   };
@@ -76,7 +81,7 @@ class Playlist extends React.Component{
     const newList = {...this.state.playlist};
     newList.title = this.state.currentTitle;
     this.setState({playlist: newList}, () => {
-      console.log("PLAYLIST STATE UPDATE COMPLETE {playlist: newList}");
+      console.log("PLAYLIST STATE UPDATE COMPLETE: playlist");
     });
   };
 
@@ -91,7 +96,7 @@ class Playlist extends React.Component{
         index !== this.state.selectedIndex
       );
       this.setState({playlist: newList, selectedIndex: null}, () => {
-        console.log("STATE UPDATE COMPLETE, REMOVED SONG {playlist: newList}");
+        console.log("STATE UPDATE COMPLETE, REMOVED SONG");
       });
       console.log("REMOVED LIST ITEM");
       console.log(newList);
@@ -100,7 +105,7 @@ class Playlist extends React.Component{
     } else {
       newList.songs[this.state.selectedIndex] = updatedSong;
       this.setState({playlist: newList, selectedSong: updatedSong}, () => {
-        console.log("STATE UPDATE COMPLETE, CHANGED SONG {playlist: newList, selectedSong: updatedSong}");
+        console.log("STATE UPDATE COMPLETE, CHANGED SONG");
       });
     }
   };
@@ -117,7 +122,7 @@ class Playlist extends React.Component{
         this.state.playlist.songs.length === 0)) {
 
       return (
-        <div className="Playlist mt-3">
+        <div className="Playlist">
           <h1>Choose a playlist to preview, or create a new one.</h1>
         </div>
       );
@@ -126,7 +131,7 @@ class Playlist extends React.Component{
     } else if (this.state.playlist && 
         Object.keys(this.state.playlist).length > 0) {
       return (
-        <div className="Playlist mt-3">
+        <div className="Playlist">
           <h1 className="list-title">
             {this.state.isEditing? 
             (<div className="d-flex justify-content-between align-items-center">
@@ -139,7 +144,7 @@ class Playlist extends React.Component{
               />
               <svg className="bi bi-pencil-square" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16">
                 <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                <path fillRule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
               </svg>
             </div>) 
             : 
@@ -150,7 +155,7 @@ class Playlist extends React.Component{
               {this.state.currentTitle}
               <svg className="bi bi-pencil-square" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16">
                 <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                <path fillRule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
               </svg>
             </span>)}
           </h1>
@@ -173,7 +178,7 @@ class Playlist extends React.Component{
                 className="p-1 details flex-grow-1" 
                 role="button" 
                 data-bs-toggle="modal" 
-                data-bs-target="#song-details" 
+                data-bs-target={"#song-details-"+this.props.service} 
               >
                 <h2 className="m-0">{song.tracks[0].title}</h2>
                 <p className="m-0">{song.tracks[0].artist}</p>
@@ -183,28 +188,17 @@ class Playlist extends React.Component{
 
           {/* This modal pops up when you click on a song */}
           <SongDetailsModal 
+            service={this.props.service}
             song={this.state.selectedSong} 
             updatePlaylist={this.handleUpdate}
           />
 
           {/* Upload the playlist to Spotify */}
           <button 
-            className="mt-3 btn btn-secondary"
-            onClick={() => {
-              genPlaylist(this.state.playlist);
-            }
-            }
+            className="mt-3 btn btn-secondary" 
+            onClick={this.handleSave}
           >
-            Confirm Playlist
-          </button>
-          {/* Upload the playlist to Music Mirror */}
-          <button 
-            className="mt-3 btn btn-secondary"
-            onClick={() => {
-              savePlaylist(this.state.playlist);
-            }}
-          >
-            Save Playlist
+            Save Spotify Playlist
           </button>
         </div>
       );
@@ -215,4 +209,4 @@ class Playlist extends React.Component{
   }
 }
 
-export default Playlist;
+export default PlaylistSpot;

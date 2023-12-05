@@ -27,6 +27,7 @@ class SongDetailsModal extends React.Component{
     if (prevProps.song !== this.props.song) {
       this.setState({song: this.props.song, trackIndex: 0}, () => {
         console.log("MODAL STATE UPDATE COMPLETE {song: this.props.song, trackIndex: 0}");
+        console.log(this.props.service, this.props.song);
       });
     }
   }
@@ -128,7 +129,7 @@ class SongDetailsModal extends React.Component{
   /* Add a mutation observer that resets the carousel when the modal closes */
   addObserver = () => {
 
-    const modal = document.getElementById("song-details");
+    const modal = document.getElementById("song-details-"+this.props.service);
     const indicators = document.querySelectorAll(".carousel-indicators > button");
     const slides = document.querySelectorAll(".carousel-item");
     
@@ -174,7 +175,7 @@ class SongDetailsModal extends React.Component{
     if (!this.state.song || Object.keys(this.state.song).length === 0) {
       return (
         <div 
-          id="song-details" 
+          id={"song-details-" + this.props.service} 
           className="SongDetailsModal modal fade" 
           tabIndex="-1" 
           aria-hidden="true"
@@ -192,7 +193,7 @@ class SongDetailsModal extends React.Component{
     } else {
       return (
         <div 
-          id="song-details" 
+        id={"song-details-" + this.props.service} 
           className="SongDetailsModal modal fade" 
           tabIndex="-1" 
           aria-hidden="true"

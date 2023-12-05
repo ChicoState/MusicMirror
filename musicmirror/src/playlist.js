@@ -31,7 +31,8 @@ export async function findSongs(input, resCount) {
         }
 
         let res = 0;
-        while(res < resCount && res < Object.keys(obj.tracks.items).length) {
+        // added obj.tracks check to prevent "reading props of undefined" runtime error
+        while(res < resCount && obj.tracks && res < Object.keys(obj.tracks.items).length) {
             let names = "";
             for(let j in obj.tracks.items[res].artists){
                 names += obj.tracks.items[res].artists[j].name + ", ";
@@ -87,6 +88,44 @@ export async function genPlaylist(list) {
         .then((json) => console.log(json));
     }
 }
+
+export async function getPlaylists() {
+    const user_id = sessionStorage.getItem("user_id");
+    const token = sessionStorage.getItem("token");
+
+    let resp = await fetch("https://api.spotify.com/v1/users/" + user_id + "/playlists", {
+        method: "GET",
+        headers: { Authorization: `Bearer ${token}` }
+    });
+    let obj = await resp.json();
+
+    console.log(obj);
+    return obj;
+}
+
+export async function searchPlaylists(query) {
+    const token = localStorage.getItem("token");
+
+    let url = "https://api.spotify.com/v1/search/?q=" + query.replace(' ', '+') + "&type=playlist";
+    let resp = await fetch(url, {
+        method: "GET", headers: { Authorization: `Bearer ${token}` }
+    });
+    return await resp.json();
+}
+
+// export async function savePlaylist(list) {
+//     const uri = "mongodb+srv://carobles:Du1UYVCn02jkYmaD@musicmirrorcluster.ke9uina.mongodb.net/?retryWrites=true&w=majority";
+//     const client = new MongoClient(uri, {
+//         useNewUrlParser: true,
+//         useUnifiedTopology: true,
+//     });
+    
+//     await client.connect();
+//     await client.db("admin").command({ ping: 1 });
+//     console.log("Pinged your deployment. You successfully connected to MongoDB!");
+  
+//     const res = await client.db("users").collection("playlists").insertOne(list);
+//   }
 
 export async function savePlaylist(list) {
     //change later to get current user's id

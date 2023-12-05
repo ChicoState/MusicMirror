@@ -78,13 +78,29 @@
   overflow-y: scroll;
 }
 
-button {
+/* button {
   width: 100%;
+} */
+
+/*--- SavedPlaylists Styling -------------------------------------------------*/
+
+.SavedPlaylists h1 {
+  font-size: calc(0.9rem + 0.9vw);
 }
 
-/*--- AddSongs Styling -------------------------------------------------------*/
+.SavedPlaylists h2 {
+  color: #ffffff;
+  font-size: calc(0.7rem + 0.7vw);
+}
 
+.SavedPlaylists p {
+  color: #bbbbbb;
+}
 
+.list-card {
+  text-align: left;
+  background-color: #003d4c;
+}
 
 /*--- Playlist Styling -------------------------------------------------------*/
 
