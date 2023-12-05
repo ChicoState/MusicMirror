@@ -88,7 +88,10 @@ class SavedPlaylists extends React.Component{
 
   /*--- HANDLERS -------------------------------------------------------------*/
 
-  getMusicMirrorLists = async() => {}
+  getMusicMirrorLists = async() => {
+    // let playlists = some_func_to_retrieve_MM_playlists(sessionStorage.getItem("email"));
+    // this.setState({MusicMirrorLists: playlists});
+  }
 
   getSpotifyLists = async() => {
 

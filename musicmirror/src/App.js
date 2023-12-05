@@ -26,7 +26,7 @@ function App() {
     sessionStorage.getItem("loggedIn") === "true"
   );
   const [needsListRefresh, setListRefresh] = useState(false);
-  const [viewSignIn, setViewSignIn] = useState(true);
+  const [viewSignIn, setViewSignIn] = useState(!sessionStorage.getItem("verifier"));
   const [viewSignUp, setViewSignUp] = useState(false);
 
   //----------------------------------------------------------------------------
