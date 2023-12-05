@@ -63,17 +63,27 @@ function App() {
     setSpotifyConnection(true);
   }
 
-  const handleMMLogin = async (data) => {
+  const handleMMLogin = async () => {
+    // needs a func to verify password is correct and return username
     setViewSignUp(false);
     setViewSignIn(false);
   }
 
   const handleMMLogout = async () => {
+    setUsername("");
+    setEmail("");
+    setPassword("");
+    setPasswordConfirm("");
     setViewSignIn(true);
+    // needs a func to refresh the session?
   }
 
-  const handleNewAccount = async (data) => {
-    handleMMLogin(data);
+  const handleNewAccount = async () => {
+    if (password === passwordConfirm) {
+      // needs a func to make sure there isn't already an account with the
+      // provided email, then add the new user to the database
+      handleMMLogin();
+    }
   }
 
   const handleListAdded = () => {
@@ -156,7 +166,6 @@ function App() {
                 Sign In!
               </button>
             </div>
-            {/* Double-check this href and update the href for the signup section */}
             <p className="m-0">
               Don't have an account yet?&nbsp;
               <button className="redirect" onClick={goToSignUp}>
@@ -338,7 +347,7 @@ function App() {
   
           {/* Page footer */}
           <footer className="App-footer px-3 d-flex justify-content-between align-items-center">
-            <p className="m-0">Current User: username here</p>
+            <p className="m-0">Current User: {username !== ""? username : "no username provided"}</p>
             <p className="m-0 mm-logout" onClick={handleMMLogout}>Log Out of MusicMirror</p>
           </footer>
           {/* End of page footer */}

@@ -53,6 +53,7 @@
 
 .mm-logout:hover {
   color: #aaaaaa;
+  cursor: pointer;
 }
 
 .App.sign-in .App-main, .App.sign-up .App-main {
