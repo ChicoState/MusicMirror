@@ -16,10 +16,10 @@ function App() {
   const [SpotList, setSpotList] = useState();
   const [YTList, setYTList] = useState();
   const [search, setSearch] = useState(0);
-  const [loggedIn, setLog] = useState();
+  const [loggedIn, setLog] = useState(false);
+  //const [setLog] = useState();
   const [spotifyConnection, setSpotifyConnection] = useState(
-    localStorage.getItem("token") && localStorage.getItem("token") !== null &&
-    localStorage.getItem("user_id") && localStorage.getItem("user_id") !== null
+    sessionStorage.getItem("loggedIn") === "true"
   );
   const [needsListRefresh, setListRefresh] = useState(false);
 
@@ -28,7 +28,7 @@ function App() {
   useEffect(() => {
     const handleStorageUpdate = (event) => {
       if (event.key === "loggedIn") {
-        setSpotifyConnection(localStorage.getItem("loggedIn") === "true");
+        setSpotifyConnection(sessionStorage.getItem("loggedIn") === "true");
       }
     };
 
