@@ -1,4 +1,5 @@
 import "./styles/App.css";
+import PageAlert from "./components/PageAlert";
 import AddSongs from "./components/AddSongs";
 import SavedPlaylists from "./components/SavedPlaylists";
 import SpotifyProfile from "./components/SpotifyProfile";
@@ -8,7 +9,7 @@ import PlaylistSpot from "./components/PlaylistSpot";
 import PlaylistYT from "./components/PlaylistYT";
 import { useEffect, useState } from "react";
 import { findSongs } from "./playlist";
-import {Tabs, Tab} from "react-bootstrap";
+import { Tabs, Tab } from "react-bootstrap";
 import * as auth from './auth';
 
 function App() {
@@ -28,6 +29,8 @@ function App() {
   const [needsListRefresh, setListRefresh] = useState(false);
   const [viewSignIn, setViewSignIn] = useState(!sessionStorage.getItem("verifier"));
   const [viewSignUp, setViewSignUp] = useState(false);
+  const [alertShow, setAlertShow] = useState(false);
+  const [alertHeading, setAlertHeading] = useState("");
 
   //----------------------------------------------------------------------------
 
@@ -64,8 +67,21 @@ function App() {
   }
 
   const handleMMLogin = async () => {
-    // needs a func to verify password is correct and return username
-    if (email !== "" && password !== "") {
+    
+    if (password === "") {
+      setAlertHeading("Please enter your password");
+      console.log("Alert heading: ", alertHeading);
+      setAlertShow(true);
+    } else if (email === "") {
+      setAlertHeading("Please enter your email address");
+      setAlertShow(true);
+    // } else if (email not in database) {
+    //   setAlertHeading("That email address does not have an account");
+    //   setAlertShow(true);
+    // } else if (password is incorrect) {
+    //   setAlertHeading("Password is incorrect, please try again");
+    //   setAlertShow(true);
+    } else {
       setViewSignUp(false);
       setViewSignIn(false);
     }
@@ -77,14 +93,29 @@ function App() {
     setPassword("");
     setPasswordConfirm("");
     setViewSignIn(true);
-    // needs a func to refresh the session?
+    // Do we need a func to refresh the session?
   }
 
   const handleNewAccount = async () => {
-    if (username !== "" && email !== "" && password !== "" && 
-        password === passwordConfirm) {
-      // needs a func to make sure there isn't already an account with the
-      // provided email, then add the new user to the database
+    if (username === "") {
+      setAlertHeading("Please enter a username");
+      setAlertShow(true);
+    } else if (email === "") {
+      setAlertHeading("Please enter a valid email address");
+      setAlertShow(true);
+    // } else if (some func that says email is in use) {
+    //   setAlertHeading("That email address is already in use");
+    //   setAlertShow(true);
+    } else if (password === "") {
+      setAlertHeading("Please enter a password");
+      setAlertShow(true);
+    } else if (passwordConfirm === "") {
+      setAlertHeading("Please confirm your password");
+      setAlertShow(true);
+    } else if (password !== passwordConfirm) {
+      setAlertHeading("Password and confirmation must be the same");
+      setAlertShow(true);
+    } else {
       handleMMLogin();
     }
   }
@@ -122,6 +153,11 @@ function App() {
     setPasswordConfirm(event.target.value);
   };
 
+  const handleAlertClose = () => {
+    setAlertShow(false);
+    setAlertHeading("");
+  }
+
   //----------------------------------------------------------------------------
 
   const goToSignIn = () => {
@@ -140,6 +176,10 @@ function App() {
   if (viewSignIn) {
     return (
       <div className="App sign-in">
+
+        {/* Alert */}
+        <PageAlert show={alertShow} heading={alertHeading} close={handleAlertClose} />
+        {/* End alert */}
 
         {/* Page body */}
         <div className="main-wrapper">
@@ -193,6 +233,10 @@ function App() {
   } else if (viewSignUp) {
     return (
       <div className="App sign-up">
+
+        {/* Alert */}
+        <PageAlert show={alertShow} heading={alertHeading} close={handleAlertClose} />
+        {/* End alert */}
 
         {/* Page body */}
         <div className="main-wrapper">
@@ -276,9 +320,14 @@ function App() {
           <h1>MusicMirror</h1>        
         </header>
         {/* End of page header */}
+
+        {/* Alert displays in fixed position beneath header, when visible */}
+        <PageAlert show={alertShow} heading={alertHeading} close={handleAlertClose} />
+        {/* End alert */}
   
         {/* Page body */}
         <div className="main-wrapper">
+
           {/* Wrapper to help with columns */}
           <div className="App-main mx-0 px-5 row grid gap-5">
             

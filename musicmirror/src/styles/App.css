@@ -119,6 +119,14 @@ button.redirect:hover {
   overflow-y: scroll;
 }
 
+.PageAlert {
+  height: 15vh;
+  width: 100vw;
+  border-radius: 0;
+  position: fixed;
+  z-index: 11;
+}
+
 /*--- SavedPlaylists Styling -------------------------------------------------*/
 
 .SavedPlaylists h1 {
