@@ -15,6 +15,7 @@ function App() {
   const [MMList, setMMList] = useState();
   const [SpotList, setSpotList] = useState();
   const [YTList, setYTList] = useState();
+  const [SearchTerm, setSearchTerm] = useState();
   const [search, setSearch] = useState(0);
   const [loggedIn, setLog] = useState();
   const [spotifyConnection, setSpotifyConnection] = useState(
@@ -45,9 +46,10 @@ function App() {
     console.log(`Searching! This is search number ${search+1}.`)
     //change search result count (5) to a user input value later
     let list = await findSongs(data, 5)
+    console.log("This is the search querry:", data);
     setMMList(list);
     setSpotList(list);
-    // setYTList(list);
+    setYTList(data);
     setSearch(search+1);
   }
 
@@ -143,8 +145,8 @@ function App() {
               </Tab>
               <Tab tabClassName="tab tab-youtube" eventKey="youtubeRight" title="YT Music">
                 <div className="tab-body p-3">
-                  <YouTube />
-                  <PlaylistYT service="youtube" list={YTList} search={search} save={handleListAdded}/>
+                  <YouTube searchTerm={YTList}/>
+                  {/*<PlaylistYT service="youtube" list={YTList} search={search} save={handleListAdded}/>*/}
                 </div> 
               </Tab>
             </Tabs>

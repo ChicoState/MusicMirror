@@ -8,7 +8,14 @@ services:
     volumes:
       - /app/backend
       - /app/node_modules
-
+  youtubeapi:
+    build: ./server
+    container_name: youtubeapi_calls
+    ports:
+      - '3001:3001'
+    volumes:
+      - /app/server # 
+      - /app/node_modules # Preserves the node_modules directory in the container
   client:
     build: ./musicmirror
     container_name: client_frontend
