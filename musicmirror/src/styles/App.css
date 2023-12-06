@@ -220,6 +220,10 @@ button.redirect:hover {
   padding: 5% 15%;
 }
 
+.user-data {
+  color: limegreen;
+}
+
 .confirm-button, .remove-button, .nevermind-button, .delete-button {
   border: none;
   transition: background-color 0.4s;

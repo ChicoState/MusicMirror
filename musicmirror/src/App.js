@@ -386,11 +386,27 @@ function App() {
                   ></button>
                 </div>
                 <div className="modal-body">
-                  <p>Username and email go here.</p>
-                  <p className="warning">
+                  <div className="d-flex">
+                    <p>
+                      Username:&nbsp;
+                    </p>
+                    <p className="user-data">
+                        {username !== ""? username : "no username provided"}
+                    </p>
+                  </div>
+                  <div className="d-flex">
+                    <p>
+                      Email:&nbsp;
+                    </p>
+                    <p className="user-data">
+                        {email !== ""? email : "no email provided"}
+                    </p>
+                  </div>
+                  <br />
+                  <p><b>
                     WARNING: If you delete your account, all playlists saved to
                     MusicMirror will be lost.
-                  </p>
+                  </b></p>
                 </div>
                 <div className="modal-footer d-flex">
                   <button 
@@ -398,7 +414,7 @@ function App() {
                     type="button" 
                     data-bs-dismiss="modal" 
                   >
-                    No, keep my account.
+                    Not Now
                   </button>
                   <button 
                     className="delete-button btn btn-secondary flex-fill"
@@ -406,7 +422,7 @@ function App() {
                     data-bs-dismiss="modal"
                     onClick={handleDeleteAccount}
                   >
-                    Yes, delete my account.
+                    Delete It
                   </button>
                 </div>
               </div>
