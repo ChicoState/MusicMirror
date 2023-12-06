@@ -65,8 +65,10 @@ function App() {
 
   const handleMMLogin = async () => {
     // needs a func to verify password is correct and return username
-    setViewSignUp(false);
-    setViewSignIn(false);
+    if (email !== "" && password !== "") {
+      setViewSignUp(false);
+      setViewSignIn(false);
+    }
   }
 
   const handleMMLogout = async () => {
@@ -79,7 +81,8 @@ function App() {
   }
 
   const handleNewAccount = async () => {
-    if (password === passwordConfirm) {
+    if (username !== "" && email !== "" && password !== "" && 
+        password === passwordConfirm) {
       // needs a func to make sure there isn't already an account with the
       // provided email, then add the new user to the database
       handleMMLogin();
