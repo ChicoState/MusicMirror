@@ -21,8 +21,13 @@ class AddSongs extends React.Component {
   };
 
   handleClick = async () => {
-    this.props.handleMsg(this.state.message);
-    console.log(`passing: ${this.state.message}`)
+    if (sessionStorage.getItem("loggedIn") === "true") {
+      this.props.handleMsg(this.state.message);
+      console.log(`passing: ${this.state.message}`)
+    }
+    // may want to add an alert when attempting to find songs without
+    // logging in; may also want to add loading gif when searching for songs
+    // (it can take a while)
   };
 
   render() {
