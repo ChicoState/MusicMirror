@@ -22,8 +22,6 @@ class SavedPlaylists extends React.Component{
     } else if (this.props.service === "spotify" && 
         this.props.connected) {
 
-      console.log("UPDATING PLAYLISTS ON MOUNT");
-      console.log("token: ", localStorage.getItem("token"));
       this.getSpotifyLists();
 
     } else if (this.props.service === "youtube" && 
@@ -46,8 +44,6 @@ class SavedPlaylists extends React.Component{
         this.props.connected && 
         !prevProps.connected) {
 
-      console.log("UPDATING PLAYLISTS ON LOGIN");
-      console.log("token: ", localStorage.getItem("token"));
       this.getSpotifyLists();
 
     } else if (this.props.service === "youtube" && 
@@ -68,8 +64,6 @@ class SavedPlaylists extends React.Component{
         !this.props.connected && 
         prevProps.connected) {
 
-      console.log("UPDATING PLAYLISTS ON LOGOUT");
-      console.log("token: ", localStorage.getItem("token"));
       this.setState({SpotifyLists: {}});
 
     } else if (this.props.service === "youtube" && 
@@ -94,15 +88,18 @@ class SavedPlaylists extends React.Component{
 
   /*--- HANDLERS -------------------------------------------------------------*/
 
-  getMusicMirrorLists = async() => {}
+  getMusicMirrorLists = async() => {
+    // let playlists = some_func_to_retrieve_MM_playlists(sessionStorage.getItem("email"));
+    // this.setState({MusicMirrorLists: playlists});
+  }
 
   getSpotifyLists = async() => {
 
     let playlists = {};
-    while (Object.keys(playlists).length < 2) {
+    while (sessionStorage.getItem("verifier") && Object.keys(playlists).length < 2) {
       let test = await getPlaylists();
       if (Object.keys(test).length > 2 && 
-          test.href != "https://api.spotify.com/v1/users/null/playlists?offset=0&limit=20") {
+          test.href !== "https://api.spotify.com/v1/users/null/playlists?offset=0&limit=20") {
 
         playlists = test;
       }
@@ -146,12 +143,6 @@ class SavedPlaylists extends React.Component{
       );
 
     } else {
-      console.log("WHY AREN'T LISTS SHOWING UP??????");
-      console.log("this.props.service: ", this.props.service);
-      console.log("this.props.connected: ", this.props.connected);
-      console.log("this.state.SpotifyLists: ", this.state.SpotifyLists);
-      console.log("localStorage.getItem('user_id'): ", localStorage.getItem("user_id"));
-      console.log("localStorage.getItem('token'): ", localStorage.getItem("token"));
       return (
         <div className="SavedPlaylists">
           <p>No playlists yet!</p>

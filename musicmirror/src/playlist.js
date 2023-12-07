@@ -3,7 +3,8 @@
 
 export async function findSongs(input, resCount) {
     console.log(input);
-    const token = localStorage.getItem("token");
+    //const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
     //separate each query by line
     //let search = input.split('\n');
     let search = input.split(/[\n,]\s*/);
@@ -60,8 +61,10 @@ export async function findSongs(input, resCount) {
 
 export async function genPlaylist(list) {
     console.log(list);
-    const user_id = localStorage.getItem("user_id");
-    const token = localStorage.getItem("token");
+    //const user_id = localStorage.getItem("user_id");
+    const user_id = sessionStorage.getItem("user_id");
+    //const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
     // if list size > 0, create playlist (api req)
     if(Object.keys(list.songs).length > 0){
         //create spotify playlist
@@ -88,8 +91,8 @@ export async function genPlaylist(list) {
 }
 
 export async function getPlaylists() {
-    const user_id = localStorage.getItem("user_id");
-    const token = localStorage.getItem("token");
+    const user_id = sessionStorage.getItem("user_id");
+    const token = sessionStorage.getItem("token");
 
     let resp = await fetch("https://api.spotify.com/v1/users/" + user_id + "/playlists", {
         method: "GET",

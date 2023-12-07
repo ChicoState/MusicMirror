@@ -4,27 +4,20 @@ import React from "react";
 class SpotifyProfile extends React.Component {
   constructor() {
     super();
-    const loggedIn = localStorage.getItem("loggedIn") === "true";
+    const loggedIn = sessionStorage.getItem("loggedIn") === "true";
     this.state = {
       loggedIn: loggedIn,
       connected: false,
-      //loggedIn: false,
     }
   }
 
   componentDidMount() {
-    localStorage.setItem('loggedIn', true);
     this.props.handleLogin(this.state.loggedIn);
   }
 
   handleChange = async() => {
     auth.checkCode();
-    /*
-    this.setState({loggedIn: true}, async() => {
-      //localStorage.setItem('loggedIn', true);
-      await this.props.handleLogin(this.state.loggedIn);
-    });
-    */
+
   };
 
   /*--- HANDLERS -------------------------------------------------------------*/
@@ -39,7 +32,7 @@ class SpotifyProfile extends React.Component {
   /*--------------------------------------------------------------------------*/
 
   render() {
-    if(!this.state.loggedIn){
+    if(sessionStorage.getItem("loggedIn") === "false"){
       return (
         <section id="profile" className="SpotifyProfile mb-3">
           <h3>Looks like you haven't connected to Spotify yet. Please sign in.</h3>
@@ -47,6 +40,7 @@ class SpotifyProfile extends React.Component {
         </section>
       );
     }else{
+      console.log("loggedIn: ", sessionStorage.getItem("loggedIn"));
       return (
         <section id="profile" className="SpotifyProfile mb-3 d-flex justify-content-between align-items-center">
           <h3 className="logged-in">Spotify Connected!</h3>
