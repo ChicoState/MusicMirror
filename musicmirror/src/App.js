@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { findSongs } from "./playlist";
 import {Tabs, Tab} from "react-bootstrap";
 import * as auth from './auth';
+import { emailCheck, createUser, getUsername, deleteUser } from './database';
 
 function App() {
   const [username, setUsername] = useState("");
@@ -64,6 +65,7 @@ function App() {
   }
 
   const handleMMLogin = async () => {
+    //let joe = await getUsername(email, password);
     // needs a func to verify password is correct and return username
     if (email !== "" && password !== "") {
       setViewSignUp(false);
@@ -83,6 +85,14 @@ function App() {
   const handleNewAccount = async () => {
     if (username !== "" && email !== "" && password !== "" && 
         password === passwordConfirm) {
+          /*
+          //Remember to await function to wait for promise to resolve
+          //or else it wont return back as true/false
+          let check = await emailCheck(email);
+          if(!check){
+            createUser(username, password, email);
+          }
+          */
       // needs a func to make sure there isn't already an account with the
       // provided email, then add the new user to the database
       handleMMLogin();
@@ -91,6 +101,7 @@ function App() {
 
   const handleDeleteAccount = async () => {
     handleMMLogout();
+    deleteUser(email);
     // needs a func to remove the user from the database
   }
 
