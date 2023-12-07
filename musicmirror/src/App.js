@@ -27,6 +27,7 @@ function App() {
   const [spotifyConnection, setSpotifyConnection] = useState(
     sessionStorage.getItem("loggedIn") === "true"
   );
+  const [youtubeLoggedIn, setIsYoutubeLoggedIn]=useState(false);
   const [needsListRefresh, setListRefresh] = useState(false);
   const [viewSignIn, setViewSignIn] = useState(!sessionStorage.getItem("verifier"));
   const [viewSignUp, setViewSignUp] = useState(false);
@@ -42,6 +43,10 @@ function App() {
         setSpotifyConnection(sessionStorage.getItem("loggedIn") === "true");
       }
     };
+    const youtubeToken = localStorage.getItem('youtubeAccessToken');
+    if (youtubeToken) {
+      setIsYoutubeLoggedIn(true);
+    }
 
     window.addEventListener('storage', handleStorageUpdate);
 
@@ -160,7 +165,6 @@ function App() {
   }
 
   //----------------------------------------------------------------------------
-
   const goToSignIn = () => {
     setViewSignIn(true);
     setViewSignUp(false);
@@ -377,7 +381,7 @@ function App() {
                     <YouTube />
                     <SavedPlaylists 
                       service="youtube" 
-                      connected="false" 
+                      connected={setIsYoutubeLoggedIn} 
                       refresh={needsListRefresh} 
                       confirm={handleConfirmRefresh}
                     />
@@ -421,14 +425,8 @@ function App() {
                 </Tab>
                 <Tab tabClassName="tab tab-youtube" eventKey="youtubeRight" title="YT Music">
                   <div className="tab-body p-3">
-                    <YouTube />
-                    <PlaylistYT 
-                      service="youtube" 
-                      list={YTList} 
-                      search={search} 
-                      save={handleListAdded}
-                      alert={handleAlertOpen}
-                    />
+                      <YouTube searchTerm={YTList}/>
+                  {/*<PlaylistYT service="youtube" list={YTList} search={search} save={handleListAdded}/>*/}
                   </div> 
                 </Tab>
               </Tabs>

@@ -38,7 +38,6 @@ function Youtube({searchTerm}){
     if(token){
       setAccessToken(token);
       localStorage.setItem('youtubeAccessToken',token);
-      //console.log("GOt the fucker", token);
     }else if(code){
       axios.post('http://localhost:3001/getAccessToken',{code: code}).then(response=>{
         setAccessToken(response.data.acessToken);
@@ -47,10 +46,9 @@ function Youtube({searchTerm}){
       ).catch(error=>console.error('Error in fetching acess Token:',error));
     }else if(storedToken){
       setAccessToken(storedToken);
-     console.log("Yeaaaah, failed to get the access token");
+      fetchUserPlaylists(storedToken);
     }
     if(accessToken){
-      //console.log("We got the toke", accessToken);
       fetchUserPlaylists();
     }
 
@@ -99,6 +97,7 @@ function Youtube({searchTerm}){
     setUser(null);
     setPlaylists([]);
     localStorage.removeItem('youtubeAccessToken');
+    setAccessToken(null);
   };
   useEffect(() => {
     if (window.YT && currentVideoId) {
