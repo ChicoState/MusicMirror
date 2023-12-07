@@ -93,6 +93,7 @@ class PlaylistMM extends React.Component{
 
     /* If passed nothing, remove the currently selected song */
     if (!updatedSong) {
+      this.props.alert(`Song removed: ${this.state.selectedSong.title}`, "success");
       newList.songs = newList.songs.filter((song, index) => 
         index !== this.state.selectedIndex
       );
@@ -104,6 +105,10 @@ class PlaylistMM extends React.Component{
 
     /* If passed a song, replace the currently selected song */
     } else {
+      this.props.alert(
+        `Song updated: ${this.state.selectedSong.title} is now ${updatedSong.title}`, 
+        "success"
+      );
       newList.songs[this.state.selectedIndex] = updatedSong;
       this.setState({playlist: newList, selectedSong: updatedSong}, () => {
         console.log("STATE UPDATE COMPLETE, CHANGED SONG");

@@ -7,6 +7,7 @@ class PageAlert extends React.Component {
     this.state = {
       show: false,
       heading: "",
+      variant: ""
     }
   }
 
@@ -14,10 +15,11 @@ class PageAlert extends React.Component {
 
   componentDidUpdate(prevProps) {
 
-    if (!prevProps.show && this.props.show) {
+    if (this.props.show && (!prevProps.show || (prevProps.heading !== this.props.heading))) {
       this.setState({
         show: true,
-        heading: this.props.heading
+        heading: this.props.heading,
+        variant: this.props.variant
       }, () => {
         console.log("PAGE ALERT STATE UPDATE: show = true");
       });
@@ -29,7 +31,8 @@ class PageAlert extends React.Component {
   handleClose = () => {
     this.setState({
       show: false,
-      heading: ""
+      heading: "",
+      variant: ""
     }, () => {
       console.log("PAGE ALERT STATE UPDATE: show = false")
     });
@@ -43,8 +46,8 @@ class PageAlert extends React.Component {
     if (this.state.show) {
       return (
         <Alert 
-          className="PageAlert"
-          variant="info" 
+          className="PageAlert d-flex align-items-center"
+          variant={this.state.variant === ""? "info" : this.state.variant} 
           onClose={this.handleClose}
           dismissible
         >
