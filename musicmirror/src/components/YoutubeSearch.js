@@ -11,7 +11,7 @@ function YoutubeSearch({searchTearm, API_KEY,MAXRESULTS, accessToken}){
 
     useEffect(()=>{
         if(searchTearm){
-            const terms = searchTearm.split(/[\n,]\s*/).map(term => term.trim());
+            const terms = searchTearm.split('\n').map(term => term.trim());
             console.log('Doing a multi search');
             performMultiSearch(terms); 
         }else{

@@ -12,11 +12,11 @@ API_KETYS:
 2ND:AIzaSyBnKLIVgOiPTzRVvXMguoHi8a49aVvEUvI
 
 3RD: AIzaSyBWAir5kNDcRDZAAPr8pvINjmJA2ERD22M
-
+4th: AIzaSyAV-JTsRzcn_ZIj32pSkrEGlY1eJHvosv0
 CHNAGE whne the API search limit has been reached and request, 
 go to the server and change the need info
 */
-const API_KEY = 'AIzaSyDhDpQvbI2W1P5IH8xV4o2fsw0gK_5lGzY';
+const API_KEY = 'AIzaSyBnKLIVgOiPTzRVvXMguoHi8a49aVvEUvI';
 const MAXRESULTS = 20;
 
 //We are reciving the search term form the text  box 
@@ -237,7 +237,6 @@ const renderVideoPlayer = () => {
         }
       </Tab>
       <Tab tabClassName="SearchResults" eventKey={"SearchResults"} title="Search Results" >
-        <div>console.log("Here before the search", searchTerm);</div>
         {searchTerm && (
             <YoutubeSearch
               searchTearm={searchTerm}

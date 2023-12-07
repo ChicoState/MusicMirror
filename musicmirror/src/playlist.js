@@ -5,8 +5,7 @@ export async function findSongs(input, resCount) {
     console.log(input);
     const token = localStorage.getItem("token");
     //separate each query by line
-    //let search = input.split('\n');
-    let search = input.split(/[\n,]\s*/);
+    let search = input.split('\n');
     //iterate over songs and search for song
     let playlist = {
         title: "Music Mirror Playlist",
