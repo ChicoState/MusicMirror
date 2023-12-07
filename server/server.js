@@ -3,6 +3,7 @@ const express = require('express');
 const { google } = require('googleapis');
 const cors = require('cors');
 const app = express();
+require('dotenv').config();
 
 app.use(cors()); // Enable CORS for all routes
 /*
@@ -22,12 +23,12 @@ Client secret: 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
 Client ID: 1005392414752-kmq436j60idb4no59quujm9gic61jr3f.apps.googleusercontent.com
 */
 const API_KEY = 'AIzaSyBWAir5kNDcRDZAAPr8pvINjmJA2ERD22M';
-const C_secrete = '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';
-const C_id = '1005392414752-kmq436j60idb4no59quujm9gic61jr3f.apps.googleusercontent.com';
+const C_secrete = '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';
+const C_id = '808121759367-6efs65rh50k4p5qhn6af10iqjtgcs7m8.apps.googleusercontent.com';
 const oauthCall = 'http://localhost:3001/oauth2callback';
 const oauth2Client = new google.auth.OAuth2(
-  '808121759367-6efs65rh50k4p5qhn6af10iqjtgcs7m8.apps.googleusercontent.com', // Replace with client ID
-  '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', // Replace with client secret
+  C_id, // Replace with client ID
+  C_secrete, // Replace with client secret
   'http://localhost:3001/oauth2callback'// <- is for this server don't. server's redirect URI
 );
 
@@ -51,7 +52,7 @@ app.get('/oauth2callback', async (req, res) => {
     const { tokens } = await oauth2Client.getToken(code);
     oauth2Client.setCredentials(tokens);
     res.redirect('http://localhost:3000?accessToken=' + tokens.access_token);
-    req.session.refreshToken = tokens.refresh_token;
+    //req.session.refreshToken = tokens.refresh_token;
   } catch (err) {
     console.error('Error retrieving access token', err);
     res.status(500).send('Authentication failed');
@@ -59,7 +60,7 @@ app.get('/oauth2callback', async (req, res) => {
 });
 
 app.get('/youtube/playlists', async (req, res) => {
-  await refreshAccessTokenIfNeeded();
+  //await refreshAccessTokenIfNeeded();
   const accessToken = req.query.accessToken;
   if(!accessToken){
     return res.status(400).send('Access Token Required');
@@ -86,7 +87,7 @@ app.get('/youtube/playlists', async (req, res) => {
   }
 });
 app.get('/youtube/playlistItems', async (req, res) => {
-  await refreshAccessTokenIfNeeded();
+  //await refreshAccessTokenIfNeeded();
   const { accessToken, playlistId } = req.query;
   if (!accessToken || !playlistId) {
     return res.status(400).send('Access Token and Playlist ID Required');
@@ -111,7 +112,7 @@ app.get('/youtube/playlistItems', async (req, res) => {
 });
 
 app.post('/youtube/addToPlaylist', async (req, res) => {
-  await refreshAccessTokenIfNeeded();
+  //await refreshAccessTokenIfNeeded();
   const { accessToken, playlistId, videoId } = req.body;
   
   if (!accessToken || !playlistId || !videoId) {
@@ -143,7 +144,7 @@ app.post('/youtube/addToPlaylist', async (req, res) => {
 });
 
 app.post('/youtube/createPlaylist', async (req, res) => {
-  await refreshAccessTokenIfNeeded();
+  //await refreshAccessTokenIfNeeded();
   const { accessToken, title, description } = req.body;
 
   if (!accessToken || !title) {
@@ -175,7 +176,7 @@ app.post('/youtube/createPlaylist', async (req, res) => {
 });
 
 app.delete('/youtube/removeFromPlaylist', async (req, res) => {
-  await refreshAccessTokenIfNeeded();
+  //await refreshAccessTokenIfNeeded();
   const { accessToken, playlistItemId } = req.body;
 
   if (!accessToken || !playlistItemId) {
@@ -198,7 +199,7 @@ app.delete('/youtube/removeFromPlaylist', async (req, res) => {
   }
 });
 app.delete('/youtube/deletePlaylist', async (req, res) => {
-  await refreshAccessTokenIfNeeded();
+  //await refreshAccessTokenIfNeeded();
   const { accessToken, playlistId } = req.body;
   if (!accessToken || !playlistId) {
     return res.status(400).send('Access Token and Playlist ID Required');

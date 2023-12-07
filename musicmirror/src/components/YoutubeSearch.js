@@ -77,11 +77,9 @@ function YoutubeSearch({searchTearm, API_KEY,MAXRESULTS, accessToken}){
                         id: item.id,
                         title: item.snippet.title,
                         thumbnails: item.snippet.thumbnails,
-                        duration: detail.contentDetails?.duration, // Use optional chaining in case contentDetails is undefined
-                        // Add any other details you need here
+                        duration: detail.contentDetails?.duration,
                         channelTitle: item.snippet.channelTitle,
                         publishedAt: item.snippet.publishedAt,
-                        // If there are additional details you want from the detail object, add them here
                         definition: detail.contentDetails?.definition,
                     };
                 });

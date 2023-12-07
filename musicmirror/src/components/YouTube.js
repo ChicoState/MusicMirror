@@ -30,22 +30,24 @@ function Youtube({searchTerm}){
   console.log('The Search: val', searchTerm);
 //START OF EFFECT
   useEffect(()=>{
-    const urlParams = new URLSearchParams(window.location.search);
+    let storedToken = localStorage.getItem('youtubeToken');//use to store the token
+    const urlParams = new URLSearchParams(window.location.search);//url parameters
     //used to be called authCode
     const token = urlParams.get('accessToken');
-    console.log("HERE :::::", token);
     const code = urlParams.get('code');
     if(token){
       setAccessToken(token);
+      localStorage.setItem('youtubeAccessToken',token);
       //console.log("GOt the fucker", token);
-      setAccessToken(token);
-    }else{
-     console.log("Yeaaaah");
-    }
-    if(code){
-      axios.post('http://localhost:3001/getAccessToken', {code: code}).then(response=>{
+    }else if(code){
+      axios.post('http://localhost:3001/getAccessToken',{code: code}).then(response=>{
         setAccessToken(response.data.acessToken);
-      }).catch(error=>console.error('Error in fetching acess Token:',error));
+        localStorage.setItem('youtubeAccessToken',accessToken);
+      }
+      ).catch(error=>console.error('Error in fetching acess Token:',error));
+    }else if(storedToken){
+      setAccessToken(storedToken);
+     console.log("Yeaaaah, failed to get the access token");
     }
     if(accessToken){
       //console.log("We got the toke", accessToken);
@@ -53,6 +55,7 @@ function Youtube({searchTerm}){
     }
 
   },[searchTerm, accessToken]);
+  
   const signIn =()=> {
     window.location.href = 'http://localhost:3001/auth/google';
   };
@@ -95,6 +98,7 @@ function Youtube({searchTerm}){
   const signOut =()=>{
     setUser(null);
     setPlaylists([]);
+    localStorage.removeItem('youtubeAccessToken');
   };
   useEffect(() => {
     if (window.YT && currentVideoId) {
@@ -126,23 +130,6 @@ function Youtube({searchTerm}){
     }
   };
 
-  /*End of userplaylist */
-/////////* User playlist eidt */
-  /*End of user Edit */
-
-  /*const renderVideoPlayer = () => {
-    console.log("Here at render:::", currentVideoId);
-    return currentVideoId && (
-      <iframe 
-        width="auto"
-        height="auto"
-        src={`https://www.youtube.com/embed/${currentVideoId}?enablejsapi=1`}
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowFullScreen>
-      </iframe>
-    );
-  };
-  */
   const handleVideoSelect = (playlistIndex, videoIndex) => {
     setCurrentPlaylistIndex(playlistIndex);
     setCurrentVideoIndex(videoIndex);
