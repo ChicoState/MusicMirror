@@ -223,7 +223,6 @@ const renderVideoPlayer = () => {
         }
       </Tab>
       <Tab tabClassName="SearchResults" eventKey={"SearchResults"} title="Search Results" >
-        <div>console.log("Here before the search", searchTerm);</div>
         {searchTerm && (
             <YoutubeSearch
               searchTearm={searchTerm}
