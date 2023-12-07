@@ -64,6 +64,7 @@ class PlaylistYT extends React.Component{
   handleSave = async() => {
     await genPlaylist(this.state.playlist);
     this.props.save();
+    this.props.alert(`${this.state.currentTitle} playlist saved to YouTube!`, "success");
   }
 
 

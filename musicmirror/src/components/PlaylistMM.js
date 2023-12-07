@@ -65,6 +65,7 @@ class PlaylistMM extends React.Component{
   handleSave = async() => {
     await savePlaylist(this.state.playlist);
     this.props.save();
+    this.props.alert(`${this.state.currentTitle} playlist saved to MusicMirror!`, "success");
   }
 
 
