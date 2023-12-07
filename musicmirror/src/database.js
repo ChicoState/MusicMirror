@@ -87,6 +87,33 @@ export async function getUsername(email, password){
     }
 }
 
+//Returns a list of playlist objects if a user matches id
+//Otherwise, returns undefined
+export async function getMMPlaylists(id){
+    try {
+        let resp = await fetch(`http://localhost:5000/user?_id=${id}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        });
+        if (resp.ok) {
+            let jsonData = await resp.json();
+            
+            if(jsonData.playlists.length == 0){
+                return undefined;
+            } else {
+                return jsonData.playlists;
+            }
+        } else {
+            console.error(`Error: ${resp.status} - ${resp.statusText}`);
+        }
+    } catch (err) {
+        console.error(err);
+        throw err;
+    }
+}
+
 //Deletes user via given email
 export async function deleteUser(email){
     try {

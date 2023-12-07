@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 import { findSongs } from "./playlist";
 import {Tabs, Tab} from "react-bootstrap";
 import * as auth from './auth';
-import { emailCheck, createUser, getUsername, deleteUser } from './database';
+import { emailCheck, createUser, getUsername, deleteUser, getMMPlaylists } from './database';
 
 function App() {
   const [username, setUsername] = useState("");
@@ -66,6 +66,7 @@ function App() {
 
   const handleMMLogin = async () => {
     //let joe = await getUsername(email, password);
+    //console.log(await getMMPlaylists("65714e623e36dc333ee6eef4"));
     // needs a func to verify password is correct and return username
     if (email !== "" && password !== "") {
       setViewSignUp(false);
