@@ -20,12 +20,14 @@ function App() {
   const [MMList, setMMList] = useState();
   const [SpotList, setSpotList] = useState();
   const [YTList, setYTList] = useState();
+  const [SearchTerm, setSearchTerm] = useState();
   const [search, setSearch] = useState(0);
   const [loggedIn, setLog] = useState(false);
   //const [setLog] = useState();
   const [spotifyConnection, setSpotifyConnection] = useState(
     sessionStorage.getItem("loggedIn") === "true"
   );
+  const [youtubeLoggedIn, setIsYoutubeLoggedIn]=useState(false);
   const [needsListRefresh, setListRefresh] = useState(false);
   const [viewSignIn, setViewSignIn] = useState(!sessionStorage.getItem("verifier"));
   const [viewSignUp, setViewSignUp] = useState(false);
@@ -41,6 +43,10 @@ function App() {
         setSpotifyConnection(sessionStorage.getItem("loggedIn") === "true");
       }
     };
+    const youtubeToken = localStorage.getItem('youtubeAccessToken');
+    if (youtubeToken) {
+      setIsYoutubeLoggedIn(true);
+    }
 
     window.addEventListener('storage', handleStorageUpdate);
 
@@ -55,9 +61,10 @@ function App() {
     console.log(`Searching! This is search number ${search+1}.`)
     //change search result count (5) to a user input value later
     let list = await findSongs(data, 5)
+    console.log("This is the search querry:", data);
     setMMList(list);
     setSpotList(list);
-    // setYTList(list);
+    setYTList(data);
     setSearch(search+1);
     handleAlertOpen("Search complete!", "success");
   }
@@ -158,7 +165,6 @@ function App() {
   }
 
   //----------------------------------------------------------------------------
-
   const goToSignIn = () => {
     setViewSignIn(true);
     setViewSignUp(false);
@@ -375,7 +381,7 @@ function App() {
                     <YouTube />
                     <SavedPlaylists 
                       service="youtube" 
-                      connected="false" 
+                      connected={setIsYoutubeLoggedIn} 
                       refresh={needsListRefresh} 
                       confirm={handleConfirmRefresh}
                     />
@@ -419,14 +425,8 @@ function App() {
                 </Tab>
                 <Tab tabClassName="tab tab-youtube" eventKey="youtubeRight" title="YT Music">
                   <div className="tab-body p-3">
-                    <YouTube />
-                    <PlaylistYT 
-                      service="youtube" 
-                      list={YTList} 
-                      search={search} 
-                      save={handleListAdded}
-                      alert={handleAlertOpen}
-                    />
+                      <YouTube searchTerm={YTList}/>
+                  {/*<PlaylistYT service="youtube" list={YTList} search={search} save={handleListAdded}/>*/}
                   </div> 
                 </Tab>
               </Tabs>
