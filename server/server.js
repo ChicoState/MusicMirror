@@ -6,6 +6,7 @@ const app = express();
 require('dotenv').config();
 
 app.use(cors()); // Enable CORS for all routes
+app.use(express.json());
 /*
 
 Firt Google information for YOUTUBE API to do searched and get user informtion of their iteams:
@@ -56,6 +57,18 @@ app.get('/oauth2callback', async (req, res) => {
   } catch (err) {
     console.error('Error retrieving access token', err);
     res.status(500).send('Authentication failed');
+  }
+});
+// server.js
+app.post('/getAccessToken', async (req, res) => {
+  const code = req.body.code;
+  try {
+    const { tokens } = await oauth2Client.getToken(code);
+    oauth2Client.setCredentials(tokens);
+    res.json({ accessToken: tokens.access_token });
+  } catch (error) {
+    console.error('Error exchanging authorization code:', error);
+    res.status(500).send('Failed to exchange authorization code');
   }
 });
 
