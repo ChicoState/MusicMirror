@@ -64,6 +64,7 @@ class PlaylistSpot extends React.Component{
   handleSave = async() => {
     await genPlaylist(this.state.playlist);
     this.props.save();
+    this.props.alert(`${this.state.currentTitle} playlist saved to Spotify!`, "success");
   }
 
 
@@ -92,6 +93,10 @@ class PlaylistSpot extends React.Component{
 
     /* If passed nothing, remove the currently selected song */
     if (!updatedSong) {
+      this.props.alert(
+        `Song removed: ${this.state.selectedSong.tracks[0].title}`, 
+        "success"
+      );
       newList.songs = newList.songs.filter((song, index) => 
         index !== this.state.selectedIndex
       );
@@ -103,6 +108,10 @@ class PlaylistSpot extends React.Component{
 
     /* If passed a song, replace the currently selected song */
     } else {
+      this.props.alert(
+        `Song updated: ${updatedSong.tracks[0].title}`, 
+        "success"
+      );
       newList.songs[this.state.selectedIndex] = updatedSong;
       this.setState({playlist: newList, selectedSong: updatedSong}, () => {
         console.log("STATE UPDATE COMPLETE, CHANGED SONG");

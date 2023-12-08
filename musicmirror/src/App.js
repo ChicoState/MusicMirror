@@ -1,4 +1,5 @@
 import "./styles/App.css";
+import PageAlert from "./components/PageAlert";
 import AddSongs from "./components/AddSongs";
 import SavedPlaylists from "./components/SavedPlaylists";
 import SpotifyProfile from "./components/SpotifyProfile";
@@ -8,7 +9,7 @@ import PlaylistSpot from "./components/PlaylistSpot";
 import PlaylistYT from "./components/PlaylistYT";
 import { useEffect, useState } from "react";
 import { findSongs } from "./playlist";
-import {Tabs, Tab} from "react-bootstrap";
+import { Tabs, Tab } from "react-bootstrap";
 import * as auth from './auth';
 
 function App() {
@@ -19,15 +20,20 @@ function App() {
   const [MMList, setMMList] = useState();
   const [SpotList, setSpotList] = useState();
   const [YTList, setYTList] = useState();
+  const [SearchTerm, setSearchTerm] = useState();
   const [search, setSearch] = useState(0);
   const [loggedIn, setLog] = useState(false);
   //const [setLog] = useState();
   const [spotifyConnection, setSpotifyConnection] = useState(
     sessionStorage.getItem("loggedIn") === "true"
   );
+  const [youtubeLoggedIn, setIsYoutubeLoggedIn]=useState(false);
   const [needsListRefresh, setListRefresh] = useState(false);
   const [viewSignIn, setViewSignIn] = useState(!sessionStorage.getItem("verifier"));
   const [viewSignUp, setViewSignUp] = useState(false);
+  const [alertShow, setAlertShow] = useState(false);
+  const [alertHeading, setAlertHeading] = useState("");
+  const [alertVariant, setAlertVariant] = useState("");
 
   //----------------------------------------------------------------------------
 
@@ -37,6 +43,10 @@ function App() {
         setSpotifyConnection(sessionStorage.getItem("loggedIn") === "true");
       }
     };
+    const youtubeToken = localStorage.getItem('youtubeAccessToken');
+    if (youtubeToken) {
+      setIsYoutubeLoggedIn(true);
+    }
 
     window.addEventListener('storage', handleStorageUpdate);
 
@@ -51,10 +61,12 @@ function App() {
     console.log(`Searching! This is search number ${search+1}.`)
     //change search result count (5) to a user input value later
     let list = await findSongs(data, 5)
+    console.log("This is the search querry:", data);
     setMMList(list);
     setSpotList(list);
-    // setYTList(list);
+    setYTList(data);
     setSearch(search+1);
+    handleAlertOpen("Search complete!", "success");
   }
 
   const handleLogin = async (data) => {
@@ -64,8 +76,16 @@ function App() {
   }
 
   const handleMMLogin = async () => {
-    // needs a func to verify password is correct and return username
-    if (email !== "" && password !== "") {
+    
+    if (password === "") {
+      handleAlertOpen("Please enter your password", "info");
+    } else if (email === "") {
+      handleAlertOpen("Please enter your email address", "info");
+    // } else if (email not in database) {
+    //   handleAlertOpen("That email address does not have an account", "info");
+    // } else if (password is incorrect) {
+    //   handleAlertOpen("Password is incorrect, please try again", "info");
+    } else {
       setViewSignUp(false);
       setViewSignIn(false);
     }
@@ -77,14 +97,24 @@ function App() {
     setPassword("");
     setPasswordConfirm("");
     setViewSignIn(true);
-    // needs a func to refresh the session?
+    // Do we need a func to refresh the session?
   }
 
   const handleNewAccount = async () => {
-    if (username !== "" && email !== "" && password !== "" && 
-        password === passwordConfirm) {
-      // needs a func to make sure there isn't already an account with the
-      // provided email, then add the new user to the database
+    if (username === "") {
+      handleAlertOpen("Please enter a username", "info");
+    } else if (email === "") {
+      handleAlertOpen("Please enter a valid email address", "info");
+    // } else if (some func that says email is in use) {
+    //   handleAlertOpen("That email address is already in use", "info");
+    } else if (password === "") {
+      handleAlertOpen("Please enter a password", "info");
+    } else if (passwordConfirm === "") {
+      handleAlertOpen("Please confirm your password", "info");
+    } else if (password !== passwordConfirm) {
+      handleAlertOpen("Password and confirmation must be the same", "info");
+    } else {
+      // func to add user to database
       handleMMLogin();
     }
   }
@@ -122,8 +152,19 @@ function App() {
     setPasswordConfirm(event.target.value);
   };
 
-  //----------------------------------------------------------------------------
+  const handleAlertOpen = (heading, variant) => {
+    setAlertHeading(heading);
+    setAlertVariant(variant);
+    setAlertShow(true);
+  }
 
+  const handleAlertClose = () => {
+    setAlertShow(false);
+    setAlertHeading("");
+    setAlertVariant("");
+  }
+
+  //----------------------------------------------------------------------------
   const goToSignIn = () => {
     setViewSignIn(true);
     setViewSignUp(false);
@@ -140,6 +181,15 @@ function App() {
   if (viewSignIn) {
     return (
       <div className="App sign-in">
+
+        {/* Alert */}
+        <PageAlert 
+          show={alertShow} 
+          heading={alertHeading} 
+          variant={alertVariant}
+          close={handleAlertClose} 
+        />
+        {/* End alert */}
 
         {/* Page body */}
         <div className="main-wrapper">
@@ -193,6 +243,15 @@ function App() {
   } else if (viewSignUp) {
     return (
       <div className="App sign-up">
+
+        {/* Alert */}
+        <PageAlert 
+          show={alertShow} 
+          heading={alertHeading} 
+          variant={alertVariant}
+          close={handleAlertClose} 
+        />
+        {/* End alert */}
 
         {/* Page body */}
         <div className="main-wrapper">
@@ -276,9 +335,19 @@ function App() {
           <h1>MusicMirror</h1>        
         </header>
         {/* End of page header */}
+
+        {/* Alert displays in fixed position beneath header, when visible */}
+        <PageAlert 
+          show={alertShow} 
+          heading={alertHeading} 
+          variant={alertVariant}
+          close={handleAlertClose} 
+        />
+        {/* End alert */}
   
         {/* Page body */}
         <div className="main-wrapper">
+
           {/* Wrapper to help with columns */}
           <div className="App-main mx-0 px-5 row grid gap-5">
             
@@ -312,7 +381,7 @@ function App() {
                     <YouTube />
                     <SavedPlaylists 
                       service="youtube" 
-                      connected="false" 
+                      connected={setIsYoutubeLoggedIn} 
                       refresh={needsListRefresh} 
                       confirm={handleConfirmRefresh}
                     />
@@ -320,7 +389,7 @@ function App() {
                 </Tab>
                 <Tab tabClassName="tab tab-addsongs" eventKey="addsongs" title="New">
                   <div className="tab-body p-3 d-flex flex-column">
-                    <AddSongs handleMsg={handleMsg}/>
+                    <AddSongs handleMsg={handleMsg} alert={handleAlertOpen} />
                   </div>
                 </Tab>
               </Tabs>
@@ -333,19 +402,31 @@ function App() {
               <Tabs id="tab" defaultActiveKey="musicmirrorRight" justify>
                 <Tab tabClassName="tab tab-musicmirror" eventKey="musicmirrorRight" title="MusicMirror">
                   <div className="tab-body p-3">
-                    <PlaylistMM service="musicmirror" list={MMList} search={search} save={handleListAdded}/>
+                    <PlaylistMM 
+                      service="musicmirror" 
+                      list={MMList} 
+                      search={search} 
+                      save={handleListAdded}
+                      alert={handleAlertOpen}
+                    />
                   </div> 
                 </Tab>
                 <Tab tabClassName="tab tab-spotify" eventKey="spotifyRight" title="Spotify">
                   <div className="tab-body p-3">
                     <SpotifyProfile handleLogin={handleLogin}/>
-                    <PlaylistSpot service="spotify" list={SpotList} search={search} save={handleListAdded}/>
+                    <PlaylistSpot 
+                      service="spotify" 
+                      list={SpotList} 
+                      search={search} 
+                      save={handleListAdded}
+                      alert={handleAlertOpen}
+                    />
                   </div> 
                 </Tab>
                 <Tab tabClassName="tab tab-youtube" eventKey="youtubeRight" title="YT Music">
                   <div className="tab-body p-3">
-                    <YouTube />
-                    <PlaylistYT service="youtube" list={YTList} search={search} save={handleListAdded}/>
+                      <YouTube searchTerm={YTList}/>
+                  {/*<PlaylistYT service="youtube" list={YTList} search={search} save={handleListAdded}/>*/}
                   </div> 
                 </Tab>
               </Tabs>
