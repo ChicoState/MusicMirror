@@ -8,6 +8,8 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.6.2",
     "bootstrap": "^5.3.2",
+    "cors": "latest",
+    "express": "^4.18.2",
     "googleapis": "^129.0.0",
     "mongodb": "^6.3.0",
     "mongoose": "^8.0.2",
@@ -15,13 +17,12 @@
     "react-bootstrap": "^2.9.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
-    "supertest": "^6.3.3",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "jest --coverage ./testing",
+    "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -41,13 +42,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "@babel/preset-env": "^7.23.5",
-    "@babel/preset-react": "^7.23.3",
-    "babel-jest": "^29.7.0",
-    "code": "^5.2.4",
-    "jest": "^27.5.1",
-    "react-test-renderer": "^18.2.0"
   }
 }

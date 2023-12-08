@@ -22,7 +22,7 @@ const User = mongoose.model('User', userSchema);
 
 app.use(express.json());
 app.use(cors());
-console.log("app listening at port 5000");
+console.log("app listening at port 3002");
 
 //healtheck endpoint
 app.get("/", (req, res) => {
@@ -97,4 +97,4 @@ app.post("/playlist/:id", async (req, res) => {
         console.error(`Error: ${err}`);
     }
 });
-app.listen(5000);
+app.listen(3002);
