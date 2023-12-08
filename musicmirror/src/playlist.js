@@ -1,13 +1,9 @@
-//import MongoClient from 'mongodb';
-// const uri = "mongodb+srv://carobles:Du1UYVCn02jkYmaD@musicmirrorcluster.ke9uina.mongodb.net/?retryWrites=true&w=majority";
 
 export async function findSongs(input, resCount) {
     console.log(input);
-    //const token = localStorage.getItem("token");
     const token = sessionStorage.getItem("token");
     //separate each query by line
-    //let search = input.split('\n');
-    let search = input.split(/[\n,]\s*/);
+    let search = input.split('\n');
     //iterate over songs and search for song
     let playlist = {
         title: "Music Mirror Playlist",
@@ -113,20 +109,6 @@ export async function searchPlaylists(query) {
     });
     return await resp.json();
 }
-
-// export async function savePlaylist(list) {
-//     const uri = "mongodb+srv://carobles:Du1UYVCn02jkYmaD@musicmirrorcluster.ke9uina.mongodb.net/?retryWrites=true&w=majority";
-//     const client = new MongoClient(uri, {
-//         useNewUrlParser: true,
-//         useUnifiedTopology: true,
-//     });
-    
-//     await client.connect();
-//     await client.db("admin").command({ ping: 1 });
-//     console.log("Pinged your deployment. You successfully connected to MongoDB!");
-  
-//     const res = await client.db("users").collection("playlists").insertOne(list);
-//   }
 
 export async function savePlaylist(list) {
     //change later to get current user's id

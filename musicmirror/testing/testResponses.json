@@ -44,6 +44,35 @@
             }
         ]
     },
+    "playlist2": {
+        "title": "Music Mirror Playlist",
+        "songs": [
+            {
+                "query": "test1",
+                "tracks": [
+                    {
+                        "title": "TEST DRIVE",
+                        "artist": "Joji",
+                        "album": "BALLADS 1",
+                        "length": "2:59",
+                        "uri": "spotify:track:1DMEzmAoQIikcL52psptQL"
+                    }
+                ]
+            },
+            {
+                "query": "test2",
+                "tracks": [
+                    {
+                        "title": "TEST DRIVE",
+                        "artist": "Joji",
+                        "album": "BALLADS 1",
+                        "length": "2:59",
+                        "uri": "spotify:track:1DMEzmAoQIikcL52psptQL"
+                    }
+                ]
+            }
+        ]
+    },
     "spotify_resp": {
             "tracks": {
                 "href": "https://api.spotify.com/v1/search?query=test1&type=track&locale=en-US%2Cen%3Bq%3D0.9&offset=0&limit=20",
