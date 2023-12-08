@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import { findSongs } from "./playlist";
 import { Tabs, Tab } from "react-bootstrap";
 import * as auth from './auth';
+import { emailCheck, createUser, getUsername, deleteUser, getMMPlaylists } from './database';
 
 function App() {
   const [username, setUsername] = useState("");
@@ -121,6 +122,7 @@ function App() {
 
   const handleDeleteAccount = async () => {
     handleMMLogout();
+    deleteUser(email);
     // needs a func to remove the user from the database
   }
 
