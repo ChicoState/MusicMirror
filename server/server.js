@@ -27,13 +27,18 @@ const API_KEY = 'AIzaSyBWAir5kNDcRDZAAPr8pvINjmJA2ERD22M';
 const C_secrete = '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';
 const C_id = '808121759367-6efs65rh50k4p5qhn6af10iqjtgcs7m8.apps.googleusercontent.com';
 const oauthCall = 'http://localhost:3001/oauth2callback';
+
 const oauth2Client = new google.auth.OAuth2(
   C_id, // Replace with client ID
   C_secrete, // Replace with client secret
   'http://localhost:3001/oauth2callback'// <- is for this server don't. server's redirect URI
 );
 
-const SCOPES = ['https://www.googleapis.com/auth/youtube'];
+const SCOPES = [
+  'https://www.googleapis.com/auth/youtube.readonly', // For reading playlists
+  'https://www.googleapis.com/auth/youtube' // For creating and managing playlists
+];
+
 console.log("Its here");
 app.get('/auth/google', (req, res) => {
   const authUrl = oauth2Client.generateAuthUrl({
