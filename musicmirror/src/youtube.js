@@ -80,3 +80,61 @@ export async function fetchUserPlaylists() {
 
 //------------------------------------------------------------------------------
 
+export async function performYouTubeSearch(searchInput, numResults) {
+
+  let searchTerms = searchInput.split(/[\n,]\s*/);
+  let newSongs = [];
+  let newList = {
+    title: "Music Mirror Playlist", 
+    songs: []
+  };
+
+  for (const term of searchTerms) {
+    try {
+      const searchResponse = await axios.get('https://www.googleapis.com/youtube/v3/search', {
+        params: {
+          part: 'snippet',
+          maxResults: MAXRESULTS,
+          key: API_KEY,
+          q: term,
+          type: 'video',
+          videoCategoryId: '10',
+        },
+      });
+
+      const videoIds = searchResponse.data.items.map(item => item.id.videoId).join(',');
+      const detailsResponse = await axios.get('https://www.googleapis.com/youtube/v3/videos', {
+        params: {
+          part: 'snippet,contentDetails',
+          id: videoIds,
+          key: API_KEY,
+        },
+      });
+
+      const detailedItems = searchResponse.data.items.map(item => {
+        const detail = detailsResponse.data.items.find(d => d.id === item.id.videoId) ?? {};
+        return {
+          ...item,
+          id: item.id,
+          title: item.snippet.title,
+          thumbnails: item.snippet.thumbnails,
+          duration: detail.contentDetails?.duration,
+          channelTitle: item.snippet.channelTitle,
+          artist: item.snippet.channelTitle, // channel title used as artist for song cards
+          publishedAt: item.snippet.publishedAt,
+          definition: detail.contentDetails?.definition,
+        };
+      });
+
+      newSongs.push({ query: term, tracks: detailedItems.slice(0, numResults) });
+
+    } catch (error) {
+      console.error("Error in multi search for term:", term, "Error:", error);
+    }
+  }
+
+  newList.songs = newSongs;
+  console.log("---INSIDE YOUTUBE SEARCH FUNC---");
+  console.log(newList);
+  return(newList);
+};

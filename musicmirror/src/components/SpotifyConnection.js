@@ -35,7 +35,7 @@ class SpotifyConnection extends React.Component {
   render() {
     if(sessionStorage.getItem("loggedIn") === "false"){
       return (
-        <section className="service-connection mt-3 pt-3">
+        <section id="spot-connection" className="service-connection mt-3 pt-3">
           <h3 className="m-0">Looks like you haven't connected to Spotify yet. Please sign in.</h3>
           <button className="mt-3 btn btn-secondary" onClick={this.handleChange}>Sign in with Spotify!</button>
         </section>
@@ -43,7 +43,7 @@ class SpotifyConnection extends React.Component {
     }else{
       console.log("loggedIn: ", sessionStorage.getItem("loggedIn"));
       return (
-        <section className="service-connection mt-3 pt-3 d-flex justify-content-between align-items-center">
+        <section id="spot-connection" className="service-connection mt-3 pt-3 d-flex justify-content-between align-items-center">
           <h3 className="m-0 logged-in">Spotify Connected!</h3>
           <button className="mt-3 btn btn-secondary" onClick={auth.signOut}>Sign out</button>
         </section>

@@ -16,6 +16,7 @@ import YouTubeConnection from "./components/YouTubeConnection";
 import * as auth from './auth';
 import { emailCheck, createUser, getUsername, deleteUser, getMMPlaylists } from './database';
 import { findSongs } from "./playlist";
+import * as youtube from './youtube';
 
 // Libraries
 import { useEffect, useState } from "react";
@@ -67,14 +68,21 @@ function App() {
 
   //----------------------------------------------------------------------------
   
+  // This function searches for songs and updates the pending playlist
   const handleMsg = async (data) => {
     console.log(`Searching! This is search number ${search+1}.`)
-    //change search result count (5) to a user input value later
-    let list = await findSongs(data, 5)
-    console.log("This is the search querry:", data);
+
+    let list;
+    if (sessionStorage.getItem("loggedIn") === "true") {
+      list = await findSongs(data, 5);
+    } else {
+      // list = await youtube.findSongs(data);
+      list = await youtube.performYouTubeSearch(data, 5);
+    }
+
     setMMList(list);
     setSpotList(list);
-    setYTList(data);
+    setYTList(list);
     setSearch(search+1);
     handleAlertOpen("Search complete!", "success");
   }
@@ -404,7 +412,7 @@ function App() {
                       refresh={needsListRefresh} 
                       confirm={handleConfirmRefresh}
                     />
-                    <YouTubeConnection />
+                    <YouTubeConnection connected={youtubeConnection} />
                   </div> 
                 </Tab>
                 <Tab tabClassName="tab tab-addsongs" eventKey="addsongs" title="New">
@@ -453,7 +461,7 @@ function App() {
                         save={handleListAdded}
                         alert={handleAlertOpen}
                       />
-                      <YouTubeConnection />
+                      <YouTubeConnection connected={youtubeConnection} />
                   </div> 
                 </Tab>
               </Tabs>

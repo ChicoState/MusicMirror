@@ -21,12 +21,13 @@ class AddSongs extends React.Component {
   };
 
   handleClick = async () => {
-    if (sessionStorage.getItem("loggedIn") === "true") {
+    if (sessionStorage.getItem("loggedIn") === "true" || 
+        sessionStorage.getItem("loggedInYT") === "true") {
       this.props.alert("Searching...", "info");
       this.props.handleMsg(this.state.message);
       console.log(`passing: ${this.state.message}`);
     } else {
-      this.props.alert("You must log in to another service before searching for songs", "info");
+      this.props.alert("You must connect to either Spotify or YouTube before searching for songs", "info");
     }
   };
 
