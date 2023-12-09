@@ -1,4 +1,3 @@
-import { genPlaylist } from "../playlist";
 import React from "react";
 import SongDetailsModal from "./SongDetailsModal";
 

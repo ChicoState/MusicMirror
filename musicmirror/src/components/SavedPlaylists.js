@@ -1,4 +1,4 @@
-import { getPlaylists, searchPlaylists } from "../playlist";
+import { getPlaylists } from "../playlist";
 import { fetchUserPlaylists } from "../youtube";
 import React from "react";
 
@@ -35,18 +35,18 @@ class SavedPlaylists extends React.Component{
   componentDidUpdate(prevProps, prevState) {
 
     // Retrieve playlists on service login
-    if (this.props.service === "musicmirror" && this.state.MusicMirrorLists && this.state.MusicMirrorLists !== null &&
+    if (this.props.service === "musicmirror" && 
         Object.keys(this.state.MusicMirrorLists).length < 1) {
           
       this.getMusicMirrorLists();
 
-    } else if (this.props.service === "spotify" && this.state.SpotifyLists && this.state.SpotifyLists !== null &&
-        sessionStorage.getItem("loggedIn") === "true" &&
+    } else if (this.props.service === "spotify" && 
+        sessionStorage.getItem("loggedIn") === "true" && 
         Object.keys(this.state.SpotifyLists).length < 1) {
 
       this.getSpotifyLists();
 
-    } else if (this.props.service === "youtube" && this.state.YouTubeLists && this.state.YouTubeLists !== null &&
+    } else if (this.props.service === "youtube" && 
         sessionStorage.getItem("loggedInYT") === "true" && 
         Object.keys(this.state.YouTubeLists).length < 1) {
 
@@ -56,13 +56,15 @@ class SavedPlaylists extends React.Component{
 
     // Remove playlists on logout
     if (this.props.service === "spotify" && 
-        sessionStorage.getItem("loggedIn") !== "true" &&
+        sessionStorage.getItem("loggedIn") !== "true" && 
+        this.state.SpotifyLists &&
         Object.keys(this.state.SpotifyLists).length > 0) {
 
       this.setState({SpotifyLists: {}});
 
     } else if (this.props.service === "youtube" && 
         sessionStorage.getItem("loggedInYT") !== "true" && 
+        this.state.YouTubeLists &&
         Object.keys(this.state.YouTubeLists).length > 0) {
 
       this.setState({YouTubeLists: {}});

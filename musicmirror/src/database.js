@@ -100,7 +100,7 @@ export async function getMMPlaylists(id){
         if (resp.ok) {
             let jsonData = await resp.json();
             
-            if(jsonData.playlists.length == 0){
+            if(jsonData.playlists.length === 0){
                 return undefined;
             } else {
                 return jsonData.playlists;

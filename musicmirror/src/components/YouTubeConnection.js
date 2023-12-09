@@ -12,8 +12,8 @@ class YouTubeConnection extends React.Component {
 
     if (sessionStorage.getItem("ytTokenNeedsProcessing") === "true") {
       // store the user's youtube auth token for reference
-      youtube.signIn();
       sessionStorage.setItem("ytTokenNeedsProcessing", "false");
+      youtube.signIn();
     }
   }
 

@@ -65,6 +65,7 @@ class PlaylistSpot extends React.Component{
     if (sessionStorage.getItem("loggedIn") !== "true") {
       this.props.alert("You must be signed in to Spotify to save this playlist!", "info");
     } else {
+      console.log(this.state.playlist);
       await genPlaylist(this.state.playlist);
       this.props.save();
       this.props.alert(`${this.state.currentTitle} playlist saved to Spotify!`, "success");
