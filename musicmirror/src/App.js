@@ -114,8 +114,7 @@ function App() {
       handleAlertOpen("Please confirm your password", "info");
     } else if (password !== passwordConfirm) {
       handleAlertOpen("Password and confirmation must be the same", "info");
-    } else {
-      // func to add user to database
+    } else if (createUser(username, password, email)) {
       handleMMLogin();
     }
   }
@@ -123,7 +122,6 @@ function App() {
   const handleDeleteAccount = async () => {
     handleMMLogout();
     deleteUser(email);
-    // needs a func to remove the user from the database
   }
 
   const handleListAdded = () => {
