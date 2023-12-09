@@ -23,12 +23,12 @@ class SpotifyConnection extends React.Component {
     auth.checkCode();
   };
 
-  handleAuth = async() => {
-    auth.checkCode();
-    this.setState({connected: true}, () => {
-      console.log("SPOTIFY STATE UPDATE COMPLETE {connected: true}");
-    });
-  }
+  // handleAuth = async() => {
+  //   auth.checkCode();
+  //   this.setState({connected: true}, () => {
+  //     console.log("SPOTIFY STATE UPDATE COMPLETE {connected: true}");
+  //   });
+  // }
 
   /*--------------------------------------------------------------------------*/
 

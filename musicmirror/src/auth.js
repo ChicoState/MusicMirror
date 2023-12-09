@@ -43,7 +43,14 @@ export async function signIn(loggedIn){
         getPlaylists();
     } else {
        
-        sessionStorage.setItem("loggedIn", false);
+        // made this change because otherwise every time we returned to our app
+        // from Google auth, it would reset loggedIn to false even if Spotify
+        // was connected
+        if (sessionStorage.getItem("token")) {
+            sessionStorage.setItem("loggedIn", true);
+        } else {
+            sessionStorage.setItem("loggedIn", false);
+        }
     }
 }
 
@@ -166,6 +173,10 @@ export function signOut(){
     let newUrl = window.location.href;
     newUrl = newUrl.split("?")[0];
     window.location.href = newUrl;
-    localStorage.clear();
-    sessionStorage.clear();
+
+    // only reset Spotify storage (using sessionStorage for MM and YT as well)
+    sessionStorage.setItem("loggedIn", "false");
+    sessionStorage.removeItem("verifier");
+    sessionStorage.removeItem("token");
+    sessionStorage.removeItem("user_id");
 }

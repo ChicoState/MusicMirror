@@ -4,7 +4,11 @@ import React from "react";
 class YouTubeConnection extends React.Component {
   constructor() {
     super();
-    this.state = {}
+    const loggedIn = sessionStorage.getItem("loggedInYT") === "true";
+    this.state = {
+      loggedIn: loggedIn,
+      connected: false,
+    }
 
     if (sessionStorage.getItem("ytTokenNeedsProcessing") === "true") {
       // store the user's youtube auth token for reference
@@ -15,9 +19,9 @@ class YouTubeConnection extends React.Component {
 
   /*--- COMPONENT LIFECYCLE FUNCS --------------------------------------------*/
 
-  componentDidMount() {}
-
-  componentDidUpdate(prevProps) {}
+  componentDidMount() {
+    this.props.handleLogin(this.state.loggedIn);
+  }
 
   /*--- HANDLERS -------------------------------------------------------------*/
 
@@ -26,10 +30,12 @@ class YouTubeConnection extends React.Component {
     // finish the sign in process once we've been redirected back to MusicMirror
     sessionStorage.setItem("ytTokenNeedsProcessing", "true");
     await youtube.signIn();
+    this.props.handleLogin(true);
   }
 
   handleSignOut = async() => {
     youtube.signOut();
+    this.props.handleLogin(false);
   }
 
   /*--------------------------------------------------------------------------*/

@@ -138,7 +138,9 @@ button.redirect:hover {
 /*--- SavedPlaylists Styling -------------------------------------------------*/
 
 .SavedPlaylists h1 {
-  font-size: calc(0.9rem + 0.9vw);
+  color: #171717;
+  font-size: calc(0.7rem + 0.7vw);
+  font-weight: bolder;
 }
 
 .SavedPlaylists h2 {

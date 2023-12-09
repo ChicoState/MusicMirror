@@ -37,7 +37,9 @@ function App() {
   const [spotifyConnection, setSpotifyConnection] = useState(
     sessionStorage.getItem("loggedIn") === "true"
   );
-  const [youtubeConnection, setYoutubeConnection]=useState(false);
+  const [youtubeConnection, setYoutubeConnection]=useState(
+    sessionStorage.getItem("loggedInYT") === "true"
+  );
   const [needsListRefresh, setListRefresh] = useState(false);
   const [viewSignIn, setViewSignIn] = useState(!sessionStorage.getItem("verifier"));
   const [viewSignUp, setViewSignUp] = useState(false);
@@ -47,23 +49,24 @@ function App() {
 
   //----------------------------------------------------------------------------
 
-  useEffect(() => {
-    const handleStorageUpdate = (event) => {
-      if (event.key === "loggedIn") {
-        setSpotifyConnection(sessionStorage.getItem("loggedIn") === "true");
-        console.log("Spotify is connected!");
-      } else if (event.key === "loggedInYT") {
-        setYoutubeConnection(sessionStorage.getItem("loggedInYT") === "true");
-        console.log("YouTube is connected!");
-      }
-    };
+  // useEffect(() => {
+  //   const handleStorageUpdate = (event) => {
+  //     console.log("STORAGE EVENT TRIGGERED");
+  //     if (event.key === "loggedIn") {
+  //       setSpotifyConnection(sessionStorage.getItem("loggedIn") === "true");
+  //       console.log("---LOOK AT THIS--- Spotify is connected!");
+  //     } else if (event.key === "loggedInYT") {
+  //       setYoutubeConnection(sessionStorage.getItem("loggedInYT") === "true");
+  //       console.log("---LOOK AT THIS--- YouTube is connected!");
+  //     }
+  //   };
 
-    window.addEventListener('storage', handleStorageUpdate);
+  //   window.addEventListener('storage', handleStorageUpdate);
 
-    return () => {
-      window.removeEventListener('storage', handleStorageUpdate);
-    }
-  }, []);
+  //   return () => {
+  //     window.removeEventListener('storage', handleStorageUpdate);
+  //   }
+  // }, []);
 
   //----------------------------------------------------------------------------
   
@@ -75,7 +78,6 @@ function App() {
     if (sessionStorage.getItem("loggedIn") === "true") {
       list = await findSongs(data, 5);
     } else {
-      // list = await youtube.findSongs(data);
       list = await youtube.performYouTubeSearch(data, 5);
     }
 
@@ -88,25 +90,32 @@ function App() {
 
   // Spotify login
   const handleLogin = async (data) => {
-    console.log("handleLogin");
+    console.log("handleLogin: Spotify");
     setLog(await auth.signIn(data));
-    setSpotifyConnection(true);
+    setSpotifyConnection(data);
+  }
+
+  // YouTube login, data is either true or false
+  const handleLoginYT = async (data) => {
+    console.log("handleLogin: YouTube");
+    setYoutubeConnection(data);
   }
 
   const handleMMLogin = async () => {
-    
     if (password === "") {
       handleAlertOpen("Please enter your password", "info");
     } else if (email === "") {
       handleAlertOpen("Please enter your email address", "info");
-    // } else if (email not in database) {
+    // } else if (!(await emailCheck(email))) {
     //   handleAlertOpen("That email address does not have an account", "info");
-    // } else if (password is incorrect) {
+    // } else if (!(await getUserName(email, password))) {
     //   handleAlertOpen("Password is incorrect, please try again", "info");
     } else {
       setViewSignUp(false);
       setViewSignIn(false);
       sessionStorage.setItem("loggedInMM", "true");
+      sessionStorage.setItem("email", email);
+      sessionStorage.setItem("password", password);
     }
   }
 
@@ -116,8 +125,8 @@ function App() {
     setPassword("");
     setPasswordConfirm("");
     setViewSignIn(true);
-    sessionStorage.setItem("loggedInMM", "false");
-    // Do we need a func to refresh the session?
+    localStorage.clear();
+    sessionStorage.clear();
   }
 
   const handleNewAccount = async () => {
@@ -125,7 +134,7 @@ function App() {
       handleAlertOpen("Please enter a username", "info");
     } else if (email === "") {
       handleAlertOpen("Please enter a valid email address", "info");
-    // } else if (some func that says email is in use) {
+    // } else if (await emailCheck(email)) {
     //   handleAlertOpen("That email address is already in use", "info");
     } else if (password === "") {
       handleAlertOpen("Please enter a password", "info");
@@ -134,15 +143,14 @@ function App() {
     } else if (password !== passwordConfirm) {
       handleAlertOpen("Password and confirmation must be the same", "info");
     } else {
-      // func to add user to database
+      // await createUser(username, password, email);
       handleMMLogin();
     }
   }
 
   const handleDeleteAccount = async () => {
+    // await deleteUser(sessionStorage.getItem("email"));
     handleMMLogout();
-    deleteUser(email);
-    // needs a func to remove the user from the database
   }
 
   const handleListAdded = () => {
@@ -386,7 +394,7 @@ function App() {
                   <div className="tab-body p-3">
                     <SavedPlaylists 
                       service="musicmirror" 
-                      connected="false" 
+                      connected="true"
                       refresh={needsListRefresh} 
                       confirm={handleConfirmRefresh}
                     />
@@ -411,7 +419,7 @@ function App() {
                       refresh={needsListRefresh} 
                       confirm={handleConfirmRefresh}
                     />
-                    <YouTubeConnection connected={youtubeConnection} />
+                    <YouTubeConnection handleLogin={handleLoginYT} />
                   </div> 
                 </Tab>
                 <Tab tabClassName="tab tab-addsongs" eventKey="addsongs" title="New">
@@ -460,7 +468,7 @@ function App() {
                         save={handleListAdded}
                         alert={handleAlertOpen}
                       />
-                      <YouTubeConnection connected={youtubeConnection} />
+                      <YouTubeConnection handleLogin={handleLoginYT} />
                   </div> 
                 </Tab>
               </Tabs>

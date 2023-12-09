@@ -35,19 +35,18 @@ class SavedPlaylists extends React.Component{
   componentDidUpdate(prevProps, prevState) {
 
     // Retrieve playlists on service login
-    if (this.props.service === "musicmirror" && 
-        this.props.connected && 
-        !prevProps.connected) {
+    if (this.props.service === "musicmirror" && this.state.MusicMirrorLists && this.state.MusicMirrorLists !== null &&
+        Object.keys(this.state.MusicMirrorLists).length < 1) {
           
       this.getMusicMirrorLists();
 
-    } else if (this.props.service === "spotify" && 
-        this.props.connected && 
-        !prevProps.connected) {
+    } else if (this.props.service === "spotify" && this.state.SpotifyLists && this.state.SpotifyLists !== null &&
+        sessionStorage.getItem("loggedIn") === "true" &&
+        Object.keys(this.state.SpotifyLists).length < 1) {
 
       this.getSpotifyLists();
 
-    } else if (this.props.service === "youtube" && 
+    } else if (this.props.service === "youtube" && this.state.YouTubeLists && this.state.YouTubeLists !== null &&
         sessionStorage.getItem("loggedInYT") === "true" && 
         Object.keys(this.state.YouTubeLists).length < 1) {
 
@@ -56,21 +55,15 @@ class SavedPlaylists extends React.Component{
     }
 
     // Remove playlists on logout
-    if (this.props.service === "musicmirror" && 
-        !this.props.connected && 
-        prevProps.connected) {
-          
-      this.setState({MusicMirrorLists: {}});
-
-    } else if (this.props.service === "spotify" && 
-        !this.props.connected && 
-        prevProps.connected) {
+    if (this.props.service === "spotify" && 
+        sessionStorage.getItem("loggedIn") !== "true" &&
+        Object.keys(this.state.SpotifyLists).length > 0) {
 
       this.setState({SpotifyLists: {}});
 
     } else if (this.props.service === "youtube" && 
-        !this.props.connected && 
-        prevProps.connected) {
+        sessionStorage.getItem("loggedInYT") !== "true" && 
+        Object.keys(this.state.YouTubeLists).length > 0) {
 
       this.setState({YouTubeLists: {}});
     }
@@ -91,7 +84,10 @@ class SavedPlaylists extends React.Component{
   /*--- HANDLERS -------------------------------------------------------------*/
 
   getMusicMirrorLists = async() => {
-    // let playlists = some_func_to_retrieve_MM_playlists(sessionStorage.getItem("email"));
+    // Is "id" the user_id in session storage? Because it needs to not be
+    // dependent on Spotify being connected.
+
+    // let playlists = getMMPlaylists(id);
     // this.setState({MusicMirrorLists: playlists});
   }
 
