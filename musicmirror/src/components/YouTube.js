@@ -40,7 +40,7 @@ function Youtube({searchTerm, Loged}){
       localStorage.setItem('youtubeAccessToken',token);
     }else if(code){
       axios.post('http://localhost:3001/getAccessToken',{code: code}).then(response=>{
-        setAccessToken(response.data.acessToken);
+        setAccessToken(response.data.accessToken);
         localStorage.setItem('youtubeAccessToken',accessToken);
       }
       ).catch(error=>console.error('Error in fetching acess Token:',error));

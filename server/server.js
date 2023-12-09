@@ -34,9 +34,8 @@ const oauth2Client = new google.auth.OAuth2(
   'http://localhost:3001/oauth2callback'// <- is for this server don't. server's redirect URI
 );
 
-const SCOPES = [
-  'https://www.googleapis.com/auth/youtube.readonly', // For reading playlists
-  'https://www.googleapis.com/auth/youtube' // For creating and managing playlists
+const SCOPES = ['https://www.googleapis.com/auth/youtube',
+  'https://www.googleapis.com/auth/youtube.readonly' // For reading playlists
 ];
 
 console.log("Its here");
@@ -86,7 +85,7 @@ app.get('/youtube/playlists', async (req, res) => {
   const authClient = new google.auth.OAuth2();
   authClient.setCredentials({access_token: accessToken});
   try {
-    
+    console.log('Here getting user playlist the token:', accessToken);
     const youtube = google.youtube({
       version: 'v3',
       auth: oauth2Client,
@@ -94,7 +93,7 @@ app.get('/youtube/playlists', async (req, res) => {
 
     const response = await youtube.playlists.list({
       part: 'snippet,contentDetails',
-      mine: true,
+      mine: 'true',
       maxResults: 20,
     });
 
