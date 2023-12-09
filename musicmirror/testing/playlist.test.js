@@ -1,5 +1,5 @@
 import renderer from 'react-test-renderer';
-import { findSongs } from '../src/playlist';
+import { findSongs, genPlaylist } from '../src/playlist';
 import fetchMock from "jest-fetch-mock";
 import 'whatwg-fetch'
 import { describe } from 'yargs';
@@ -38,7 +38,8 @@ beforeEach(() => {
     fetch.resetMocks();
 });
 
-it('returns playlist object', async () => {
+//findSongs
+it('findSongs returns playlist object', async () => {
     const message = 'test1';
     fetch.mockResponse(JSON.stringify(responses.spotify_resp));
     sessionStorage.setItem("token", "test");
@@ -46,7 +47,7 @@ it('returns playlist object', async () => {
     expect(JSON.stringify(resp)).toBe(JSON.stringify(responses.playlist));
 });
 
-it('returns n tracks', async () => {
+it('findSongs returns n tracks', async () => {
     const message = 'test1';
     fetch.mockResponse(JSON.stringify(responses.spotify_resp));
     sessionStorage.setItem("token", "test");
@@ -54,7 +55,7 @@ it('returns n tracks', async () => {
     expect(resp.songs[0].tracks.length).toBe(5);
 });
 
-it('splits input by newline', async () => {
+it('findSongs splits input by newline', async () => {
     const message = 'test1\ntest2';
     fetch.mockResponse(JSON.stringify(responses.spotify_resp));
     sessionStorage.setItem("token", "test");
@@ -62,10 +63,37 @@ it('splits input by newline', async () => {
     expect(JSON.stringify(resp)).toBe(JSON.stringify(responses.playlist2));
 });
 
-it('skips empty lines', async () => {
+it('findSongs skips empty lines', async () => {
     const message = 'test1\n\ntest2\n ';
     fetch.mockResponse(JSON.stringify(responses.spotify_resp));
     sessionStorage.setItem("token", "test");
     const resp = await findSongs(message, 1);
     expect(JSON.stringify(resp)).toBe(JSON.stringify(responses.playlist2));
+});
+
+//genPlaylists
+it('genPlaylists populates uri list', async () => {
+    fetch.mockResponse(JSON.stringify({status: 200}));
+    sessionStorage.setItem("token", "test");
+    sessionStorage.setItem("user_id", "testid");
+    const resp = await genPlaylist(responses.playlist2);
+    expect(JSON.stringify(resp)).toBe(JSON.stringify(responses.uriList));
+});
+
+it('genPlaylists unsuccessful response', async () => {
+    fetch.mockReject(new Error('mock error'));
+    sessionStorage.setItem("token", "test");
+    sessionStorage.setItem("user_id", "testid");
+    expect(genPlaylist(responses.playlist2)).rejects.toThrow(Error);
+});
+
+it('genPlaylists returns undefined with empty input', async () => {
+    fetch.mockResponse(JSON.stringify({status: 200}));
+    sessionStorage.setItem("token", "test");
+    sessionStorage.setItem("user_id", "testid");
+    const resp = await genPlaylist({
+        "title": "Music Mirror Playlist",
+        "songs": []
+    });
+    expect(resp).toBe(undefined);
 });

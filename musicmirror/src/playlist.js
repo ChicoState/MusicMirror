@@ -57,33 +57,36 @@ export async function findSongs(input, resCount) {
 
 export async function genPlaylist(list) {
     console.log(list);
-    //const user_id = localStorage.getItem("user_id");
     const user_id = sessionStorage.getItem("user_id");
-    //const token = localStorage.getItem("token");
     const token = sessionStorage.getItem("token");
+    let uris = [];
     // if list size > 0, create playlist (api req)
     if(Object.keys(list.songs).length > 0){
-        //create spotify playlist
-        let resp = await fetch("https://api.spotify.com/v1/users/" + user_id + "/playlists", {
-            method: "POST",
-            body: JSON.stringify({name: list.title}),
-            headers: { Authorization: `Bearer ${token}` }
-        });
-        let obj = await resp.json();
-        let p_id = obj.id;
-        let uris = [];
-        for (let i in list.songs) {
-            uris.push(list.songs[i].tracks[0].uri);
+        try {
+            //create spotify playlist
+            let resp = await fetch("https://api.spotify.com/v1/users/" + user_id + "/playlists", {
+                method: "POST",
+                body: JSON.stringify({ name: list.title }),
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            let obj = await resp.json();
+            let p_id = obj.id;
+            for (let i in list.songs) {
+                uris.push(list.songs[i].tracks[0].uri);
+            }
+            // Iterate through list of matches and add each song to the playlist (api req)
+            resp = await fetch("https://api.spotify.com/v1/playlists/" + p_id + "/tracks", {
+                method: "POST",
+                body: JSON.stringify({ uris }),
+                headers: { Authorization: `Bearer ${token}` }
+            }).then((response) => response.json())
+                .then((json) => console.log(json));
+            return uris;
+        } catch (err) {
+            throw err;
         }
-
-        // Iterate through list of matches and add each song to the playlist (api req)
-        resp = await fetch("https://api.spotify.com/v1/playlists/" + p_id + "/tracks", {
-            method: "POST",
-            body: JSON.stringify({uris}),
-            headers: { Authorization: `Bearer ${token}` }
-        }).then((response) => response.json())
-        .then((json) => console.log(json));
     }
+    return undefined; //Mostly for testing purposes
 }
 
 export async function getPlaylists() {
