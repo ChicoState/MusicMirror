@@ -17,7 +17,6 @@ class SpotifyProfile extends React.Component {
 
   handleChange = async() => {
     auth.checkCode();
-
   };
 
   /*--- HANDLERS -------------------------------------------------------------*/
@@ -36,7 +35,7 @@ class SpotifyProfile extends React.Component {
       return (
         <section id="profile" className="SpotifyProfile mb-3">
           <h3>Looks like you haven't connected to Spotify yet. Please sign in.</h3>
-          <button className="my-3 btn btn-secondary" onClick={this.handleChange}>Sign in with Spotify!</button>
+          <button id="authButton" className="my-3 btn btn-secondary" onClick={this.handleChange}>Sign in with Spotify!</button>
         </section>
       );
     }else{
