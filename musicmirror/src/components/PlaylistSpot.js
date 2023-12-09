@@ -61,7 +61,8 @@ class PlaylistSpot extends React.Component{
   };
 
 
-  handleSave = async() => {
+  handleSave = async () => {
+    console.log(this.state.playlist);
     await genPlaylist(this.state.playlist);
     this.props.save();
     this.props.alert(`${this.state.currentTitle} playlist saved to Spotify!`, "success");

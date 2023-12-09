@@ -1,13 +1,9 @@
-//import MongoClient from 'mongodb';
-// const uri = "mongodb+srv://carobles:Du1UYVCn02jkYmaD@musicmirrorcluster.ke9uina.mongodb.net/?retryWrites=true&w=majority";
 
 export async function findSongs(input, resCount) {
     console.log(input);
-    //const token = localStorage.getItem("token");
     const token = sessionStorage.getItem("token");
     //separate each query by line
-    //let search = input.split('\n');
-    let search = input.split(/[\n,]\s*/);
+    let search = input.split('\n');
     //iterate over songs and search for song
     let playlist = {
         title: "Music Mirror Playlist",
@@ -61,33 +57,36 @@ export async function findSongs(input, resCount) {
 
 export async function genPlaylist(list) {
     console.log(list);
-    //const user_id = localStorage.getItem("user_id");
     const user_id = sessionStorage.getItem("user_id");
-    //const token = localStorage.getItem("token");
     const token = sessionStorage.getItem("token");
+    let uris = [];
     // if list size > 0, create playlist (api req)
     if(Object.keys(list.songs).length > 0){
-        //create spotify playlist
-        let resp = await fetch("https://api.spotify.com/v1/users/" + user_id + "/playlists", {
-            method: "POST",
-            body: JSON.stringify({name: list.title}),
-            headers: { Authorization: `Bearer ${token}` }
-        });
-        let obj = await resp.json();
-        let p_id = obj.id;
-        let uris = [];
-        for (let i in list.songs) {
-            uris.push(list.songs[i].tracks[0].uri);
+        try {
+            //create spotify playlist
+            let resp = await fetch("https://api.spotify.com/v1/users/" + user_id + "/playlists", {
+                method: "POST",
+                body: JSON.stringify({ name: list.title }),
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            let obj = await resp.json();
+            let p_id = obj.id;
+            for (let i in list.songs) {
+                uris.push(list.songs[i].tracks[0].uri);
+            }
+            // Iterate through list of matches and add each song to the playlist (api req)
+            resp = await fetch("https://api.spotify.com/v1/playlists/" + p_id + "/tracks", {
+                method: "POST",
+                body: JSON.stringify({ uris }),
+                headers: { Authorization: `Bearer ${token}` }
+            }).then((response) => response.json())
+                .then((json) => console.log(json));
+            return uris;
+        } catch (err) {
+            throw err;
         }
-
-        // Iterate through list of matches and add each song to the playlist (api req)
-        resp = await fetch("https://api.spotify.com/v1/playlists/" + p_id + "/tracks", {
-            method: "POST",
-            body: JSON.stringify({uris}),
-            headers: { Authorization: `Bearer ${token}` }
-        }).then((response) => response.json())
-        .then((json) => console.log(json));
     }
+    return undefined; //Mostly for testing purposes
 }
 
 export async function getPlaylists() {
@@ -114,23 +113,12 @@ export async function searchPlaylists(query) {
     return await resp.json();
 }
 
-// export async function savePlaylist(list) {
-//     const uri = "mongodb+srv://carobles:Du1UYVCn02jkYmaD@musicmirrorcluster.ke9uina.mongodb.net/?retryWrites=true&w=majority";
-//     const client = new MongoClient(uri, {
-//         useNewUrlParser: true,
-//         useUnifiedTopology: true,
-//     });
-    
-//     await client.connect();
-//     await client.db("admin").command({ ping: 1 });
-//     console.log("Pinged your deployment. You successfully connected to MongoDB!");
-  
-//     const res = await client.db("users").collection("playlists").insertOne(list);
-//   }
-
 export async function savePlaylist(list) {
     //change later to get current user's id
     let uid = "656822bfe9f57013d3b46c2e"
+    if (!list || JSON.stringify(list) === '{}' || list.songs.length <= 0) {
+        return undefined;
+    }
 
     let q_body = {
         playlist: {
@@ -158,4 +146,6 @@ export async function savePlaylist(list) {
         console.error(err);
         throw err;
     }
+
+    return q_body;
   }
