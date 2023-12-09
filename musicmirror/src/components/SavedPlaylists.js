@@ -133,7 +133,7 @@ class SavedPlaylists extends React.Component{
       lists = this.state.YouTubeLists;
     }
 
-    if (lists && Object.keys(lists).length > 0 && lists.items) {
+    if (this.props.service === "spotify" && lists && Object.keys(lists).length > 0 && lists.items) {
       return (
         <div className="SavedPlaylists">
           {/* List of playlists */}
@@ -144,6 +144,24 @@ class SavedPlaylists extends React.Component{
                 <h2 className="m-0">{playlist.name}</h2>
                 {playlist.description?
                   <p className="m-0">{playlist.description}</p> : null
+                }
+              </div>
+            </div>
+          ))}
+        </div>
+      );
+
+    } else if (this.props.service === "youtube" && lists && Object.keys(lists).length > 0) {
+      return (
+        <div className="SavedPlaylists">
+          {/* List of playlists */}
+          {lists.map((playlist, index) => (
+            <div className="my-1 list-card d-flex align-items-center">
+              <h1 className="m-0 px-2 py-1 list-index">{index+1}</h1>
+              <div className="p-1 list-data flex-grow-1">
+                <h2 className="m-0">{playlist.snippet.localized.title}</h2>
+                {playlist.snippet.localized.description?
+                  <p className="m-0">{playlist.snippet.localized.description}</p> : null
                 }
               </div>
             </div>

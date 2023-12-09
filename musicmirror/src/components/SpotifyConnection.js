@@ -45,7 +45,7 @@ class SpotifyConnection extends React.Component {
       return (
         <section id="spot-connection" className="service-connection mt-3 pt-3 d-flex justify-content-between align-items-center">
           <h3 className="m-0 logged-in">Spotify Connected!</h3>
-          <button className="mt-3 btn btn-secondary" onClick={auth.signOut}>Sign out</button>
+          <button className="btn btn-secondary" onClick={auth.signOut}>Sign out</button>
         </section>
       );
     }

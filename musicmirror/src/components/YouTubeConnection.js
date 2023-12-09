@@ -46,7 +46,7 @@ class YouTubeConnection extends React.Component {
       return (
         <section  id="yt-connection" className="service-connection mt-3 pt-3 d-flex justify-content-between align-items-center">
           <h3 className="m-0 logged-in">YouTube Connected!</h3>
-          <button className="mt-3 btn btn-secondary" onClick={this.handleSignOut}>Sign out</button>
+          <button className="btn btn-secondary" onClick={this.handleSignOut}>Sign out</button>
         </section>
       );
     }
