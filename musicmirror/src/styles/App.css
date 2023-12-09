@@ -257,10 +257,10 @@ button.redirect:hover {
   background-color: #e24005;
 }
 
-/*--- Spotify Styling --------------------------------------------------------*/
+/*--- Spotify/YouTube Connection Styling -------------------------------------*/
 
-.SpotifyProfile {
-  border-bottom: 1px solid #ffffff;
+.service-connection {
+  border-top: 1px solid #ffffff;
 }
 
 .profile-info, .logged-in {

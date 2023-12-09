@@ -1,4 +1,5 @@
 import { getPlaylists, searchPlaylists } from "../playlist";
+import { fetchUserPlaylists } from "../youtube";
 import React from "react";
 
 class SavedPlaylists extends React.Component{
@@ -47,10 +48,11 @@ class SavedPlaylists extends React.Component{
       this.getSpotifyLists();
 
     } else if (this.props.service === "youtube" && 
-        this.props.connected && 
-        !prevProps.connected) {
+        sessionStorage.getItem("loggedInYT") === "true" && 
+        Object.keys(this.state.YouTubeLists).length < 1) {
 
       this.getYouTubeLists();
+      console.log("GETTING YOUTUBE LISTS");
     }
 
     // Remove playlists on logout
@@ -109,7 +111,14 @@ class SavedPlaylists extends React.Component{
     });
   }
 
-  getYouTubeLists = async() => {}
+  getYouTubeLists = async() => {
+
+    let playlists = await fetchUserPlaylists();
+    this.setState({YouTubeLists: playlists}, () => {
+      console.log("SAVEDPLAYLIST STATE UPDATED: YouTubeLists");
+      console.log(this.state.YouTubeLists);
+    });
+  }
 
   /*--------------------------------------------------------------------------*/
 
@@ -145,7 +154,7 @@ class SavedPlaylists extends React.Component{
     } else {
       return (
         <div className="SavedPlaylists">
-          <p>No playlists yet!</p>
+          <p>Sign in to view playlists!</p>
         </div>
       );
     }

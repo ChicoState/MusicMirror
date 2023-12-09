@@ -1,17 +1,27 @@
+// Styles
 import "./styles/App.css";
-import PageAlert from "./components/PageAlert";
+
+// Components
 import AddSongs from "./components/AddSongs";
-import SavedPlaylists from "./components/SavedPlaylists";
-import SpotifyProfile from "./components/SpotifyProfile";
-import YouTube from "./components/YouTube";
+import PageAlert from "./components/PageAlert";
 import PlaylistMM from "./components/PlaylistMM";
 import PlaylistSpot from "./components/PlaylistSpot";
 import PlaylistYT from "./components/PlaylistYT";
-import { useEffect, useState } from "react";
-import { findSongs } from "./playlist";
-import { Tabs, Tab } from "react-bootstrap";
+import SavedPlaylists from "./components/SavedPlaylists";
+import SpotifyConnection from "./components/SpotifyConnection";
+import YouTubeConnection from "./components/YouTubeConnection";
+// import YouTube from "./components/YouTube";
+
+// Back end
 import * as auth from './auth';
 import { emailCheck, createUser, getUsername, deleteUser, getMMPlaylists } from './database';
+import { findSongs } from "./playlist";
+
+// Libraries
+import { useEffect, useState } from "react";
+import { Tabs, Tab } from "react-bootstrap";
+
+//==============================================================================
 
 function App() {
   const [username, setUsername] = useState("");
@@ -21,14 +31,13 @@ function App() {
   const [MMList, setMMList] = useState();
   const [SpotList, setSpotList] = useState();
   const [YTList, setYTList] = useState();
-  const [SearchTerm, setSearchTerm] = useState();
   const [search, setSearch] = useState(0);
   const [loggedIn, setLog] = useState(false);
   //const [setLog] = useState();
   const [spotifyConnection, setSpotifyConnection] = useState(
     sessionStorage.getItem("loggedIn") === "true"
   );
-  const [youtubeLoggedIn, setIsYoutubeLoggedIn]=useState(false);
+  const [youtubeConnection, setYoutubeConnection]=useState(false);
   const [needsListRefresh, setListRefresh] = useState(false);
   const [viewSignIn, setViewSignIn] = useState(!sessionStorage.getItem("verifier"));
   const [viewSignUp, setViewSignUp] = useState(false);
@@ -42,12 +51,12 @@ function App() {
     const handleStorageUpdate = (event) => {
       if (event.key === "loggedIn") {
         setSpotifyConnection(sessionStorage.getItem("loggedIn") === "true");
+        console.log("Spotify is connected!");
+      } else if (event.key === "loggedInYT") {
+        setYoutubeConnection(sessionStorage.getItem("loggedInYT") === "true");
+        console.log("YouTube is connected!");
       }
     };
-    const youtubeToken = localStorage.getItem('youtubeAccessToken');
-    if (youtubeToken) {
-      setIsYoutubeLoggedIn(true);
-    }
 
     window.addEventListener('storage', handleStorageUpdate);
 
@@ -70,6 +79,7 @@ function App() {
     handleAlertOpen("Search complete!", "success");
   }
 
+  // Spotify login
   const handleLogin = async (data) => {
     console.log("handleLogin");
     setLog(await auth.signIn(data));
@@ -89,6 +99,7 @@ function App() {
     } else {
       setViewSignUp(false);
       setViewSignIn(false);
+      sessionStorage.setItem("loggedInMM", "true");
     }
   }
 
@@ -98,6 +109,7 @@ function App() {
     setPassword("");
     setPasswordConfirm("");
     setViewSignIn(true);
+    sessionStorage.setItem("loggedInMM", "false");
     // Do we need a func to refresh the session?
   }
 
@@ -168,11 +180,17 @@ function App() {
 
   //----------------------------------------------------------------------------
   const goToSignIn = () => {
+    setUsername("");
+    setEmail("");
+    setPassword("");
+    setPasswordConfirm("");
     setViewSignIn(true);
     setViewSignUp(false);
   }
 
   const goToSignUp = () => {
+    setEmail("");
+    setPassword("");
     setViewSignUp(true);
     setViewSignIn(false);
   }
@@ -180,7 +198,7 @@ function App() {
   //----------------------------------------------------------------------------
 
   // Default view when not logged in
-  if (viewSignIn) {
+  if (viewSignIn && sessionStorage.getItem("loggedInMM") !== "true") {
     return (
       <div className="App sign-in">
 
@@ -242,7 +260,7 @@ function App() {
   //----------------------------------------------------------------------------
 
   // View for creating a new account
-  } else if (viewSignUp) {
+  } else if (viewSignUp && sessionStorage.getItem("loggedInMM") !== "true") {
     return (
       <div className="App sign-up">
 
@@ -369,24 +387,24 @@ function App() {
                 </Tab>
                 <Tab tabClassName="tab tab-spotify" eventKey="spotifyLeft" title="Spotify">
                   <div className="tab-body p-3">
-                    <SpotifyProfile handleLogin={handleLogin}/>
                     <SavedPlaylists 
                       service="spotify" 
                       connected={spotifyConnection} 
                       refresh={needsListRefresh} 
                       confirm={handleConfirmRefresh}
                     />
+                    <SpotifyConnection handleLogin={handleLogin}/>
                   </div> 
                 </Tab>
                 <Tab tabClassName="tab tab-youtube" eventKey="youtubeLeft" title="YT Music">
                   <div className="tab-body p-3">
-                    <YouTube />
                     <SavedPlaylists 
                       service="youtube" 
-                      connected={setIsYoutubeLoggedIn} 
+                      connected={youtubeConnection} 
                       refresh={needsListRefresh} 
                       confirm={handleConfirmRefresh}
                     />
+                    <YouTubeConnection />
                   </div> 
                 </Tab>
                 <Tab tabClassName="tab tab-addsongs" eventKey="addsongs" title="New">
@@ -415,7 +433,6 @@ function App() {
                 </Tab>
                 <Tab tabClassName="tab tab-spotify" eventKey="spotifyRight" title="Spotify">
                   <div className="tab-body p-3">
-                    <SpotifyProfile handleLogin={handleLogin}/>
                     <PlaylistSpot 
                       service="spotify" 
                       list={SpotList} 
@@ -423,12 +440,20 @@ function App() {
                       save={handleListAdded}
                       alert={handleAlertOpen}
                     />
+                    <SpotifyConnection handleLogin={handleLogin}/>
                   </div> 
                 </Tab>
                 <Tab tabClassName="tab tab-youtube" eventKey="youtubeRight" title="YT Music">
                   <div className="tab-body p-3">
-                      <YouTube searchTerm={YTList}/>
-                  {/*<PlaylistYT service="youtube" list={YTList} search={search} save={handleListAdded}/>*/}
+                      {/* <YouTube searchTerm={YTList}/> */}
+                      <PlaylistYT 
+                        service="youtube" 
+                        list={YTList} 
+                        search={search} 
+                        save={handleListAdded}
+                        alert={handleAlertOpen}
+                      />
+                      <YouTubeConnection />
                   </div> 
                 </Tab>
               </Tabs>
