@@ -10,7 +10,6 @@ import PlaylistYT from "./components/PlaylistYT";
 import SavedPlaylists from "./components/SavedPlaylists";
 import SpotifyConnection from "./components/SpotifyConnection";
 import YouTubeConnection from "./components/YouTubeConnection";
-// import YouTube from "./components/YouTube";
 
 // Back end
 import * as auth from './auth';

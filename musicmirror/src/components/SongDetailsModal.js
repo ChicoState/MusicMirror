@@ -256,25 +256,25 @@ class SongDetailsModal extends React.Component{
                       data-index={index}
                     >
                       <div className="mb-2 details-header d-flex align-items-center">
-                        {/* This img is where the song preview play/pause button 
-                        should go. Still needs input, handler, and formatting. */}
-                        <img 
-                          className="play-button"
-                          src="./images/play-circle.svg" 
-                          alt="play" 
-                          role="button"
-                        />
                         <h1 className="mx-2 mb-0">{track.title}</h1>
                         <p className="mb-0 song-length">({track.length})</p>
                       </div>
-                      <div className="d-flex justify-content-between">
-                        <p>Artist:&nbsp;</p>
-                        <p>{track.artist}</p>
-                      </div>
-                      <div className="d-flex justify-content-between">
-                        <p>Album:&nbsp;</p>
-                        <p>{track.album}</p>
-                      </div>
+                      {track.album?
+                        <div>
+                          <div className="d-flex justify-content-between">
+                            <p>Artist:&nbsp;</p>
+                            <p>{track.artist}</p>
+                          </div>
+                          <div className="d-flex justify-content-between">
+                            <p>Album:&nbsp;</p>
+                            <p>{track.album}</p>
+                          </div>
+                        </div>
+                        :
+                        <div>
+                          {/* Angel: playable youtube video goes inside this div */}
+                        </div>
+                      }
                     </div>
                   ))}
                 </div>
