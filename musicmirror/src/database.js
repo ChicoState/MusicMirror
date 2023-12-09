@@ -24,7 +24,8 @@ export async function emailCheck(email) {
         }
     } catch (err) {
         console.error(err);
-        throw err;
+        // throw err;
+        return undefined;
     }
 }
 
@@ -83,15 +84,17 @@ export async function getUsername(email, password){
         }
     } catch (err) {
         console.error(err);
-        throw err;
+        // throw err;
+        return undefined;
     }
 }
 
 //Returns a list of playlist objects if a user matches id
 //Otherwise, returns undefined
-export async function getMMPlaylists(id){
+export async function getMMPlaylists(email){
     try {
-        let resp = await fetch(`http://localhost:5000/user?_id=${id}`, {
+        // let resp = await fetch(`http://localhost:5000/user?_id=${id}`, {
+        let resp = await fetch(`http://localhost:5000/user/${email}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",

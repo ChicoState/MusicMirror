@@ -13,7 +13,7 @@ import YouTubeConnection from "./components/YouTubeConnection";
 
 // Back end
 import * as auth from './auth';
-import { emailCheck, createUser, getUsername, deleteUser, getMMPlaylists } from './database';
+import { emailCheck, createUser, getUsername, deleteUser } from './database';
 import { findSongs } from "./playlist";
 import * as youtube from './youtube';
 
@@ -106,10 +106,10 @@ function App() {
       handleAlertOpen("Please enter your password", "info");
     } else if (email === "") {
       handleAlertOpen("Please enter your email address", "info");
-    // } else if (!(await emailCheck(email))) {
-    //   handleAlertOpen("That email address does not have an account", "info");
-    // } else if (!(await getUserName(email, password))) {
-    //   handleAlertOpen("Password is incorrect, please try again", "info");
+    } else if (!(await emailCheck(email))) {
+      handleAlertOpen("That email address does not have an account", "info");
+    } else if (!(await getUsername(email, password))) {
+      handleAlertOpen("Password is incorrect, please try again", "info");
     } else {
       setViewSignUp(false);
       setViewSignIn(false);
@@ -134,22 +134,21 @@ function App() {
       handleAlertOpen("Please enter a username", "info");
     } else if (email === "") {
       handleAlertOpen("Please enter a valid email address", "info");
-    // } else if (await emailCheck(email)) {
-    //   handleAlertOpen("That email address is already in use", "info");
+    } else if (await emailCheck(email)) {
+      handleAlertOpen("That email address is already in use", "info");
     } else if (password === "") {
       handleAlertOpen("Please enter a password", "info");
     } else if (passwordConfirm === "") {
       handleAlertOpen("Please confirm your password", "info");
     } else if (password !== passwordConfirm) {
       handleAlertOpen("Password and confirmation must be the same", "info");
-    } else {
-      // await createUser(username, password, email);
+    } else if (await createUser(username, password, email)) {
       handleMMLogin();
     }
   }
 
   const handleDeleteAccount = async () => {
-    // await deleteUser(sessionStorage.getItem("email"));
+    await deleteUser(sessionStorage.getItem("email"));
     handleMMLogout();
   }
 
@@ -199,6 +198,7 @@ function App() {
     setEmail("");
     setPassword("");
     setPasswordConfirm("");
+    handleAlertClose();
     setViewSignIn(true);
     setViewSignUp(false);
   }
@@ -206,6 +206,7 @@ function App() {
   const goToSignUp = () => {
     setEmail("");
     setPassword("");
+    handleAlertClose();
     setViewSignUp(true);
     setViewSignIn(false);
   }

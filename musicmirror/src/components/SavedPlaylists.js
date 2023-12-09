@@ -1,3 +1,4 @@
+import { getMMPlaylists } from "../database";
 import { getPlaylists } from "../playlist";
 import { fetchUserPlaylists } from "../youtube";
 import React from "react";
@@ -86,11 +87,8 @@ class SavedPlaylists extends React.Component{
   /*--- HANDLERS -------------------------------------------------------------*/
 
   getMusicMirrorLists = async() => {
-    // Is "id" the user_id in session storage? Because it needs to not be
-    // dependent on Spotify being connected.
-
-    // let playlists = getMMPlaylists(id);
-    // this.setState({MusicMirrorLists: playlists});
+    let playlists = getMMPlaylists(sessionStorage.getItem("email"));
+    this.setState({MusicMirrorLists: playlists});
   }
 
   getSpotifyLists = async() => {
