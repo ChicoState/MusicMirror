@@ -116,6 +116,9 @@ export async function searchPlaylists(query) {
 export async function savePlaylist(list) {
     //change later to get current user's id
     let uid = "656822bfe9f57013d3b46c2e"
+    if (!list || JSON.stringify(list) === '{}' || list.songs.length <= 0) {
+        return undefined;
+    }
 
     let q_body = {
         playlist: {
@@ -143,4 +146,6 @@ export async function savePlaylist(list) {
         console.error(err);
         throw err;
     }
+
+    return q_body;
   }

@@ -1,8 +1,9 @@
 import renderer from 'react-test-renderer';
-import { findSongs, genPlaylist } from '../src/playlist';
+import { findSongs, genPlaylist, getPlaylists, savePlaylist } from '../src/playlist';
 import fetchMock from "jest-fetch-mock";
 import 'whatwg-fetch'
 import { describe } from 'yargs';
+import { response } from 'express';
 
 const responses = require('./testResponses.json');
 
@@ -92,6 +93,59 @@ it('genPlaylists returns undefined with empty input', async () => {
     sessionStorage.setItem("token", "test");
     sessionStorage.setItem("user_id", "testid");
     const resp = await genPlaylist({
+        "title": "Music Mirror Playlist",
+        "songs": []
+    });
+    expect(resp).toBe(undefined);
+});
+
+//getPlaylists
+it('getPlaylists happy path', async () => {
+    fetch.mockResponse(JSON.stringify(responses.getPlaylist));
+    sessionStorage.setItem("token", "test");
+    sessionStorage.setItem("user_id", "testid");
+    expect(JSON.stringify(await getPlaylists())).toBe(JSON.stringify(responses.getPlaylist));
+});
+
+it('getPlaylists sad path', async () => {
+    fetch.mockReject(new Error('mock error'));
+    sessionStorage.setItem("token", "test");
+    sessionStorage.setItem("user_id", "testid");
+    expect(getPlaylists).rejects.toThrow(Error);
+});
+
+//savePlaylist
+it('savePlaylists happy path', async () => {
+    fetch.mockResponse(JSON.stringify({ status: 200 }));
+    const resp = await savePlaylist(responses.playlist);
+    expect(JSON.stringify(resp)).toBe(JSON.stringify({
+        "playlist": {
+            "p_name": "Music Mirror Playlist",
+            "songs": [
+                {
+                    "title": "TEST DRIVE",
+                    "artist": "Joji"
+                }
+            ]
+        }
+    }));
+});
+
+it('getPlaylists sad path', async () => {
+    fetch.mockReject(new Error('mock error'));
+    sessionStorage.setItem("token", "test");
+    expect(savePlaylist(responses.playlist2)).rejects.toThrow(Error);
+});
+
+it('savePlaylists empty playlist', async () => {
+    fetch.mockResponse(JSON.stringify({ status: 200 }));
+    const resp = await savePlaylist({});
+    expect(resp).toBe(undefined);
+});
+
+it('savePlaylists empty song array', async () => {
+    fetch.mockResponse(JSON.stringify({ status: 200 }));
+    const resp = await savePlaylist({
         "title": "Music Mirror Playlist",
         "songs": []
     });
