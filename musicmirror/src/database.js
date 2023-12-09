@@ -3,7 +3,7 @@
 export async function emailCheck(email) {
 
     try {
-        let resp = await fetch(`http://localhost:5000/user?email=${email}`, {
+        let resp = await fetch(`http://localhost:3002/user?email=${email}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -40,7 +40,7 @@ export async function createUser(username, password, email){
     };
 
     try{
-        let resp = await fetch("http://localhost:5000/register", {
+        let resp = await fetch("http://localhost:3002/register", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -65,7 +65,7 @@ export async function createUser(username, password, email){
 export async function getUsername(email, password){
 
     try {
-        let resp = await fetch(`http://localhost:5000/user?email=${email}`, {
+        let resp = await fetch(`http://localhost:3002/user?email=${email}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -93,8 +93,8 @@ export async function getUsername(email, password){
 //Otherwise, returns undefined
 export async function getMMPlaylists(email){
     try {
-        // let resp = await fetch(`http://localhost:5000/user?_id=${id}`, {
-        let resp = await fetch(`http://localhost:5000/user/${email}`, {
+        // let resp = await fetch(`http://localhost:3002/user?_id=${id}`, {
+        let resp = await fetch(`http://localhost:3002/user/${email}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -120,7 +120,7 @@ export async function getMMPlaylists(email){
 //Deletes user via given email
 export async function deleteUser(email){
     try {
-        let resp = await fetch(`http://localhost:5000/user/${email}`, {
+        let resp = await fetch(`http://localhost:3002/user/${email}`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
