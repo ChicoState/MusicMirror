@@ -62,9 +62,13 @@ class PlaylistYT extends React.Component{
 
 
   handleSave = async() => {
-    await genPlaylist(this.state.playlist);
-    this.props.save();
-    this.props.alert(`${this.state.currentTitle} playlist saved to YouTube!`, "success");
+    if (sessionStorage.getItem("loggedInYT") !== "true") {
+      this.props.alert("You must be signed in to YouTube to save this playlist!", "info");
+    } else {
+      // await youtube_gen_playlist_func;
+      // this.props.save();
+      this.props.alert(`${this.state.currentTitle} playlist saved to YouTube!`, "success");
+    }
   }
 
 
