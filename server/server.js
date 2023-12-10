@@ -4,7 +4,7 @@ const { google } = require('googleapis');
 const cors = require('cors');
 const app = express();
 require('dotenv').config();
-
+app.use(express.json());
 app.use(cors()); // Enable CORS for all routes
 /*
 
@@ -31,7 +31,12 @@ const oauth2Client = new google.auth.OAuth2(
   C_secrete, // Replace with client secret
   'http://localhost:3001/oauth2callback'// <- is for this server don't. server's redirect URI
 );
-
+const corsOptions ={
+  origin:'http://localhost:3000', 
+  credentials:true,            //access-control-allow-credentials:true
+  optionSuccessStatus:200
+}
+app.use(cors(corsOptions));
 const SCOPES = ['https://www.googleapis.com/auth/youtube'];
 console.log("Its here");
 app.get('/auth/google', (req, res) => {
@@ -143,8 +148,8 @@ app.post('/youtube/addToPlaylist', async (req, res) => {
   }
 });
 
-app.post('/youtube/createPlaylist', async (req, res) => {
-  //await refreshAccessTokenIfNeeded();
+/* Meant to creat playlist */
+app.post('/youtube/createPlaylists', async (req, res) => {
   const { accessToken, title, description } = req.body;
 
   if (!accessToken || !title) {
@@ -164,16 +169,19 @@ app.post('/youtube/createPlaylist', async (req, res) => {
           description: description
         },
         status: {
-          privacyStatus: 'private' // or 'public', 'unlisted'
+          privacyStatus: 'public' // or 'private', 'unlisted'
         }
       }
     });
+    
     res.json(response.data);
   } catch (err) {
     console.error('Error creating playlist:', err);
     res.status(500).send('Error creating playlist');
   }
 });
+
+/** */
 
 app.delete('/youtube/removeFromPlaylist', async (req, res) => {
   //await refreshAccessTokenIfNeeded();

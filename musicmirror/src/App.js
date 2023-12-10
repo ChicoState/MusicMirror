@@ -10,6 +10,7 @@ import PlaylistYT from "./components/PlaylistYT";
 import SavedPlaylists from "./components/SavedPlaylists";
 import SpotifyConnection from "./components/SpotifyConnection";
 import YouTubeConnection from "./components/YouTubeConnection";
+import PlaylistCreationYT from "./PlaylistCreationYT";
 
 // Back end
 import * as auth from './auth';
@@ -424,6 +425,7 @@ function App() {
                       refresh={needsListRefresh} 
                       confirm={handleConfirmRefresh}
                     />
+                    <PlaylistCreationYT/>
                     <YouTubeConnection handleLogin={handleLoginYT} />
                   </div> 
                 </Tab>

@@ -141,4 +141,24 @@ export async function performYouTubeSearch(searchInput, numResults) {
 };
 
 //------------------------------------------------------------------------------
-
+export async function createPlaylist(accessToken,title, description) {
+  console.log('Here:::::::::::::>',accessToken);
+  if (!accessToken) {
+    console.error('An issue with the token:', accessToken);
+    return;
+  }
+  if (!title) {
+    console.log('No title given');
+    return;
+  }
+  try {
+    const response = await axios.post('http://localhost:3001/youtube/createPlaylists',{      accessToken
+      ,title
+      ,description}
+    );
+    console.log('Playlist created successfully:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error in creating playlist:', error);
+  }
+}
