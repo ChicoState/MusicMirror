@@ -6,6 +6,7 @@ const app = express();
 require('dotenv').config();
 
 app.use(cors()); // Enable CORS for all routes
+app.use(express.json());
 /*
 
 Firt Google information for YOUTUBE API to do searched and get user informtion of their iteams:
@@ -26,13 +27,17 @@ const API_KEY = 'AIzaSyBWAir5kNDcRDZAAPr8pvINjmJA2ERD22M';
 const C_secrete = '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';
 const C_id = '808121759367-6efs65rh50k4p5qhn6af10iqjtgcs7m8.apps.googleusercontent.com';
 const oauthCall = 'http://localhost:3001/oauth2callback';
+
 const oauth2Client = new google.auth.OAuth2(
   C_id, // Replace with client ID
   C_secrete, // Replace with client secret
   'http://localhost:3001/oauth2callback'// <- is for this server don't. server's redirect URI
 );
 
-const SCOPES = ['https://www.googleapis.com/auth/youtube'];
+const SCOPES = ['https://www.googleapis.com/auth/youtube',
+  'https://www.googleapis.com/auth/youtube.readonly' // For reading playlists
+];
+
 console.log("Its here");
 app.get('/auth/google', (req, res) => {
   const authUrl = oauth2Client.generateAuthUrl({
@@ -58,6 +63,18 @@ app.get('/oauth2callback', async (req, res) => {
     res.status(500).send('Authentication failed');
   }
 });
+// server.js
+app.post('/getAccessToken', async (req, res) => {
+  const code = req.body.code;
+  try {
+    const { tokens } = await oauth2Client.getToken(code);
+    oauth2Client.setCredentials(tokens);
+    res.json({ accessToken: tokens.access_token });
+  } catch (error) {
+    console.error('Error exchanging authorization code:', error);
+    res.status(500).send('Failed to exchange authorization code');
+  }
+});
 
 app.get('/youtube/playlists', async (req, res) => {
   //await refreshAccessTokenIfNeeded();
@@ -68,7 +85,7 @@ app.get('/youtube/playlists', async (req, res) => {
   const authClient = new google.auth.OAuth2();
   authClient.setCredentials({access_token: accessToken});
   try {
-    
+    console.log('Here getting user playlist the token:', accessToken);
     const youtube = google.youtube({
       version: 'v3',
       auth: oauth2Client,
@@ -76,7 +93,7 @@ app.get('/youtube/playlists', async (req, res) => {
 
     const response = await youtube.playlists.list({
       part: 'snippet,contentDetails',
-      mine: true,
+      mine: 'true',
       maxResults: 20,
     });
 

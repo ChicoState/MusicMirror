@@ -378,7 +378,7 @@ function App() {
                 </Tab>
                 <Tab tabClassName="tab tab-youtube" eventKey="youtubeLeft" title="YT Music">
                   <div className="tab-body p-3">
-                    <YouTube />
+                    <YouTube Loged={youtubeLoggedIn} />
                     <SavedPlaylists 
                       service="youtube" 
                       connected={setIsYoutubeLoggedIn} 

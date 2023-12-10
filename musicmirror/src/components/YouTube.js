@@ -20,7 +20,7 @@ const API_KEY = 'AIzaSyDhDpQvbI2W1P5IH8xV4o2fsw0gK_5lGzY';
 const MAXRESULTS = 20;
 
 //We are reciving the search term form the text  box 
-function Youtube({searchTerm}){
+function Youtube({searchTerm, Loged}){
   const [user, setUser] = useState({});//sets user state 
   const [accessToken, setAccessToken] = useState(null);//access token used for the user
   const [playlists, setPlaylists] = useState([]);//Playlist 
@@ -40,7 +40,7 @@ function Youtube({searchTerm}){
       localStorage.setItem('youtubeAccessToken',token);
     }else if(code){
       axios.post('http://localhost:3001/getAccessToken',{code: code}).then(response=>{
-        setAccessToken(response.data.acessToken);
+        setAccessToken(response.data.accessToken);
         localStorage.setItem('youtubeAccessToken',accessToken);
       }
       ).catch(error=>console.error('Error in fetching acess Token:',error));
@@ -52,7 +52,7 @@ function Youtube({searchTerm}){
       fetchUserPlaylists();
     }
 
-  },[searchTerm, accessToken]);
+  },[searchTerm, accessToken, Loged]);
   
   const signIn =()=> {
     window.location.href = 'http://localhost:3001/auth/google';
