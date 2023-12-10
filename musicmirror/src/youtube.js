@@ -86,7 +86,7 @@ export async function performYouTubeSearch(searchInput, numResults) {
   let searchTerms = searchInput.split('\n');
   let newSongs = [];
   let newList = {
-    title: "Music Mirror Playlist", 
+    title: "MusicMirror Playlist", 
     songs: []
   };
 

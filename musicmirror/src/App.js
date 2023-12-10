@@ -51,24 +51,27 @@ function App() {
   //----------------------------------------------------------------------------
   
   // This function searches for songs and updates the pending playlist
-  const handleSearch = async (data, title) => {
+  const handleSearch = async (data, title = "MusicMirror Playlist") => {
     console.log(`Searching! This is search number ${search+1}.`)
+    let list = {};
+    let listYT = {};
 
-    let list = await findSongs(data, 5);
-    let listYT = await youtube.performYouTubeSearch(data, 5);
-    console.log("title:", title);
-    console.log("list title before:", list.title);
-    if (title) {
+    if (sessionStorage.getItem("token")) {
+      list = await findSongs(data, 5);
       list.title = title;
-      listYT.title = title;
+      console.log("new spotify list:", list);
     }
-    console.log("list title after:", list.title);
+    if (sessionStorage.getItem("youtubeAccessToken")) {
+      listYT = await youtube.performYouTubeSearch(data, 5);
+      listYT.title = title;
+      console.log("new youtube list:", listYT);
+    }
 
-    setMMList(list);
+    setMMList(Object.keys(list).length > 0? list : listYT);
     setSpotList(list);
     setYTList(listYT);
     setSearch(search+1);
-    setProgress(false);
+    // setProgress(false);
     handleAlertOpen("Playlist loaded!", "success");
   }
 
@@ -79,7 +82,7 @@ function App() {
       let term = song.title + " " + song.artist + "\n";
       searchString += term;
     }
-    setProgress(true);
+    // setProgress(true);
     handleSearch(searchString, list.p_name);
   }
 
@@ -98,7 +101,7 @@ function App() {
       let term = vid.snippet.title + " " + vid.snippet.videoOwnerChannelTitle + "\n";
       searchString += term;
     }
-    setProgress(true);
+    // setProgress(true);
     handleSearch(searchString, list.snippet.title);
   }
 

@@ -10,7 +10,7 @@ class PlaylistMM extends React.Component{
     this.state = {
       playlist: {},
       isEditing: false,
-      currentTitle: "New Music Mirror Playlist",
+      currentTitle: "MusicMirror Playlist",
       selectedSong: {},
       selectedIndex: null,
       search: 1,
@@ -100,7 +100,10 @@ class PlaylistMM extends React.Component{
 
     /* If passed nothing, remove the currently selected song */
     if (!updatedSong) {
-      this.props.alert(`Song removed: ${this.state.selectedSong.title}`, "success");
+      this.props.alert(
+        `Song removed: ${this.state.selectedSong.tracks[0].title}`, 
+        "success"
+      );
       newList.songs = newList.songs.filter((song, index) => 
         index !== this.state.selectedIndex
       );
@@ -113,7 +116,7 @@ class PlaylistMM extends React.Component{
     /* If passed a song, replace the currently selected song */
     } else {
       this.props.alert(
-        `Song updated: ${this.state.selectedSong.title} is now ${updatedSong.title}`, 
+        `Song updated: ${updatedSong.tracks[0].title}`, 
         "success"
       );
       newList.songs[this.state.selectedIndex] = updatedSong;
@@ -149,6 +152,7 @@ class PlaylistMM extends React.Component{
             {this.state.isEditing? 
             (<div className="d-flex justify-content-between align-items-center">
               <input 
+                className="title-editor"
                 type="text" 
                 value={this.state.currentTitle} 
                 onChange={this.handleChange} 
@@ -176,10 +180,10 @@ class PlaylistMM extends React.Component{
           {/* List of song cards */}
           {this.state.playlist.songs.map((song, index) => (
             <div 
-              className="my-1 song-card d-flex"
+              className="my-1 song-card d-flex align-items-center"
               onClick={() => this.handleSongSelection(song, index)}
             >
-              <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" className="bi bi-three-dots-vertical" viewBox="0 0 16 16">
+              <svg className="bi bi-three-dots-vertical" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16">
                 <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
               </svg>
               <div 
@@ -188,8 +192,18 @@ class PlaylistMM extends React.Component{
                 data-bs-toggle="modal" 
                 data-bs-target={"#song-details-"+this.props.service} 
               >
-                <h2 className="m-0">{song.tracks[0].title}</h2>
-                <p className="m-0">{song.tracks[0].artist}</p>
+                <h2 className="m-0">{
+                  song.tracks[0]?
+                  song.tracks[0].title
+                  :
+                  "No tracks available"
+                }</h2>
+                <p className="m-0">{
+                  song.tracks[0]?
+                  song.tracks[0].artist
+                  :
+                  "Check the Google API key"
+                }</p>
               </div>
             </div>
           ))}

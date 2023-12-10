@@ -196,7 +196,17 @@ button.redirect:hover {
 
 .list-title:hover {
   color: #ffffff;
-  cursor: text;
+  cursor: pointer;
+}
+
+.title-editor {
+  width: 100%;
+}
+
+.title-editor:focus {
+  font-size: calc(0.9rem + 0.9vw);
+  color: #ffffff;
+  background-color: #171717;
 }
 
 .bi-pencil-square {
@@ -205,9 +215,8 @@ button.redirect:hover {
 }
 
 .bi-three-dots-vertical {
-  /* height: 100%; */
   color: #171717;
-  font-size: calc(0.7rem + 0.7vw);
+  font-size: calc(1rem + 1vw);
 }
 
 .song-card {

@@ -77,13 +77,13 @@ class SongDetailsModal extends React.Component{
       event.target.setAttribute("data-bs-target", "#details-carousel");
       event.target.click();
       event.target.setAttribute("data-bs-target", "");
-      this.setState({progress: true});
+      // this.setState({progress: true});
       this.handleSearch();
     }
   }
 
   handleClick = (event) => {
-    this.setState({progress: true});
+    // this.setState({progress: true});
     this.handleSearch();
   }
 

@@ -126,9 +126,16 @@ class SavedPlaylists extends React.Component{
   }
 
   handleSelectList = (list) => {
-    this.props.alert("Loading...", "info");
-    this.props.load(list);
-    console.log("Loading playlist:", list);
+    // right now the only way to "load" a list is to do a search for the songs
+    // that should be in it, and that requires you to be logged in to either
+    // youtube or spotify
+    if (sessionStorage.getItem("loggedIn") === "true" ||
+        sessionStorage.getItem("loggedInYT") === "true") {
+          
+      this.props.alert("Loading...", "info");
+      this.props.load(list);
+      console.log("Loading playlist:", list);
+    }
   }
 
   /*--------------------------------------------------------------------------*/

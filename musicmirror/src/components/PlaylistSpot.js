@@ -8,7 +8,7 @@ class PlaylistSpot extends React.Component{
     this.state = {
       playlist: {},
       isEditing: false,
-      currentTitle: "New Music Mirror Playlist",
+      currentTitle: "MusicMirror Playlist",
       selectedSong: {},
       selectedIndex: null,
       search: 1,
@@ -25,7 +25,11 @@ class PlaylistSpot extends React.Component{
         this.props.search >= this.state.search) {
 
       console.log("New search, updating state!");
-      this.setState({playlist: this.props.list, search: this.props.search+1}, () => {
+      this.setState({
+        playlist: this.props.list, 
+        currentTitle: this.props.list.title,
+        search: this.props.search+1
+      }, () => {
         console.log("PLAYLIST STATE UPDATE COMPLETE: playlist, search")
       });
     }
@@ -151,6 +155,7 @@ class PlaylistSpot extends React.Component{
             (<div className="d-flex justify-content-between align-items-center">
               <input 
                 type="text" 
+                className="title-editor"
                 value={this.state.currentTitle} 
                 onChange={this.handleChange} 
                 onBlur={this.handleBlur} 
@@ -177,10 +182,10 @@ class PlaylistSpot extends React.Component{
           {/* List of song cards */}
           {this.state.playlist.songs.map((song, index) => (
             <div 
-              className="my-1 song-card d-flex"
+              className="my-1 song-card d-flex align-items-center"
               onClick={() => this.handleSongSelection(song, index)}
             >
-              <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" className="bi bi-three-dots-vertical" viewBox="0 0 16 16">
+              <svg className="bi bi-three-dots-vertical" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16">
                 <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
               </svg>
               <div 
