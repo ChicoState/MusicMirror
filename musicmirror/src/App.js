@@ -18,7 +18,7 @@ import { findSongs } from "./playlist";
 import * as youtube from './youtube';
 
 // Libraries
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Tabs, Tab } from "react-bootstrap";
 
 //==============================================================================
@@ -46,46 +46,68 @@ function App() {
   const [alertShow, setAlertShow] = useState(false);
   const [alertHeading, setAlertHeading] = useState("");
   const [alertVariant, setAlertVariant] = useState("");
-
-  //----------------------------------------------------------------------------
-
-  // useEffect(() => {
-  //   const handleStorageUpdate = (event) => {
-  //     console.log("STORAGE EVENT TRIGGERED");
-  //     if (event.key === "loggedIn") {
-  //       setSpotifyConnection(sessionStorage.getItem("loggedIn") === "true");
-  //       console.log("---LOOK AT THIS--- Spotify is connected!");
-  //     } else if (event.key === "loggedInYT") {
-  //       setYoutubeConnection(sessionStorage.getItem("loggedInYT") === "true");
-  //       console.log("---LOOK AT THIS--- YouTube is connected!");
-  //     }
-  //   };
-
-  //   window.addEventListener('storage', handleStorageUpdate);
-
-  //   return () => {
-  //     window.removeEventListener('storage', handleStorageUpdate);
-  //   }
-  // }, []);
+  const [progress, setProgress] = useState(false);
 
   //----------------------------------------------------------------------------
   
   // This function searches for songs and updates the pending playlist
-  const handleMsg = async (data) => {
+  const handleSearch = async (data, title) => {
     console.log(`Searching! This is search number ${search+1}.`)
 
-    let list;
-    if (sessionStorage.getItem("loggedIn") === "true") {
-      list = await findSongs(data, 5);
-    } else {
-      list = await youtube.performYouTubeSearch(data, 5);
+    let list = await findSongs(data, 5);
+    let listYT = await youtube.performYouTubeSearch(data, 5);
+    console.log("title:", title);
+    console.log("list title before:", list.title);
+    if (title) {
+      list.title = title;
+      listYT.title = title;
     }
+    console.log("list title after:", list.title);
 
     setMMList(list);
     setSpotList(list);
-    setYTList(list);
+    setYTList(listYT);
     setSearch(search+1);
-    handleAlertOpen("Search complete!", "success");
+    setProgress(false);
+    handleAlertOpen("Playlist loaded!", "success");
+  }
+
+  // Parse a saved playlist from MusicMirror to create a search string
+  const handleSearchMM = async (list) => {
+    let searchString = "";
+    for (let song of list.songs) {
+      let term = song.title + " " + song.artist + "\n";
+      searchString += term;
+    }
+    setProgress(true);
+    handleSearch(searchString, list.p_name);
+  }
+
+  // Parse a saved playlist from Spotify to create a search string
+  const handleSearchSpot = async (list) => {
+    // let searchString = "";
+    // // spotify lists have links to the list but no song data...
+    // setProgress(true);
+    // handleSearch(searchString, list.name);
+  }
+
+  // Parse a saved playlist from YouTube to create a search string
+  const handleSearchYT = async (list) => {
+    let searchString = "";
+    for (let vid of list.videos) {
+      let term = vid.snippet.title + " " + vid.snippet.videoOwnerChannelTitle + "\n";
+      searchString += term;
+    }
+    setProgress(true);
+    handleSearch(searchString, list.snippet.title);
+  }
+
+  const handleListAdded = () => {
+    setListRefresh(true);
+  }
+
+  const handleConfirmRefresh = () => {
+    setListRefresh(false);
   }
 
   // Spotify login
@@ -154,14 +176,6 @@ function App() {
   const handleDeleteAccount = async () => {
     await deleteUser(sessionStorage.getItem("email"));
     handleMMLogout();
-  }
-
-  const handleListAdded = () => {
-    setListRefresh(true);
-  }
-
-  const handleConfirmRefresh = () => {
-    setListRefresh(false);
   }
 
   const handleUsername = event => {
@@ -368,7 +382,7 @@ function App() {
   // View when logged in
   } else {
     return (
-      <div className="App">
+      <div className={progress? "App progress-cursor" : "App"}>
   
         {/* Page header */}
         <header className="App-header d-flex justify-content-center align-items-center">
@@ -402,6 +416,8 @@ function App() {
                       connected="true"
                       refresh={needsListRefresh} 
                       confirm={handleConfirmRefresh}
+                      load={handleSearchMM}
+                      alert={handleAlertOpen}
                     />
                   </div> 
                 </Tab>
@@ -412,6 +428,8 @@ function App() {
                       connected={spotifyConnection} 
                       refresh={needsListRefresh} 
                       confirm={handleConfirmRefresh}
+                      load={handleSearchSpot}
+                      alert={handleAlertOpen}
                     />
                     <SpotifyConnection handleLogin={handleLogin}/>
                   </div> 
@@ -423,13 +441,15 @@ function App() {
                       connected={youtubeConnection} 
                       refresh={needsListRefresh} 
                       confirm={handleConfirmRefresh}
+                      load={handleSearchYT}
+                      alert={handleAlertOpen}
                     />
                     <YouTubeConnection handleLogin={handleLoginYT} />
                   </div> 
                 </Tab>
                 <Tab tabClassName="tab tab-addsongs" eventKey="addsongs" title="New">
                   <div className="tab-body p-3 d-flex flex-column">
-                    <AddSongs handleMsg={handleMsg} alert={handleAlertOpen} />
+                    <AddSongs search={handleSearch} alert={handleAlertOpen} />
                   </div>
                 </Tab>
               </Tabs>

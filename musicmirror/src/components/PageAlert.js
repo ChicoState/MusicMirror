@@ -56,6 +56,7 @@ class PageAlert extends React.Component {
         <Alert 
           className="PageAlert d-flex align-items-center"
           variant={this.state.variant === ""? "info" : this.state.variant} 
+          data-bs-theme="dark"
           onClose={this.handleClose}
           dismissible
         >

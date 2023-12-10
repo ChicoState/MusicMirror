@@ -180,14 +180,9 @@ class PlaylistSpot extends React.Component{
               className="my-1 song-card d-flex"
               onClick={() => this.handleSongSelection(song, index)}
             >
-              {/* This img is where the song preview play/pause button 
-              should go. Still needs input, handler, and formatting. */}
-              <img 
-                className="px-2 py-1 play-button"
-                src="./images/play-circle.svg" 
-                alt="play" 
-                role="button"
-              /> 
+              <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" className="bi bi-three-dots-vertical" viewBox="0 0 16 16">
+                <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
+              </svg>
               <div 
                 className="p-1 details flex-grow-1" 
                 role="button" 

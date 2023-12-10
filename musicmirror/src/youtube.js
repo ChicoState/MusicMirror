@@ -83,7 +83,7 @@ export async function fetchUserPlaylists() {
 
 export async function performYouTubeSearch(searchInput, numResults) {
 
-  let searchTerms = searchInput.split(/[\n,]\s*/);
+  let searchTerms = searchInput.split('\n');
   let newSongs = [];
   let newList = {
     title: "Music Mirror Playlist", 
@@ -91,6 +91,10 @@ export async function performYouTubeSearch(searchInput, numResults) {
   };
 
   for (const term of searchTerms) {
+    // skip over empty lines
+    if(term.trim() === '') {
+      continue;
+    }
     try {
       const searchResponse = await axios.get('https://www.googleapis.com/youtube/v3/search', {
         params: {

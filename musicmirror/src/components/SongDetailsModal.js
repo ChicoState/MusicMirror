@@ -1,6 +1,6 @@
 import React from "react";
 import { findSongs } from "../playlist";
-// import { list of youtube video functions } from "../youtube";
+import { performYouTubeSearch } from "../youtube";
 
 class SongDetailsModal extends React.Component{
   constructor(){
@@ -9,6 +9,7 @@ class SongDetailsModal extends React.Component{
       message: "",
       song: {},
       trackIndex: 0,
+      progress: false,
     };
     this.observer = null;
   }
@@ -76,23 +77,36 @@ class SongDetailsModal extends React.Component{
       event.target.setAttribute("data-bs-target", "#details-carousel");
       event.target.click();
       event.target.setAttribute("data-bs-target", "");
+      this.setState({progress: true});
       this.handleSearch();
     }
+  }
+
+  handleClick = (event) => {
+    this.setState({progress: true});
+    this.handleSearch();
   }
 
 
   /* Perform a search and display the results */
   handleSearch = async() => {
     console.log(`searching: ${this.state.message}`);
-    const newList = await findSongs(this.state.message, 5);
+    let newList;
+    // If the selected song has Spotify data, do a Spotify search
+    if (this.state.song.tracks[this.state.trackIndex].album) {
+      newList = await findSongs(this.state.message, 5);
+    // Otherwise do a YouTube search
+    } else {
+      newList = await performYouTubeSearch(this.state.message, 5);
+    }
     if (newList.songs) {
       console.log("search successful");
-      this.setState({song: newList.songs[0], trackIndex: 0}, () => {
+      this.setState({song: newList.songs[0], trackIndex: 0, progress: false}, () => {
         console.log("MODAL STATE UPDATE COMPLETE, SEARCH SUCCESSFUL {song: newList.songs[0], trackIndex: 0}");
       });
     } else {
       console.log("could not perform search");
-      this.setState({trackIndex: 0}, () => {
+      this.setState({trackIndex: 0, progress: false}, () => {
         console.log("MODAL STATE UPDATE COMPLETE, SEARCH NOT SUCCESSFUL {trackIndex: 0}");
       });
     }
@@ -194,8 +208,12 @@ class SongDetailsModal extends React.Component{
     } else {
       return (
         <div 
-        id={"song-details-" + this.props.service} 
-          className="SongDetailsModal modal fade" 
+          id={"song-details-" + this.props.service} 
+          className={this.state.progress? 
+            "SongDetailsModal progress-cursor modal fade" 
+            : 
+            "SongDetailsModal modal fade"
+          }
           tabIndex="-1" 
           aria-hidden="true"
         >
@@ -223,7 +241,7 @@ class SongDetailsModal extends React.Component{
                     role="button" 
                     data-bs-target="#details-carousel" 
                     data-bs-slide-to="0"
-                    onClick={this.handleSearch}
+                    onClick={this.handleClick}
                   />
                 </div>
                 <button 

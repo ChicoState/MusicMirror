@@ -125,6 +125,12 @@ class SavedPlaylists extends React.Component{
     }
   }
 
+  handleSelectList = (list) => {
+    this.props.alert("Loading...", "info");
+    this.props.load(list);
+    console.log("Loading playlist:", list);
+  }
+
   /*--------------------------------------------------------------------------*/
 
   render() {
@@ -138,13 +144,34 @@ class SavedPlaylists extends React.Component{
       lists = this.state.YouTubeLists;
     }
 
-    if ((this.props.service === "musicmirror" || this.props.service === "spotify") && 
+    if ((this.props.service === "musicmirror") && lists && Object.keys(lists).length > 0) {
+      return (
+        <div className="SavedPlaylists">
+          {/* List of playlists */}
+          {lists.map((playlist, index) => (
+            <div 
+              className="my-1 list-card d-flex align-items-center"
+              onClick={() => this.handleSelectList(playlist)}
+            >
+              <h1 className="m-0 px-2 py-1 list-index">{index+1}</h1>
+              <div className="p-1 list-data flex-grow-1">
+                <h2 className="m-0">{playlist.p_name}</h2>
+              </div>
+            </div>
+          ))}
+        </div>
+      );
+
+    } else if ((this.props.service === "spotify") && 
         lists && Object.keys(lists).length > 0 && lists.items) {
       return (
         <div className="SavedPlaylists">
           {/* List of playlists */}
           {lists.items.map((playlist, index) => (
-            <div className="my-1 list-card d-flex align-items-center">
+            <div 
+              className="my-1 list-card d-flex align-items-center"
+              onClick={() => this.handleSelectList(playlist)}
+            >
               <h1 className="m-0 px-2 py-1 list-index">{index+1}</h1>
               <div className="p-1 list-data flex-grow-1">
                 <h2 className="m-0">{playlist.name}</h2>
@@ -162,7 +189,10 @@ class SavedPlaylists extends React.Component{
         <div className="SavedPlaylists">
           {/* List of playlists */}
           {lists.map((playlist, index) => (
-            <div className="my-1 list-card d-flex align-items-center">
+            <div 
+              className="my-1 list-card d-flex align-items-center"
+              onClick={() => this.handleSelectList(playlist)}
+            >
               <h1 className="m-0 px-2 py-1 list-index">{index+1}</h1>
               <div className="p-1 list-data flex-grow-1">
                 <h2 className="m-0">{playlist.snippet.localized.title}</h2>

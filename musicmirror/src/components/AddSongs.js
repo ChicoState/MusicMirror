@@ -24,7 +24,7 @@ class AddSongs extends React.Component {
     if (sessionStorage.getItem("loggedIn") === "true" || 
         sessionStorage.getItem("loggedInYT") === "true") {
       this.props.alert("Searching...", "info");
-      this.props.handleMsg(this.state.message);
+      this.props.search(this.state.message);
       console.log(`passing: ${this.state.message}`);
     } else {
       this.props.alert("You must connect to either Spotify or YouTube before searching for songs", "info");

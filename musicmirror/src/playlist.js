@@ -114,7 +114,6 @@ export async function searchPlaylists(query) {
 }
 
 export async function savePlaylist(list, uid) {
-    //change later to get current user's id
     if (!list || JSON.stringify(list) === '{}' || list.songs.length <= 0) {
         return undefined;
     }
@@ -134,7 +133,8 @@ export async function savePlaylist(list, uid) {
     console.log(q_body);
 
     try {
-        let resp = await fetch("http://localhost:3002/playlist/" + uid, {
+        // let resp = await fetch("http://localhost:3002/playlist/" + uid, {
+        await fetch("http://localhost:3002/playlist/" + uid, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

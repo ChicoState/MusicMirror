@@ -172,6 +172,7 @@ button.redirect:hover {
 
 .list-card:hover {
   background-color: #004f63;
+  cursor: pointer;
 }
 
 /*--- Playlist Styling -------------------------------------------------------*/
@@ -203,6 +204,12 @@ button.redirect:hover {
   font-size: calc(0.9rem + 0.9vw);
 }
 
+.bi-three-dots-vertical {
+  /* height: 100%; */
+  color: #171717;
+  font-size: calc(0.7rem + 0.7vw);
+}
+
 .song-card {
   text-align: left;
   background-color: #003d4c;
@@ -211,6 +218,7 @@ button.redirect:hover {
 
 .song-card:hover {
   background-color: #004f63;
+  cursor: pointer;
 }
 
 /*--- Modal Styling ----------------------------------------------------------*/
@@ -290,14 +298,16 @@ button.redirect:hover {
   color: limegreen;
 }
 
-/*--- YouTube Music Styling --------------------------------------------------*/
+/*--- Misc Styling -----------------------------------------------------------*/
 
 .YouTube {
   border-bottom: 1px solid #ffffff;
 }
 
-/*--- AddSongs Styling -------------------------------------------------------*/
-
 .AddSongs h1 {
   font-size: calc(0.9rem + 0.9vw);
+}
+
+.progress-cursor {
+  cursor: progress;
 }
