@@ -72,7 +72,9 @@ export async function genPlaylist(list) {
             let obj = await resp.json();
             let p_id = obj.id;
             for (let i in list.songs) {
-                uris.push(list.songs[i].tracks[0].uri);
+                if (list.songs[i].tracks[0]) {
+                    uris.push(list.songs[i].tracks[0].uri);
+                }
             }
             // Iterate through list of matches and add each song to the playlist (api req)
             resp = await fetch("https://api.spotify.com/v1/playlists/" + p_id + "/tracks", {
@@ -125,10 +127,12 @@ export async function savePlaylist(list, uid) {
         }
     }
     for (let i in list.songs) {
-        q_body.playlist.songs.push({
-            title: list.songs[i].tracks[0].title,
-            artist: list.songs[i].tracks[0].artist
-        });
+        if (list.songs[i].tracks[0]) {
+            q_body.playlist.songs.push({
+                title: list.songs[i].tracks[0].title,
+                artist: list.songs[i].tracks[0].artist
+            });
+        }
     }
     console.log(q_body);
 

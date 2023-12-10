@@ -181,7 +181,7 @@ class PlaylistMM extends React.Component{
           {this.state.playlist.songs.map((song, index) => (
             <div 
               className="my-1 song-card d-flex align-items-center"
-              onClick={() => this.handleSongSelection(song, index)}
+              onClick={song.tracks[0]? () => this.handleSongSelection(song, index) : null}
             >
               <svg className="bi bi-three-dots-vertical" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16">
                 <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
@@ -189,7 +189,7 @@ class PlaylistMM extends React.Component{
               <div 
                 className="p-1 details flex-grow-1" 
                 role="button" 
-                data-bs-toggle="modal" 
+                data-bs-toggle={song.tracks[0]? "modal" : ""} 
                 data-bs-target={"#song-details-"+this.props.service} 
               >
                 <h2 className="m-0">{
@@ -202,7 +202,7 @@ class PlaylistMM extends React.Component{
                   song.tracks[0]?
                   song.tracks[0].artist
                   :
-                  "Check the Google API key"
+                  null
                 }</p>
               </div>
             </div>
