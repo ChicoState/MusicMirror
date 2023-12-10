@@ -97,6 +97,14 @@ button.redirect:hover {
   box-shadow: 2px 2px 10px #000000;
 }
 
+.tab-window h2.load {
+  text-align: left;
+}
+
+.tab-window h2.save {
+  text-align: left;
+}
+
 /* Tab label */
 .nav-link {
   color: #aaaaaa;
@@ -138,12 +146,16 @@ button.redirect:hover {
 /*--- SavedPlaylists Styling -------------------------------------------------*/
 
 .SavedPlaylists h1 {
+  font-size: calc(0.9rem + 0.9vw);
+}
+
+.SavedPlaylists .list-card h1 {
   color: #171717;
   font-size: calc(0.7rem + 0.7vw);
   font-weight: bolder;
 }
 
-.SavedPlaylists h2 {
+.SavedPlaylists .list-card h2 {
   color: #ffffff;
   font-size: calc(0.7rem + 0.7vw);
 }
@@ -155,6 +167,11 @@ button.redirect:hover {
 .list-card {
   text-align: left;
   background-color: #003d4c;
+  transition: background-color 0.25s;
+}
+
+.list-card:hover {
+  background-color: #004f63;
 }
 
 /*--- Playlist Styling -------------------------------------------------------*/
@@ -265,6 +282,10 @@ button.redirect:hover {
   border-top: 1px solid #ffffff;
 }
 
+.service-connection h3 {
+  font-size: calc(0.9rem + 0.9vw);
+}
+
 .profile-info, .logged-in {
   color: limegreen;
 }
@@ -273,4 +294,10 @@ button.redirect:hover {
 
 .YouTube {
   border-bottom: 1px solid #ffffff;
+}
+
+/*--- AddSongs Styling -------------------------------------------------------*/
+
+.AddSongs h1 {
+  font-size: calc(0.9rem + 0.9vw);
 }

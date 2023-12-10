@@ -36,7 +36,7 @@ class AddSongs extends React.Component {
       <div className="AddSongs container p-0">
         <div className="">
           <label className="form-label" htmlFor="textInput" >
-            <h3 className="m-0">Search for songs to create a playlist:</h3>
+            <h1 className="m-0">Search for songs to create a playlist:</h1>
           </label>
           <textarea className="form-control" id="textInput" rows="5" onChange={this.handleChange} value={this.message} placeholder="Type each song on its own line."></textarea>
         </div>

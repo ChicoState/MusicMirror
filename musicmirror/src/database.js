@@ -94,7 +94,7 @@ export async function getUsername(email, password){
 export async function getMMPlaylists(email){
     try {
         // let resp = await fetch(`http://localhost:3002/user?_id=${id}`, {
-        let resp = await fetch(`http://localhost:3002/user/${email}`, {
+        let resp = await fetch(`http://localhost:3002/user?_email=${email}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",

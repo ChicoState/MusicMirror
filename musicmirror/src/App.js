@@ -111,11 +111,13 @@ function App() {
     } else if (!(await getUsername(email, password))) {
       handleAlertOpen("Password is incorrect, please try again", "info");
     } else {
-      setViewSignUp(false);
-      setViewSignIn(false);
-      sessionStorage.setItem("loggedInMM", "true");
+      let user = await getUsername(email, password);
+      sessionStorage.setItem("usernameMM", user);
       sessionStorage.setItem("email", email);
       sessionStorage.setItem("password", password);
+      sessionStorage.setItem("loggedInMM", "true");
+      setViewSignUp(false);
+      setViewSignIn(false);
     }
   }
 
@@ -125,8 +127,10 @@ function App() {
     setPassword("");
     setPasswordConfirm("");
     setViewSignIn(true);
+    auth.signOut();
     localStorage.clear();
     sessionStorage.clear();
+    console.log("Logging out!");
   }
 
   const handleNewAccount = async () => {
@@ -194,19 +198,19 @@ function App() {
 
   //----------------------------------------------------------------------------
   const goToSignIn = () => {
+    handleAlertClose();
     setUsername("");
     setEmail("");
     setPassword("");
     setPasswordConfirm("");
-    handleAlertClose();
     setViewSignIn(true);
     setViewSignUp(false);
   }
 
   const goToSignUp = () => {
+    handleAlertClose();
     setEmail("");
     setPassword("");
-    handleAlertClose();
     setViewSignUp(true);
     setViewSignIn(false);
   }
@@ -389,7 +393,7 @@ function App() {
             
             {/* Start of the first window */}
             <div className="tab-window p-3 col-12 col-md">
-              <h2 className="mb-3">Your Playlists:</h2>
+              <h2 className="mb-3 load">Load Playlists</h2>
               <Tabs id="tab" defaultActiveKey="musicmirrorLeft" justify>
                 <Tab tabClassName="tab tab-musicmirror" eventKey="musicmirrorLeft" title="MusicMirror">
                   <div className="tab-body p-3">
@@ -434,7 +438,7 @@ function App() {
             
             {/* Start of the second window */}
             <div className="tab-window p-3 col-12 col-md">
-              <h2 className="mb-3">Preview:</h2>
+              <h2 className="mb-3 save">Save Playlists</h2>
               <Tabs id="tab" defaultActiveKey="musicmirrorRight" justify>
                 <Tab tabClassName="tab tab-musicmirror" eventKey="musicmirrorRight" title="MusicMirror">
                   <div className="tab-body p-3">
@@ -479,7 +483,10 @@ function App() {
   
           {/* Page footer */}
           <footer className="App-footer px-3 d-flex justify-content-between align-items-center">
-            <p className="m-0">Current User: {username !== ""? username : "no username provided"}</p>
+            <p className="m-0">Welcome&nbsp;{
+              sessionStorage.getItem("usernameMM")? 
+              sessionStorage.getItem("usernameMM") : null
+            }</p>
             <div className="d-flex">
               <p className="m-0 mm-logout" onClick={handleMMLogout}>Log Out of MusicMirror</p>
               <p className="my-0 mx-2">|</p>
@@ -518,7 +525,11 @@ function App() {
                       Username:&nbsp;
                     </p>
                     <p className="user-data">
-                        {username !== ""? username : "no username provided"}
+                        {sessionStorage.getItem("usernameMM")? 
+                          sessionStorage.getItem("usernameMM") 
+                          : 
+                          "unable to retrieve username"
+                        }
                     </p>
                   </div>
                   <div className="d-flex">
@@ -526,7 +537,11 @@ function App() {
                       Email:&nbsp;
                     </p>
                     <p className="user-data">
-                        {email !== ""? email : "no email provided"}
+                        {sessionStorage.getItem("email")? 
+                          sessionStorage.getItem("email") 
+                          : 
+                          "unable to retrieve email"
+                        }
                     </p>
                   </div>
                   <br />

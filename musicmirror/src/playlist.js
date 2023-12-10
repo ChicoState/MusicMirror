@@ -135,7 +135,7 @@ export async function savePlaylist(list) {
     console.log(q_body);
 
     try {
-        let resp = await fetch("http://localhost:5000/playlist/" + uid, {
+        let resp = await fetch("http://localhost:3002/playlist/" + uid, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

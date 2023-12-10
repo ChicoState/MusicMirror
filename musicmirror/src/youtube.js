@@ -18,16 +18,17 @@ const MAXRESULTS = 20;
 
 //------------------------------------------------------------------------------
 
-export async function signIn() {
+// url is not "safe" if it may contain auth credentials from another service (Spotify)
+export async function signIn(urlSafe) {
 
   const urlParams = new URLSearchParams(window.location.search);
   const token = urlParams.get('accessToken');
   const code = urlParams.get('code');
 
-  if (token && sessionStorage.getItem('loggedIn') === 'false') {
+  if (urlSafe && token) {
     sessionStorage.setItem('youtubeAccessToken',token);
     sessionStorage.setItem('loggedInYT','true');
-  } else if (code && sessionStorage.getItem('loggedIn') === 'false') {
+  } else if (urlSafe && code) {
     axios.post('http://localhost:3001/getAccessToken',{code: code}).then(response=>{
       sessionStorage.setItem('youtubeAccessToken',response.data.accessToken);
       sessionStorage.setItem('loggedInYT','true');

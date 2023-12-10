@@ -33,7 +33,7 @@ class SavedPlaylists extends React.Component{
     }
   }
   
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps) {
 
     // Retrieve playlists on service login
     if (this.props.service === "musicmirror" && 
@@ -87,14 +87,21 @@ class SavedPlaylists extends React.Component{
   /*--- HANDLERS -------------------------------------------------------------*/
 
   getMusicMirrorLists = async() => {
-    let playlists = getMMPlaylists(sessionStorage.getItem("email"));
-    this.setState({MusicMirrorLists: playlists});
+    let playlists = await getMMPlaylists(sessionStorage.getItem("email"));
+    if (playlists) {
+      this.setState({MusicMirrorLists: playlists}, () => {
+        console.log("SAVEDPLAYLIST STATE UPDATED: MusicMirrorLists");
+        console.log(this.state.MusicMirrorLists);
+      });
+    }
   }
 
   getSpotifyLists = async() => {
 
-    let playlists = {};
-    while (sessionStorage.getItem("verifier") && Object.keys(playlists).length < 2) {
+    let playlists = {error: "this is a placeholder"};
+    while (sessionStorage.getItem("verifier") && Object.keys(playlists)[0] &&
+        Object.keys(playlists)[0] === "error") {
+
       let test = await getPlaylists();
       if (Object.keys(test).length > 2 && 
           test.href !== "https://api.spotify.com/v1/users/null/playlists?offset=0&limit=20") {
@@ -104,16 +111,18 @@ class SavedPlaylists extends React.Component{
     }
     this.setState({SpotifyLists: playlists}, () => {
       console.log("SAVEDPLAYLIST STATE UPDATED: SpotifyLists");
+      console.log(this.state.SpotifyLists);
     });
   }
 
   getYouTubeLists = async() => {
-
     let playlists = await fetchUserPlaylists();
-    this.setState({YouTubeLists: playlists}, () => {
-      console.log("SAVEDPLAYLIST STATE UPDATED: YouTubeLists");
-      console.log(this.state.YouTubeLists);
-    });
+    if (playlists) {
+      this.setState({YouTubeLists: playlists}, () => {
+        console.log("SAVEDPLAYLIST STATE UPDATED: YouTubeLists");
+        console.log(this.state.YouTubeLists);
+      });
+    }
   }
 
   /*--------------------------------------------------------------------------*/
@@ -129,7 +138,8 @@ class SavedPlaylists extends React.Component{
       lists = this.state.YouTubeLists;
     }
 
-    if (this.props.service === "spotify" && lists && Object.keys(lists).length > 0 && lists.items) {
+    if ((this.props.service === "musicmirror" || this.props.service === "spotify") && 
+        lists && Object.keys(lists).length > 0 && lists.items) {
       return (
         <div className="SavedPlaylists">
           {/* List of playlists */}
@@ -168,7 +178,8 @@ class SavedPlaylists extends React.Component{
     } else {
       return (
         <div className="SavedPlaylists">
-          <p>Sign in to view playlists!</p>
+          <h1>Nothing to see here</h1>
+          <p>Sign in and make some playlists!</p>
         </div>
       );
     }

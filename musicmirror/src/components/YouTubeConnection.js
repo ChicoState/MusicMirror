@@ -13,7 +13,7 @@ class YouTubeConnection extends React.Component {
     if (sessionStorage.getItem("ytTokenNeedsProcessing") === "true") {
       // store the user's youtube auth token for reference
       sessionStorage.setItem("ytTokenNeedsProcessing", "false");
-      youtube.signIn();
+      youtube.signIn(true);
     }
   }
 
@@ -29,7 +29,7 @@ class YouTubeConnection extends React.Component {
     // This var lets us know we've retrieved a token from Google and need to
     // finish the sign in process once we've been redirected back to MusicMirror
     sessionStorage.setItem("ytTokenNeedsProcessing", "true");
-    await youtube.signIn();
+    await youtube.signIn(false);
     this.props.handleLogin(true);
   }
 

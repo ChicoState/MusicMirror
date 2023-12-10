@@ -23,6 +23,14 @@ class PageAlert extends React.Component {
       }, () => {
         console.log("PAGE ALERT STATE UPDATE: show = true");
       });
+    } else if (!this.props.show && prevProps.show) {
+      this.setState({
+        show: false,
+        heading: "",
+        variant: ""
+      }, () => {
+        console.log("PAGE ALERT STATE UPDATE: show = false");
+      });
     }
   }
 
