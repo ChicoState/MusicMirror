@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import SpotifyProfile from '../src/components/SpotifyProfile'; 
+import SpotifyProfile from '../src/components/SpotifyProfile.js'; 
 import AddSongs from '../src/components/AddSongs.js';
 import * as auth from '../src/auth.js';
 import '@testing-library/jest-dom';
