@@ -9,10 +9,12 @@ API_KEYS:
 
 3RD: AIzaSyBWAir5kNDcRDZAAPr8pvINjmJA2ERD22M
 
+4TH: AIzaSyDhDpQvbI2W1P5IH8xV4o2fsw0gK_5lGzY
+
 CHANGE when the API search limit has been reached and request, 
 go to the server and change the needed info
 *******************************************************************************/
-const API_KEY = 'AIzaSyDhDpQvbI2W1P5IH8xV4o2fsw0gK_5lGzY';
+const API_KEY = 'AIzaSyBnKLIVgOiPTzRVvXMguoHi8a49aVvEUvI';
 const MAXRESULTS = 20;
 
 

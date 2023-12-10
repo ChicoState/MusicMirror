@@ -8,23 +8,30 @@ require('dotenv').config();
 app.use(cors()); // Enable CORS for all routes
 /*
 
-Firt Google information for YOUTUBE API to do searched and get user informtion of their iteams:
+First Google information for YOUTUBE API to do searched and get user informtion of their iteams:
 APIKEY: AIzaSyDhDpQvbI2W1P5IH8xV4o2fsw0gK_5lGzY
 Client ID: 808121759367-6efs65rh50k4p5qhn6af10iqjtgcs7m8.apps.googleusercontent.com
 Client Secret: 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
 
-Second :
+Second:
 API KEY: AIzaSyBnKLIVgOiPTzRVvXMguoHi8a49aVvEUvI
 cLIENT ID: 803626348217-cst9ufc52a6hi6llijn1gkm0491hnhq4.apps.googleusercontent.com
 Client Secret: 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
 
+Third: 
 API KEY: AIzaSyBWAir5kNDcRDZAAPr8pvINjmJA2ERD22M
 Client secret: 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
 Client ID: 1005392414752-kmq436j60idb4no59quujm9gic61jr3f.apps.googleusercontent.com
-*/
+
+Fourth:
 const API_KEY = 'AIzaSyBWAir5kNDcRDZAAPr8pvINjmJA2ERD22M';
 const C_secrete = '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';
 const C_id = '808121759367-6efs65rh50k4p5qhn6af10iqjtgcs7m8.apps.googleusercontent.com';
+*/
+
+const API_KEY = 'AIzaSyBnKLIVgOiPTzRVvXMguoHi8a49aVvEUvI';
+const C_secrete = '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';
+const C_id = '803626348217-cst9ufc52a6hi6llijn1gkm0491hnhq4.apps.googleusercontent.com';
 const oauthCall = 'http://localhost:3001/oauth2callback';
 const oauth2Client = new google.auth.OAuth2(
   C_id, // Replace with client ID
