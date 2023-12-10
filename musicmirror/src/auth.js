@@ -122,7 +122,7 @@ export async function getAccessToken(clientId, code) {
         console.log("Token request result:", result);
 
         const res = await result.json();
-        if (!result.ok || result.status != 200) {
+        if (!result.ok || res.status != 200) {
             console.error("Token request error:", res);
             
             return null; 
