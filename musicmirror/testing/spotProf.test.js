@@ -65,16 +65,12 @@ test('renders "Connected" view when loggedIn is true', () => {
     expect(screen.getByRole('button', { name: 'Sign out' })).toBeInTheDocument();
 });
   
-describe("SpotifyProfile component", () => {
-    it("should call handleAuth and update connected state", async () => {
-      // Arrange
-      const component = new SpotifyProfile({ handleAuth: jest.fn() });
+test("should call handleAuth", async () => {
+    const component = new SpotifyProfile({ handleAuth: jest.fn()});
+
+    expect(component.state.connected).toBe(false);
   
-      // Act
-      await component.handleAuth();
+    await component.handleAuth();
   
-      // Assert
-      expect(auth.checkCode).toHaveBeenCalled(); // Check if auth.checkCode was called
-      // Add more assertions based on the expected behavior
-    });
-  });
+    expect(auth.checkCode).toHaveBeenCalled(); 
+});
