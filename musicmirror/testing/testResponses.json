@@ -1,4 +1,5 @@
 {
+    "mockURL": "http://localhost:3000/?code=AQAdAmyDurILpI8nyyIs5_L8CXhpPQGnWbKKg64hynjtDxSdz6zPFeCeLYmf8DP7jHl0ZKa2AwMBNrrO84EV15x57FWYSm1FMa-k5W9ItDpo4cQ9WceyEewA6vcuna_nVo3AYXzdqKmOcYEHsF2IzTN1Bc9bJTQVzGiEh62Ic_Bnh1xEQZakFmHHsh9dTmnwLN6jS-uQCRZjLIdn1Gt3JX7OwYKstMdUEyZnUDt0e9DFnHNBoMhW-jnKiwOaFcw830KjfEzSh4QCIwaqgjQTTC3F3e5vOoc7yR22mbcuRrB2aoRXKE-uUf9KMOBFrVgqnRp7EHqroRgucXsiMzk_0_0",
     "playlist": {
         "title": "Music Mirror Playlist",
         "songs": [
@@ -77,6 +78,47 @@
         "spotify:track:1DMEzmAoQIikcL52psptQL",
         "spotify:track:1DMEzmAoQIikcL52psptQL"
     ],
+    "mock_token": {
+        "access_token": "mock_token",
+        "status": 200,
+        "token_type": "Bearer",
+        "expires_in": 3600,
+        "refresh_token": "AQBHZl5PZtaOHrzU23D_j1OZQIiNwW5tiGSQWxI5dMoPNKA8T7gzfH4AY1yXmlJiPlqpSIe3JJmSJkqs1FJalFPtdKI_ic_RaSZW3g5icr8dd2_a2kugxDKgFv5xwELLxTU",
+        "scope": "playlist-modify-private playlist-modify-public user-read-email user-read-private"
+    },
+    "spotify_profile": {
+        "display_name": "Jhet",
+        "external_urls": {
+            "spotify": "https://open.spotify.com/user/jheterson"
+        },
+        "href": "https://api.spotify.com/v1/users/jheterson",
+        "id": "jheterson",
+        "images": [
+            {
+                "url": "https://i.scdn.co/image/ab67757000003b827c2b43c2ea76238d3fd0c0a2",
+                "height": 64,
+                "width": 64
+            },
+            {
+                "url": "https://i.scdn.co/image/ab6775700000ee857c2b43c2ea76238d3fd0c0a2",
+                "height": 300,
+                "width": 300
+            }
+        ],
+        "type": "user",
+        "uri": "spotify:user:jheterson",
+        "followers": {
+            "href": null,
+            "total": 7
+        },
+        "country": "US",
+        "product": "premium",
+        "explicit_content": {
+            "filter_enabled": false,
+            "filter_locked": false
+        },
+        "email": "cjhet02@gmail.com"
+    },
     "spotify_resp": {
             "tracks": {
                 "href": "https://api.spotify.com/v1/search?query=test1&type=track&locale=en-US%2Cen%3Bq%3D0.9&offset=0&limit=20",

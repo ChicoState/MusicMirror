@@ -28,7 +28,6 @@ class sessionStorageMock {
       delete this.store[key];
     }
 }
-  
 global.sessionStorage = new sessionStorageMock;
 
 beforeAll(() => {

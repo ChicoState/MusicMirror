@@ -121,14 +121,14 @@ export async function getAccessToken(clientId, code) {
 
         console.log("Token request result:", result);
 
-        if (!result.ok) {
-            const errorData = await result.json();
-            console.error("Token request error:", errorData);
+        const res = await result.json();
+        if (!result.ok || result.status != 200) {
+            console.error("Token request error:", res);
             
             return null; 
         }
 
-        const { access_token } = await result.json();
+        const access_token = res.access_token;
         console.log("Access token:", access_token);
 
        
@@ -155,11 +155,6 @@ export async function fetchProfile(token) {
     }
    
     return res;
-}
-
-export function populateUI(profile) {
-    console.log(profile);
-
 }
 
 export function signOut(){
