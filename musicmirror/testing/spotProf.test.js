@@ -5,7 +5,7 @@ import SpotifyProfile from '../src/components/SpotifyProfile.js';
 import AddSongs from '../src/components/AddSongs.js';
 import * as auth from '../src/auth.js';
 import '@testing-library/jest-dom';
-
+import { handleAuth } from '../src/components/SpotifyProfile.js';
 
 /* SPOTIFYPROFILE TESTING */
 
@@ -64,6 +64,17 @@ test('renders "Connected" view when loggedIn is true', () => {
     expect(screen.getByText(/Spotify Connected!/i)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Sign out' })).toBeInTheDocument();
 });
-
-/* ADDSONGS TESTING */
-
+  
+describe("SpotifyProfile component", () => {
+    it("should call handleAuth and update connected state", async () => {
+      // Arrange
+      const component = new SpotifyProfile({ handleAuth: jest.fn() });
+  
+      // Act
+      await component.handleAuth();
+  
+      // Assert
+      expect(auth.checkCode).toHaveBeenCalled(); // Check if auth.checkCode was called
+      // Add more assertions based on the expected behavior
+    });
+  });
