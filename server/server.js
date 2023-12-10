@@ -22,13 +22,13 @@ API KEY: AIzaSyBWAir5kNDcRDZAAPr8pvINjmJA2ERD22M
 Client secret: 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
 Client ID: 1005392414752-kmq436j60idb4no59quujm9gic61jr3f.apps.googleusercontent.com
 */
-const API_KEY = 'AIzaSyBWAir5kNDcRDZAAPr8pvINjmJA2ERD22M';
-const C_secrete = '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';
-const C_id = '808121759367-6efs65rh50k4p5qhn6af10iqjtgcs7m8.apps.googleusercontent.com';
+const API_KEY='AIzaSyBWAir5kNDcRDZAAPr8pvINjmJA2ERD22M';
+const C_secret= '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';
+const C_id= '1005392414752-kmq436j60idb4no59quujm9gic61jr3f.apps.googleusercontent.com';
 const oauthCall = 'http://localhost:3001/oauth2callback';
 const oauth2Client = new google.auth.OAuth2(
   C_id, // Replace with client ID
-  C_secrete, // Replace with client secret
+  C_secret, // Replace with client secret
   'http://localhost:3001/oauth2callback'// <- is for this server don't. server's redirect URI
 );
 

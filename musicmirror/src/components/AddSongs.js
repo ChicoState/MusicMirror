@@ -21,12 +21,13 @@ class AddSongs extends React.Component {
   };
 
   handleClick = async () => {
-    if (sessionStorage.getItem("loggedIn") === "true") {
+    if (sessionStorage.getItem("loggedIn") === "true" || 
+        sessionStorage.getItem("loggedInYT") === "true") {
       this.props.alert("Searching...", "info");
-      this.props.handleMsg(this.state.message);
+      this.props.search(this.state.message);
       console.log(`passing: ${this.state.message}`);
     } else {
-      this.props.alert("You must log in to another service before searching for songs", "info");
+      this.props.alert("You must connect to either Spotify or YouTube before searching for songs", "info");
     }
   };
 
@@ -35,7 +36,7 @@ class AddSongs extends React.Component {
       <div className="AddSongs container p-0">
         <div className="">
           <label className="form-label" htmlFor="textInput" >
-            <h3 className="m-0">Search for songs to create a playlist:</h3>
+            <h1 className="m-0">Search for songs to create a playlist:</h1>
           </label>
           <textarea className="form-control" id="textInput" rows="5" onChange={this.handleChange} value={this.message} placeholder="Type each song on its own line."></textarea>
         </div>
