@@ -113,9 +113,8 @@ export async function searchPlaylists(query) {
     return await resp.json();
 }
 
-export async function savePlaylist(list) {
+export async function savePlaylist(list, uid) {
     //change later to get current user's id
-    let uid = "656822bfe9f57013d3b46c2e"
     if (!list || JSON.stringify(list) === '{}' || list.songs.length <= 0) {
         return undefined;
     }
