@@ -41,7 +41,7 @@ test('componentDidUpdate updates state correctly', () => {
   
     expect(setStateSpy).toHaveBeenCalledWith(
         { playlist: mockList, search: newMockSearch + 1 },
-        expect.any(Function) // for synchronous callback
+        expect.any(Function) 
     );
   
     expect(setStateSpy).toHaveBeenCalledTimes(1);
