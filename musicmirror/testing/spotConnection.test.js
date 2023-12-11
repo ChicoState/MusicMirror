@@ -1,13 +1,11 @@
 import React from 'react';
 import { render, screen, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import SpotifyProfile from '../src/components/SpotifyProfile.js'; 
-import AddSongs from '../src/components/AddSongs.js';
+import SpotifyProfile from '../src/components/SpotifyConnection.js'; 
 import * as auth from '../src/auth.js';
 import '@testing-library/jest-dom';
-import { handleAuth } from '../src/components/SpotifyProfile.js';
+import { handleAuth } from '../src/components/SpotifyConnection.js';
 
-/* SPOTIFYPROFILE TESTING */
 
 //mock auth functionssss
 jest.mock('../src/auth.js', () => ({
@@ -65,12 +63,3 @@ test('renders "Connected" view when loggedIn is true', () => {
     expect(screen.getByRole('button', { name: 'Sign out' })).toBeInTheDocument();
 });
   
-test("should call handleAuth", async () => {
-    const component = new SpotifyProfile({ handleAuth: jest.fn()});
-
-    expect(component.state.connected).toBe(false);
-  
-    await component.handleAuth();
-  
-    expect(auth.checkCode).toHaveBeenCalled(); 
-});

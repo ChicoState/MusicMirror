@@ -28,26 +28,25 @@ const mockList = {
     ],
   };
 
-test('componentDidUpdate updates state correctly', () => {
+  test('componentDidUpdate updates state correctly', () => {
     const mockSearch = 2;
-
+  
     const { rerender } = render(<PlaylistYT list={mockList} search={mockSearch} />);
-
+  
     const setStateSpy = jest.spyOn(PlaylistYT.prototype, 'setState');
-
+  
     const newMockSearch = 3;
-
     rerender(<PlaylistYT list={mockList} search={newMockSearch} />);
   
     expect(setStateSpy).toHaveBeenCalledWith(
-        { playlist: mockList, search: newMockSearch + 1 },
-        expect.any(Function) 
+      { playlist: mockList, search: newMockSearch + 1, currentTitle: "Mock Playlist" },
+      expect.any(Function)
     );
   
     expect(setStateSpy).toHaveBeenCalledTimes(1);
-
+  
     setStateSpy.mockRestore();
-});
+  });
 
 test('handleBlur sets isEditing to false', () => {
       const playlistSpotInstance = new PlaylistYT();
@@ -93,4 +92,3 @@ test('handleChange updates currentTitle in state', () => {
 
     expect(playlistSpotInstance.state.currentTitle).toBe('New Title'); 
 });
-

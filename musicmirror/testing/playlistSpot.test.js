@@ -1,10 +1,8 @@
 import React from 'react';
-import { render, fireEvent, waitFor, act, screen} from '@testing-library/react';
+import { render, act} from '@testing-library/react';
 //import { screen } from "@testing-library/jest-dom";
 import PlaylistSpot from '../src/components/PlaylistSpot';
-import '@testing-library/jest-dom';
-import { genPlaylist } from '../src/playlist';
-//import { act } from 'react-dom/test-utils';
+//import '@testing-library/jest-dom';
 
 const mockList = {
     title: 'Mock Playlist',
@@ -29,24 +27,23 @@ const mockList = {
   };
 
 test('componentDidUpdate updates state correctly', () => {
-    const mockSearch = 2;
+  const mockSearch = 2;
 
-    const { rerender } = render(<PlaylistSpot list={mockList} search={mockSearch} />);
+  const { rerender } = render(<PlaylistSpot list={mockList} search={mockSearch} />);
 
-    const setStateSpy = jest.spyOn(PlaylistSpot.prototype, 'setState');
+  const setStateSpy = jest.spyOn(PlaylistSpot.prototype, 'setState');
 
-    const newMockSearch = 3;
+  const newMockSearch = 3;
+  rerender(<PlaylistSpot list={mockList} search={newMockSearch} />);
 
-    rerender(<PlaylistSpot list={mockList} search={newMockSearch} />);
-  
-    expect(setStateSpy).toHaveBeenCalledWith(
-        { playlist: mockList, search: newMockSearch + 1 },
-        expect.any(Function) 
-    );
-  
-    expect(setStateSpy).toHaveBeenCalledTimes(1);
+  expect(setStateSpy).toHaveBeenCalledWith(
+    { playlist: mockList, search: newMockSearch + 1, currentTitle: "Mock Playlist" },
+    expect.any(Function)
+  );
 
-    setStateSpy.mockRestore();
+  expect(setStateSpy).toHaveBeenCalledTimes(1);
+
+  setStateSpy.mockRestore();
 });
 
 test('handleBlur sets isEditing to false', () => {
@@ -93,4 +90,3 @@ test('handleChange updates currentTitle in state', () => {
 
     expect(playlistSpotInstance.state.currentTitle).toBe('New Title'); 
 });
-
