@@ -70,7 +70,6 @@ export async function getUsername(email, password){
         });
         if (resp.ok) {
             let jsonData = await resp.json();
-            //console.log(jsonData);
             
             if(jsonData.password === password){
                 console.log("Current username is: ", jsonData.name);
@@ -106,6 +105,7 @@ export async function getMMPlaylists(id){
             }
         } else {
             console.error(`Error: ${resp.status} - ${resp.statusText}`);
+            return null;
         }
     } catch (err) {
         console.error(err);
@@ -126,6 +126,7 @@ export async function deleteUser(email){
         if (resp.ok) {
             const deletedUserData = await resp.json();
             console.log('User deleted successfully:', deletedUserData);
+            return deletedUserData
         } else if (resp.status === 404) {
             console.error('User not found');
         } else {
