@@ -6,7 +6,7 @@ export async function findSongs(input, resCount) {
     let search = input.split('\n');
     //iterate over songs and search for song
     let playlist = {
-        title: "MusicMirror Playlist",
+        title: "Music Mirror Playlist",
         songs: [],
     };
     let url = "";

@@ -9,23 +9,19 @@ export async function emailCheck(email) {
                 "Content-Type": "application/json",
             }
         });
-        
-        if (resp.ok) {
-            let jsonData = await resp.json();
+        let jsonData = await resp.json();
+        if (resp.ok && jsonData.email) {
             console.log(jsonData);
-            
-            if(jsonData.email){
-                console.log("Current email is: ", jsonData.email);
-                return true;
-            }
+        
+            console.log("Current email is: ", jsonData.email);
+            return true;
         } else {
             console.error(`Error: ${resp.status} - ${resp.statusText}`);
             return false;
         }
     } catch (err) {
         console.error(err);
-        // throw err;
-        return undefined;
+        throw err;
     }
 }
 
@@ -47,12 +43,13 @@ export async function createUser(username, password, email){
             },
             body: JSON.stringify(userData)
         });
+        const result = await resp.json();
         if(resp.ok){
-            const result = await resp.json();
             console.log("user added successfully", result);
             return result;
         } else {
             console.error(`Error: ${resp.status} - ${resp.statusText}`);
+            return null;
         }
     } catch(err) {
         console.error(err);
@@ -73,7 +70,6 @@ export async function getUsername(email, password){
         });
         if (resp.ok) {
             let jsonData = await resp.json();
-            //console.log(jsonData);
             
             if(jsonData.password === password){
                 console.log("Current username is: ", jsonData.name);
@@ -81,11 +77,11 @@ export async function getUsername(email, password){
             }
         } else {
             console.error(`Error: ${resp.status} - ${resp.statusText}`);
+            return null;
         }
     } catch (err) {
         console.error(err);
-        // throw err;
-        return undefined;
+        throw err;
     }
 }
 
@@ -112,8 +108,7 @@ export async function getUserId(email, password){
         }
     } catch (err) {
         console.error(err);
-        // throw err;
-        return undefined;
+        throw err;
     }
 }
 
@@ -137,6 +132,7 @@ export async function getMMPlaylists(email){
             }
         } else {
             console.error(`Error: ${resp.status} - ${resp.statusText}`);
+            return null;
         }
     } catch (err) {
         console.error(err);
@@ -157,6 +153,7 @@ export async function deleteUser(email){
         if (resp.ok) {
             const deletedUserData = await resp.json();
             console.log('User deleted successfully:', deletedUserData);
+            return deletedUserData
         } else if (resp.status === 404) {
             console.error('User not found');
         } else {
