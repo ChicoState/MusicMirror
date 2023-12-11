@@ -9,15 +9,12 @@ export async function emailCheck(email) {
                 "Content-Type": "application/json",
             }
         });
-        
-        if (resp.ok) {
-            let jsonData = await resp.json();
+        let jsonData = await resp.json();
+        if (resp.ok && jsonData.email) {
             console.log(jsonData);
-            
-            if(jsonData.email){
-                console.log("Current email is: ", jsonData.email);
-                return true;
-            }
+        
+            console.log("Current email is: ", jsonData.email);
+            return true;
         } else {
             console.error(`Error: ${resp.status} - ${resp.statusText}`);
             return false;
@@ -46,12 +43,13 @@ export async function createUser(username, password, email){
             },
             body: JSON.stringify(userData)
         });
-        if(resp.ok){
-            const result = await resp.json();
+        const result = await resp.json();
+        if(resp.ok && resp.status == 200){
             console.log("user added successfully", result);
             return result;
         } else {
             console.error(`Error: ${resp.status} - ${resp.statusText}`);
+            return null;
         }
     } catch(err) {
         console.error(err);

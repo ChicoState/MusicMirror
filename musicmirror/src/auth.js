@@ -34,7 +34,6 @@ export async function signIn(loggedIn){
 
         if(accessToken && accessToken !== "undefined"){
             const profile = await fetchProfile(accessToken);
-            populateUI(profile);
         }
         hasCode = true;
         
