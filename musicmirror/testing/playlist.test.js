@@ -1,4 +1,3 @@
-/*
 import renderer from 'react-test-renderer';
 import { findSongs, genPlaylist, getPlaylists, savePlaylist } from '../src/playlist';
 import fetchMock from "jest-fetch-mock";
@@ -151,4 +150,3 @@ it('savePlaylists empty song array', async () => {
     });
     expect(resp).toBe(undefined);
 });
-*/
