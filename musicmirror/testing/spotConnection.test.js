@@ -1,13 +1,11 @@
 import React from 'react';
 import { render, screen, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import SpotifyConnection from '../src/components/SpotifyConnection'; 
-import AddSongs from '../src/components/AddSongs.js';
+import SpotifyProfile from '../src/components/SpotifyConnection.js'; 
 import * as auth from '../src/auth.js';
 import '@testing-library/jest-dom';
+import { handleAuth } from '../src/components/SpotifyConnection.js';
 
-
-/* SPOTIFYPROFILE TESTING */
 
 //mock auth functionssss
 jest.mock('../src/auth.js', () => ({
@@ -25,7 +23,7 @@ beforeEach(() => {
 test('should call auth.checkCode and update state in handleAuth', async () => {
     sessionStorage.setItem('loggedIn', 'false');
 
-    render(<SpotifyConnection handleLogin={() => {}} />);
+    render(<SpotifyProfile handleLogin={() => {}} />);
 
     userEvent.click(screen.getByRole('button', { name: 'Sign in with Spotify!' }));
 
@@ -40,7 +38,7 @@ test('should call auth.checkCode and update state in handleAuth', async () => {
 test('should call handleLogin in componentDidMount', () => {
     const handleLoginMock = jest.fn();
 
-    render(<SpotifyConnection handleLogin={handleLoginMock} />);
+    render(<SpotifyProfile handleLogin={handleLoginMock} />);
 
     expect(handleLoginMock).toHaveBeenCalledWith(false);
 });
@@ -48,7 +46,7 @@ test('should call handleLogin in componentDidMount', () => {
 test('renders "Sign in" view when loggedIn is false', () => {
     sessionStorage.setItem('loggedIn', 'false');
   
-    render(<SpotifyConnection handleLogin={() => {}} />);
+    render(<SpotifyProfile handleLogin={() => {}} />);
   
     //we should have a sign in view with state false & loggedIn should be false
     expect(screen.getByText(/Looks like you haven't connected to Spotify yet/i)).toBeInTheDocument();
@@ -58,12 +56,10 @@ test('renders "Sign in" view when loggedIn is false', () => {
 test('renders "Connected" view when loggedIn is true', () => {
     sessionStorage.setItem('loggedIn', 'true');
   
-    render(<SpotifyConnection handleLogin={() => {}} />);
+    render(<SpotifyProfile handleLogin={() => {}} />);
     
     //Should see logged in view and loggedIn state should be true
     expect(screen.getByText(/Spotify Connected!/i)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Sign out' })).toBeInTheDocument();
 });
-
-/* ADDSONGS TESTING */
-
+  
