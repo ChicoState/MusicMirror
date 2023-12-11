@@ -44,7 +44,7 @@ export async function createUser(username, password, email){
             body: JSON.stringify(userData)
         });
         const result = await resp.json();
-        if(resp.ok && resp.status == 200){
+        if(resp.ok){
             console.log("user added successfully", result);
             return result;
         } else {
@@ -78,6 +78,7 @@ export async function getUsername(email, password){
             }
         } else {
             console.error(`Error: ${resp.status} - ${resp.statusText}`);
+            return null;
         }
     } catch (err) {
         console.error(err);

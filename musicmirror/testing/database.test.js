@@ -1,5 +1,5 @@
 import fetchMock from "jest-fetch-mock";
-import { createUser, emailCheck } from '../src/database';
+import { createUser, emailCheck, getUsername } from '../src/database';
 import 'whatwg-fetch'
 
 const responses = require('./testResponses.json');
@@ -55,4 +55,25 @@ it('createUser sad path (bad request)', async () => {
 
     
     expect(await createUser("name", "password", "email")).toBe(null);
+})
+
+//getUsername
+it('getUsername happy path', async () => {
+    fetchMock.mockResponseOnce(JSON.stringify({name: "testname", password: "password"}));
+    
+    expect(JSON.stringify(await getUsername("email", "password", ))).toBe(JSON.stringify("testname"));
+})
+
+it('getUsername sad path (post throws)', async () => {
+    fetchMock.mockRejectOnce(new Error("mock error"));
+    
+    expect(getUsername("email", "password")).
+        rejects.toThrow(Error);
+})
+
+it('getUsername sad path (bad request)', async () => {
+    fetch.mockResponseOnce('{}', { status: 500, headers: { 'content-type': 'application/json' } });
+
+    
+    expect(await getUsername("email", "password")).toBe(null);
 })
