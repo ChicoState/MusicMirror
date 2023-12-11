@@ -1,17 +1,27 @@
+// Styles
 import "./styles/App.css";
-import PageAlert from "./components/PageAlert";
+
+// Components
 import AddSongs from "./components/AddSongs";
-import SavedPlaylists from "./components/SavedPlaylists";
-import SpotifyProfile from "./components/SpotifyProfile";
-import YouTube from "./components/YouTube";
+import PageAlert from "./components/PageAlert";
 import PlaylistMM from "./components/PlaylistMM";
 import PlaylistSpot from "./components/PlaylistSpot";
 import PlaylistYT from "./components/PlaylistYT";
-import { useEffect, useState } from "react";
-import { findSongs } from "./playlist";
-import { Tabs, Tab } from "react-bootstrap";
+import SavedPlaylists from "./components/SavedPlaylists";
+import SpotifyConnection from "./components/SpotifyConnection";
+import YouTubeConnection from "./components/YouTubeConnection";
+
+// Back end
 import * as auth from './auth';
-import { emailCheck, createUser, getUsername, deleteUser, getMMPlaylists } from './database';
+import { emailCheck, createUser, getUsername, deleteUser } from './database';
+import { findSongs } from "./playlist";
+import * as youtube from './youtube';
+
+// Libraries
+import { useState } from "react";
+import { Tabs, Tab } from "react-bootstrap";
+
+//==============================================================================
 
 function App() {
   const [username, setUsername] = useState("");
@@ -21,72 +31,116 @@ function App() {
   const [MMList, setMMList] = useState();
   const [SpotList, setSpotList] = useState();
   const [YTList, setYTList] = useState();
-  const [SearchTerm, setSearchTerm] = useState();
   const [search, setSearch] = useState(0);
   const [loggedIn, setLog] = useState(false);
   //const [setLog] = useState();
   const [spotifyConnection, setSpotifyConnection] = useState(
     sessionStorage.getItem("loggedIn") === "true"
   );
-  const [youtubeLoggedIn, setIsYoutubeLoggedIn]=useState(false);
+  const [youtubeConnection, setYoutubeConnection]=useState(
+    sessionStorage.getItem("loggedInYT") === "true"
+  );
   const [needsListRefresh, setListRefresh] = useState(false);
   const [viewSignIn, setViewSignIn] = useState(!sessionStorage.getItem("verifier"));
   const [viewSignUp, setViewSignUp] = useState(false);
   const [alertShow, setAlertShow] = useState(false);
   const [alertHeading, setAlertHeading] = useState("");
   const [alertVariant, setAlertVariant] = useState("");
-
-  //----------------------------------------------------------------------------
-
-  useEffect(() => {
-    const handleStorageUpdate = (event) => {
-      if (event.key === "loggedIn") {
-        setSpotifyConnection(sessionStorage.getItem("loggedIn") === "true");
-      }
-    };
-    const youtubeToken = localStorage.getItem('youtubeAccessToken');
-    if (youtubeToken) {
-      setIsYoutubeLoggedIn(true);
-    }
-
-    window.addEventListener('storage', handleStorageUpdate);
-
-    return () => {
-      window.removeEventListener('storage', handleStorageUpdate);
-    }
-  }, []);
+  const [progress, setProgress] = useState(false);
 
   //----------------------------------------------------------------------------
   
-  const handleMsg = async (data) => {
+  // This function searches for songs and updates the pending playlist
+  const handleSearch = async (data, title = "MusicMirror Playlist") => {
     console.log(`Searching! This is search number ${search+1}.`)
-    //change search result count (5) to a user input value later
-    let list = await findSongs(data, 5)
-    console.log("This is the search querry:", data);
-    setMMList(list);
+    let list = {};
+    let listYT = {};
+
+    if (sessionStorage.getItem("token")) {
+      list = await findSongs(data, 5);
+      list.title = title;
+      console.log("new spotify list:", list);
+    }
+    if (sessionStorage.getItem("youtubeAccessToken")) {
+      listYT = await youtube.performYouTubeSearch(data, 5);
+      listYT.title = title;
+      console.log("new youtube list:", listYT);
+    }
+
+    setMMList(Object.keys(list).length > 0? list : listYT);
     setSpotList(list);
-    setYTList(data);
+    setYTList(listYT);
     setSearch(search+1);
-    handleAlertOpen("Search complete!", "success");
+    // setProgress(false);
+    handleAlertOpen("Playlist loaded!", "success");
   }
 
+  // Parse a saved playlist from MusicMirror to create a search string
+  const handleSearchMM = async (list) => {
+    let searchString = "";
+    for (let song of list.songs) {
+      let term = song.title + " " + song.artist + "\n";
+      searchString += term;
+    }
+    // setProgress(true);
+    handleSearch(searchString, list.p_name);
+  }
+
+  // Parse a saved playlist from Spotify to create a search string
+  const handleSearchSpot = async (list) => {
+    // let searchString = "";
+    // // spotify lists have links to the list but no song data...
+    // setProgress(true);
+    // handleSearch(searchString, list.name);
+  }
+
+  // Parse a saved playlist from YouTube to create a search string
+  const handleSearchYT = async (list) => {
+    let searchString = "";
+    for (let vid of list.videos) {
+      let term = vid.snippet.title + " " + vid.snippet.videoOwnerChannelTitle + "\n";
+      searchString += term;
+    }
+    // setProgress(true);
+    handleSearch(searchString, list.snippet.title);
+  }
+
+  const handleListAdded = () => {
+    setListRefresh(true);
+  }
+
+  const handleConfirmRefresh = () => {
+    setListRefresh(false);
+  }
+
+  // Spotify login
   const handleLogin = async (data) => {
-    console.log("handleLogin");
+    console.log("handleLogin: Spotify");
     setLog(await auth.signIn(data));
-    setSpotifyConnection(true);
+    setSpotifyConnection(data);
+  }
+
+  // YouTube login, data is either true or false
+  const handleLoginYT = async (data) => {
+    console.log("handleLogin: YouTube");
+    setYoutubeConnection(data);
   }
 
   const handleMMLogin = async () => {
-    
     if (password === "") {
       handleAlertOpen("Please enter your password", "info");
     } else if (email === "") {
       handleAlertOpen("Please enter your email address", "info");
-    // } else if (email not in database) {
-    //   handleAlertOpen("That email address does not have an account", "info");
-    // } else if (password is incorrect) {
-    //   handleAlertOpen("Password is incorrect, please try again", "info");
+    } else if (!(await emailCheck(email))) {
+      handleAlertOpen("That email address does not have an account", "info");
+    } else if (!(await getUsername(email, password))) {
+      handleAlertOpen("Password is incorrect, please try again", "info");
     } else {
+      let user = await getUsername(email, password);
+      sessionStorage.setItem("usernameMM", user);
+      sessionStorage.setItem("email", email);
+      sessionStorage.setItem("password", password);
+      sessionStorage.setItem("loggedInMM", "true");
       setViewSignUp(false);
       setViewSignIn(false);
     }
@@ -98,7 +152,10 @@ function App() {
     setPassword("");
     setPasswordConfirm("");
     setViewSignIn(true);
-    // Do we need a func to refresh the session?
+    auth.signOut();
+    localStorage.clear();
+    sessionStorage.clear();
+    console.log("Logging out!");
   }
 
   const handleNewAccount = async () => {
@@ -106,30 +163,22 @@ function App() {
       handleAlertOpen("Please enter a username", "info");
     } else if (email === "") {
       handleAlertOpen("Please enter a valid email address", "info");
-    // } else if (some func that says email is in use) {
-    //   handleAlertOpen("That email address is already in use", "info");
+    } else if (await emailCheck(email)) {
+      handleAlertOpen("That email address is already in use", "info");
     } else if (password === "") {
       handleAlertOpen("Please enter a password", "info");
     } else if (passwordConfirm === "") {
       handleAlertOpen("Please confirm your password", "info");
     } else if (password !== passwordConfirm) {
       handleAlertOpen("Password and confirmation must be the same", "info");
-    } else if (createUser(username, password, email)) {
+    } else if (await createUser(username, password, email)) {
       handleMMLogin();
     }
   }
 
   const handleDeleteAccount = async () => {
+    await deleteUser(sessionStorage.getItem("email"));
     handleMMLogout();
-    deleteUser(email);
-  }
-
-  const handleListAdded = () => {
-    setListRefresh(true);
-  }
-
-  const handleConfirmRefresh = () => {
-    setListRefresh(false);
   }
 
   const handleUsername = event => {
@@ -166,11 +215,19 @@ function App() {
 
   //----------------------------------------------------------------------------
   const goToSignIn = () => {
+    handleAlertClose();
+    setUsername("");
+    setEmail("");
+    setPassword("");
+    setPasswordConfirm("");
     setViewSignIn(true);
     setViewSignUp(false);
   }
 
   const goToSignUp = () => {
+    handleAlertClose();
+    setEmail("");
+    setPassword("");
     setViewSignUp(true);
     setViewSignIn(false);
   }
@@ -178,7 +235,7 @@ function App() {
   //----------------------------------------------------------------------------
 
   // Default view when not logged in
-  if (viewSignIn) {
+  if (viewSignIn && sessionStorage.getItem("loggedInMM") !== "true") {
     return (
       <div className="App sign-in">
 
@@ -240,7 +297,7 @@ function App() {
   //----------------------------------------------------------------------------
 
   // View for creating a new account
-  } else if (viewSignUp) {
+  } else if (viewSignUp && sessionStorage.getItem("loggedInMM") !== "true") {
     return (
       <div className="App sign-up">
 
@@ -328,7 +385,7 @@ function App() {
   // View when logged in
   } else {
     return (
-      <div className="App">
+      <div className={progress? "App progress-cursor" : "App"}>
   
         {/* Page header */}
         <header className="App-header d-flex justify-content-center align-items-center">
@@ -353,43 +410,49 @@ function App() {
             
             {/* Start of the first window */}
             <div className="tab-window p-3 col-12 col-md">
-              <h2 className="mb-3">Your Playlists:</h2>
+              <h2 className="mb-3 load">Load Playlists</h2>
               <Tabs id="tab" defaultActiveKey="musicmirrorLeft" justify>
                 <Tab tabClassName="tab tab-musicmirror" eventKey="musicmirrorLeft" title="MusicMirror">
                   <div className="tab-body p-3">
                     <SavedPlaylists 
                       service="musicmirror" 
-                      connected="false" 
+                      connected="true"
                       refresh={needsListRefresh} 
                       confirm={handleConfirmRefresh}
+                      load={handleSearchMM}
+                      alert={handleAlertOpen}
                     />
                   </div> 
                 </Tab>
                 <Tab tabClassName="tab tab-spotify" eventKey="spotifyLeft" title="Spotify">
                   <div className="tab-body p-3">
-                    <SpotifyProfile handleLogin={handleLogin}/>
                     <SavedPlaylists 
                       service="spotify" 
                       connected={spotifyConnection} 
                       refresh={needsListRefresh} 
                       confirm={handleConfirmRefresh}
+                      load={handleSearchSpot}
+                      alert={handleAlertOpen}
                     />
+                    <SpotifyConnection handleLogin={handleLogin}/>
                   </div> 
                 </Tab>
                 <Tab tabClassName="tab tab-youtube" eventKey="youtubeLeft" title="YT Music">
                   <div className="tab-body p-3">
-                    <YouTube />
                     <SavedPlaylists 
                       service="youtube" 
-                      connected={setIsYoutubeLoggedIn} 
+                      connected={youtubeConnection} 
                       refresh={needsListRefresh} 
                       confirm={handleConfirmRefresh}
+                      load={handleSearchYT}
+                      alert={handleAlertOpen}
                     />
+                    <YouTubeConnection handleLogin={handleLoginYT} />
                   </div> 
                 </Tab>
                 <Tab tabClassName="tab tab-addsongs" eventKey="addsongs" title="New">
                   <div className="tab-body p-3 d-flex flex-column">
-                    <AddSongs handleMsg={handleMsg} alert={handleAlertOpen} />
+                    <AddSongs search={handleSearch} alert={handleAlertOpen} />
                   </div>
                 </Tab>
               </Tabs>
@@ -398,7 +461,7 @@ function App() {
             
             {/* Start of the second window */}
             <div className="tab-window p-3 col-12 col-md">
-              <h2 className="mb-3">Preview:</h2>
+              <h2 className="mb-3 save">Save Playlists</h2>
               <Tabs id="tab" defaultActiveKey="musicmirrorRight" justify>
                 <Tab tabClassName="tab tab-musicmirror" eventKey="musicmirrorRight" title="MusicMirror">
                   <div className="tab-body p-3">
@@ -413,7 +476,6 @@ function App() {
                 </Tab>
                 <Tab tabClassName="tab tab-spotify" eventKey="spotifyRight" title="Spotify">
                   <div className="tab-body p-3">
-                    <SpotifyProfile handleLogin={handleLogin}/>
                     <PlaylistSpot 
                       service="spotify" 
                       list={SpotList} 
@@ -421,12 +483,20 @@ function App() {
                       save={handleListAdded}
                       alert={handleAlertOpen}
                     />
+                    <SpotifyConnection handleLogin={handleLogin}/>
                   </div> 
                 </Tab>
                 <Tab tabClassName="tab tab-youtube" eventKey="youtubeRight" title="YT Music">
                   <div className="tab-body p-3">
-                      <YouTube searchTerm={YTList}/>
-                  {/*<PlaylistYT service="youtube" list={YTList} search={search} save={handleListAdded}/>*/}
+                      {/* <YouTube searchTerm={YTList}/> */}
+                      <PlaylistYT 
+                        service="youtube" 
+                        list={YTList} 
+                        search={search} 
+                        save={handleListAdded}
+                        alert={handleAlertOpen}
+                      />
+                      <YouTubeConnection handleLogin={handleLoginYT} />
                   </div> 
                 </Tab>
               </Tabs>
@@ -436,7 +506,10 @@ function App() {
   
           {/* Page footer */}
           <footer className="App-footer px-3 d-flex justify-content-between align-items-center">
-            <p className="m-0">Current User: {username !== ""? username : "no username provided"}</p>
+            <p className="m-0">Welcome&nbsp;{
+              sessionStorage.getItem("usernameMM")? 
+              sessionStorage.getItem("usernameMM") : null
+            }</p>
             <div className="d-flex">
               <p className="m-0 mm-logout" onClick={handleMMLogout}>Log Out of MusicMirror</p>
               <p className="my-0 mx-2">|</p>
@@ -475,7 +548,11 @@ function App() {
                       Username:&nbsp;
                     </p>
                     <p className="user-data">
-                        {username !== ""? username : "no username provided"}
+                        {sessionStorage.getItem("usernameMM")? 
+                          sessionStorage.getItem("usernameMM") 
+                          : 
+                          "unable to retrieve username"
+                        }
                     </p>
                   </div>
                   <div className="d-flex">
@@ -483,7 +560,11 @@ function App() {
                       Email:&nbsp;
                     </p>
                     <p className="user-data">
-                        {email !== ""? email : "no email provided"}
+                        {sessionStorage.getItem("email")? 
+                          sessionStorage.getItem("email") 
+                          : 
+                          "unable to retrieve email"
+                        }
                     </p>
                   </div>
                   <br />

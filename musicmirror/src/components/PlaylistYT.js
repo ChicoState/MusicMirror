@@ -1,4 +1,3 @@
-import { genPlaylist } from "../playlist";
 import React from "react";
 import SongDetailsModal from "./SongDetailsModal";
 
@@ -8,7 +7,7 @@ class PlaylistYT extends React.Component{
     this.state = {
       playlist: {},
       isEditing: false,
-      currentTitle: "New Music Mirror Playlist",
+      currentTitle: "MusicMirror Playlist",
       selectedSong: {},
       selectedIndex: null,
       search: 1,
@@ -25,7 +24,11 @@ class PlaylistYT extends React.Component{
         this.props.search >= this.state.search) {
 
       console.log("New search, updating state!");
-      this.setState({playlist: this.props.list, search: this.props.search+1}, () => {
+      this.setState({
+        playlist: this.props.list, 
+        currentTitle: this.props.list.title,
+        search: this.props.search+1
+      }, () => {
         console.log("PLAYLIST STATE UPDATE COMPLETE: playlist, search")
       });
     }
@@ -62,9 +65,13 @@ class PlaylistYT extends React.Component{
 
 
   handleSave = async() => {
-    await genPlaylist(this.state.playlist);
-    this.props.save();
-    this.props.alert(`${this.state.currentTitle} playlist saved to YouTube!`, "success");
+    if (sessionStorage.getItem("loggedInYT") !== "true") {
+      this.props.alert("You must be signed in to YouTube to save this playlist!", "info");
+    } else {
+      // await youtube_gen_playlist_func;
+      // this.props.save();
+      this.props.alert(`${this.state.currentTitle} playlist saved to YouTube!`, "success");
+    }
   }
 
 
@@ -93,7 +100,10 @@ class PlaylistYT extends React.Component{
 
     /* If passed nothing, remove the currently selected song */
     if (!updatedSong) {
-      this.props.alert(`Song removed: ${this.state.selectedSong.title}`, "success");
+      this.props.alert(
+        `Song removed: ${this.state.selectedSong.tracks[0].title}`, 
+        "success"
+      );
       newList.songs = newList.songs.filter((song, index) => 
         index !== this.state.selectedIndex
       );
@@ -106,7 +116,7 @@ class PlaylistYT extends React.Component{
     /* If passed a song, replace the currently selected song */
     } else {
       this.props.alert(
-        `Song updated: ${this.state.selectedSong.title} is now ${updatedSong.title}`, 
+        `Song updated: ${updatedSong.tracks[0].title}`, 
         "success"
       );
       newList.songs[this.state.selectedIndex] = updatedSong;
@@ -142,6 +152,7 @@ class PlaylistYT extends React.Component{
             {this.state.isEditing? 
             (<div className="d-flex justify-content-between align-items-center">
               <input 
+                className="title-editor"
                 type="text" 
                 value={this.state.currentTitle} 
                 onChange={this.handleChange} 
@@ -169,25 +180,30 @@ class PlaylistYT extends React.Component{
           {/* List of song cards */}
           {this.state.playlist.songs.map((song, index) => (
             <div 
-              className="my-1 song-card d-flex"
-              onClick={() => this.handleSongSelection(song, index)}
+              className="my-1 song-card d-flex align-items-center"
+              onClick={song.tracks[0]? () => this.handleSongSelection(song, index) : null}
             >
-              {/* This img is where the song preview play/pause button 
-              should go. Still needs input, handler, and formatting. */}
-              <img 
-                className="px-2 py-1 play-button"
-                src="./images/play-circle.svg" 
-                alt="play" 
-                role="button"
-              /> 
+              <svg className="bi bi-three-dots-vertical" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
+              </svg>
               <div 
                 className="p-1 details flex-grow-1" 
                 role="button" 
-                data-bs-toggle="modal" 
+                data-bs-toggle={song.tracks[0]? "modal" : ""} 
                 data-bs-target={"#song-details-"+this.props.service} 
               >
-                <h2 className="m-0">{song.tracks[0].title}</h2>
-                <p className="m-0">{song.tracks[0].artist}</p>
+                <h2 className="m-0">{
+                  song.tracks[0]?
+                  song.tracks[0].title
+                  :
+                  "No tracks available"
+                }</h2>
+                <p className="m-0">{
+                  song.tracks[0]?
+                  song.tracks[0].artist
+                  :
+                  null
+                }</p>
               </div>
             </div>
           ))}
