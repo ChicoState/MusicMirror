@@ -21,8 +21,7 @@ export async function emailCheck(email) {
         }
     } catch (err) {
         console.error(err);
-        // throw err;
-        return undefined;
+        throw err;
     }
 }
 
@@ -82,8 +81,7 @@ export async function getUsername(email, password){
         }
     } catch (err) {
         console.error(err);
-        // throw err;
-        return undefined;
+        throw err;
     }
 }
 
@@ -110,8 +108,7 @@ export async function getUserId(email, password){
         }
     } catch (err) {
         console.error(err);
-        // throw err;
-        return undefined;
+        throw err;
     }
 }
 

@@ -81,9 +81,9 @@ it('genPlaylists populates uri list', async () => {
 });
 
 it('genPlaylists unsuccessful response', async () => {
-    fetch.mockReject(new Error('mock error'));
     sessionStorage.setItem("token", "test");
     sessionStorage.setItem("user_id", "testid");
+    fetch.mockReject(new Error('mock error'));
     expect(genPlaylist(responses.playlist2)).rejects.toThrow(Error);
 });
 
@@ -107,9 +107,9 @@ it('getPlaylists happy path', async () => {
 });
 
 it('getPlaylists sad path', async () => {
-    fetch.mockReject(new Error('mock error'));
     sessionStorage.setItem("token", "test");
     sessionStorage.setItem("user_id", "testid");
+    fetch.mockReject(new Error('mock error'));
     expect(getPlaylists).rejects.toThrow(Error);
 });
 
@@ -131,8 +131,8 @@ it('savePlaylists happy path', async () => {
 });
 
 it('getPlaylists sad path', async () => {
-    fetch.mockReject(new Error('mock error'));
     sessionStorage.setItem("token", "test");
+    fetch.mockReject(new Error('mock error'));
     expect(savePlaylist(responses.playlist2)).rejects.toThrow(Error);
 });
 

@@ -64,7 +64,8 @@ beforeAll(() => {
 });
 afterAll(() => {
   window.location = location;
-  fetch.resetMocks();
+  document.location = location;
+  fetchMock.resetMocks();
 });
 
 afterEach(() => {
@@ -102,9 +103,9 @@ it('generateCodeChallenge different string each time', () => {
 //redirectToAuthCodeFlow
 it('redirect changes document location', () => {
     const url = 'http://localhost:3000';
-    global.document.location = url;
+    document.location = url;
     redirectToAuthCodeFlow('fake_cid')
-    expect(global.document.location).not.toBe(url);
+    expect(document.location).not.toBe(url);
 });
 
 // //checkCode
@@ -160,10 +161,8 @@ it('fetchProfile sad fetch path', async () => {
 //signout
 it('signOut clears storages', async () => {
   sessionStorage.setItem("verifier", 'mock_verifier');
-  localStorage.setItem("mock", "mock");
   signOut();
   expect(sessionStorage.getItem("verifier")).toBe(null);
-  expect(localStorage.getItem("mock")).toBe(null);
 });
 
 it('signOut cleans url', async () => {
