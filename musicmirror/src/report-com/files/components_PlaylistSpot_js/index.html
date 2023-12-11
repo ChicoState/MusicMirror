@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - components\PlaylistSpot.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>components\PlaylistSpot.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">74.00</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">236</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">44.44</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">1.61</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">import { genPlaylist } from &quot;../playlist&quot;;
+import React from &quot;react&quot;;
+import SongDetailsModal from &quot;./SongDetailsModal&quot;;
+
+class PlaylistSpot extends React.Component{
+  constructor(){
+    super();
+    this.state = {
+      playlist: {},
+      isEditing: false,
+      currentTitle: &quot;MusicMirror Playlist&quot;,
+      selectedSong: {},
+      selectedIndex: null,
+      search: 1,
+    };
+  }
+
+  /*--- COMPONENT LIFECYCLE FUNCTIONS ----------------------------------------*/
+
+  componentDidUpdate() {
+
+    /* Update state.playlist if a new search occurred. */
+    if (this.props.list &amp;&amp;
+        this.state.playlist &amp;&amp;
+        this.props.search &gt;= this.state.search) {
+
+      console.log(&quot;New search, updating state!&quot;);
+      this.setState({
+        playlist: this.props.list, 
+        currentTitle: this.props.list.title,
+        search: this.props.search+1
+      }, () =&gt; {
+        console.log(&quot;PLAYLIST STATE UPDATE COMPLETE: playlist, search&quot;)
+      });
+    }
+  }
+
+  /*--- HANDLERS -------------------------------------------------------------*/
+
+  handleBlur = () =&gt; {
+    console.log(&quot;handleBlur&quot;);
+    this.setState({ isEditing: false }, () =&gt; {
+      console.log(&quot;PLAYLIST STATE UPDATE COMPLETE: isEditing:false&quot;);
+    });
+    // Call a function passed as a prop to update the list title
+    this.onTitleChange(this.state.currentTitle);
+  };
+
+
+  handleChange = (e) =&gt; {
+    console.log(&quot;handleChange&quot;);
+    this.setState({ currentTitle: e.target.value }, () =&gt; {
+      console.log(&quot;PLAYLIST STATE UPDATE COMPLETE: currentTitle&quot;);
+    });
+  };
+
+
+  handleDoubleClick = (two) =&gt; {
+    console.log(&quot;handleDoubleClick&quot;);
+    if (!this.state.isEditing) {
+      this.setState({ isEditing: true }, () =&gt; {
+        console.log(&quot;PLAYLIST STATE UPDATE COMPLETE: isEditing:true&quot;);
+      });
+    }
+  };
+
+
+  handleSave = async() =&gt; {
+    if (sessionStorage.getItem(&quot;loggedIn&quot;) !== &quot;true&quot;) {
+      this.props.alert(&quot;You must be signed in to Spotify to save this playlist!&quot;, &quot;info&quot;);
+    } else {
+      console.log(this.state.playlist);
+      await genPlaylist(this.state.playlist);
+      this.props.save();
+      this.props.alert(`${this.state.currentTitle} playlist saved to Spotify!`, &quot;success&quot;);
+    }
+  }
+
+
+  /* Note which song card was clicked on */
+  handleSongSelection = (song, index) =&gt; {
+    this.setState({selectedSong: song, selectedIndex: index}, () =&gt; {
+      console.log(&quot;PLAYLIST STATE UPDATE COMPLETE: selectedSong, selectedIndex&quot;);
+    });
+    console.log(`selected song: ${song.tracks[0].title}`);
+  };
+
+
+  onTitleChange = (newTitle) =&gt; {
+    console.log(&quot;onTitleChange&quot;);
+    const newList = {...this.state.playlist};
+    newList.title = this.state.currentTitle;
+    this.setState({playlist: newList}, () =&gt; {
+      console.log(&quot;PLAYLIST STATE UPDATE COMPLETE: playlist&quot;);
+    });
+  };
+
+
+  /* Update or delete a song card */
+  handleUpdate = (updatedSong) =&gt; {
+    const newList = {...this.state.playlist};
+
+    /* If passed nothing, remove the currently selected song */
+    if (!updatedSong) {
+      this.props.alert(
+        `Song removed: ${this.state.selectedSong.tracks[0].title}`, 
+        &quot;success&quot;
+      );
+      newList.songs = newList.songs.filter((song, index) =&gt; 
+        index !== this.state.selectedIndex
+      );
+      this.setState({playlist: newList, selectedIndex: null}, () =&gt; {
+        console.log(&quot;STATE UPDATE COMPLETE, REMOVED SONG&quot;);
+      });
+      console.log(&quot;REMOVED LIST ITEM&quot;);
+      console.log(newList);
+
+    /* If passed a song, replace the currently selected song */
+    } else {
+      this.props.alert(
+        `Song updated: ${updatedSong.tracks[0].title}`, 
+        &quot;success&quot;
+      );
+      newList.songs[this.state.selectedIndex] = updatedSong;
+      this.setState({playlist: newList, selectedSong: updatedSong}, () =&gt; {
+        console.log(&quot;STATE UPDATE COMPLETE, CHANGED SONG&quot;);
+      });
+    }
+  };
+
+  /*--------------------------------------------------------------------------*/
+
+  render() {
+      
+    /* If there are no songs to display, instruct users to add songs */
+    if (!this.props.list || 
+        !this.state.playlist ||
+        Object.keys(this.state.playlist).length === 0 ||
+        (Object.keys(this.state.playlist).length &gt; 0 &amp;&amp;
+        this.state.playlist.songs.length === 0)) {
+
+      return (
+        &lt;div className=&quot;Playlist&quot;&gt;
+          &lt;h1&gt;Choose a playlist to preview, or create a new one.&lt;/h1&gt;
+        &lt;/div&gt;
+      );
+    
+    /* If there are songs to display, render song cards */
+    } else if (this.state.playlist &amp;&amp; 
+        Object.keys(this.state.playlist).length &gt; 0) {
+      return (
+        &lt;div className=&quot;Playlist&quot;&gt;
+          &lt;h1 className=&quot;list-title&quot;&gt;
+            {this.state.isEditing? 
+            (&lt;div className=&quot;d-flex justify-content-between align-items-center&quot;&gt;
+              &lt;input 
+                type=&quot;text&quot; 
+                className=&quot;title-editor&quot;
+                value={this.state.currentTitle} 
+                onChange={this.handleChange} 
+                onBlur={this.handleBlur} 
+                autoFocus
+              /&gt;
+              &lt;svg className=&quot;bi bi-pencil-square&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;1em&quot; height=&quot;1em&quot; fill=&quot;currentColor&quot; viewBox=&quot;0 0 16 16&quot;&gt;
+                &lt;path d=&quot;M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z&quot;/&gt;
+                &lt;path fillRule=&quot;evenodd&quot; d=&quot;M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z&quot;/&gt;
+              &lt;/svg&gt;
+            &lt;/div&gt;) 
+            : 
+            (&lt;span 
+              className=&quot;d-flex justify-content-between align-items-center&quot; 
+              onDoubleClick={this.handleDoubleClick}
+            &gt;
+              {this.state.currentTitle}
+              &lt;svg className=&quot;bi bi-pencil-square&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;1em&quot; height=&quot;1em&quot; fill=&quot;currentColor&quot; viewBox=&quot;0 0 16 16&quot;&gt;
+                &lt;path d=&quot;M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z&quot;/&gt;
+                &lt;path fillRule=&quot;evenodd&quot; d=&quot;M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z&quot;/&gt;
+              &lt;/svg&gt;
+            &lt;/span&gt;)}
+          &lt;/h1&gt;
+
+          {/* List of song cards */}
+          {this.state.playlist.songs.map((song, index) =&gt; (
+            &lt;div 
+              className=&quot;my-1 song-card d-flex align-items-center&quot;
+              onClick={song.tracks[0]? () =&gt; this.handleSongSelection(song, index) : null}
+            &gt;
+              &lt;svg className=&quot;bi bi-three-dots-vertical&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;1em&quot; height=&quot;1em&quot; fill=&quot;currentColor&quot; viewBox=&quot;0 0 16 16&quot;&gt;
+                &lt;path d=&quot;M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0&quot;/&gt;
+              &lt;/svg&gt;
+              &lt;div 
+                className=&quot;p-1 details flex-grow-1&quot; 
+                role=&quot;button&quot; 
+                data-bs-toggle={song.tracks[0]? &quot;modal&quot; : &quot;&quot;} 
+                data-bs-target={&quot;#song-details-&quot;+this.props.service} 
+              &gt;
+                &lt;h2 className=&quot;m-0&quot;&gt;{
+                  song.tracks[0]?
+                  song.tracks[0].title
+                  :
+                  &quot;No tracks available&quot;
+                }&lt;/h2&gt;
+                &lt;p className=&quot;m-0&quot;&gt;{
+                  song.tracks[0]?
+                  song.tracks[0].artist
+                  :
+                  null
+                }&lt;/p&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+          ))}
+
+          {/* This modal pops up when you click on a song */}
+          &lt;SongDetailsModal 
+            service={this.props.service}
+            song={this.state.selectedSong} 
+            updatePlaylist={this.handleUpdate}
+          /&gt;
+
+          {/* Upload the playlist to Spotify */}
+          &lt;button 
+            className=&quot;mt-3 btn btn-secondary&quot; 
+            onClick={this.handleSave}
+          &gt;
+            Save Spotify Playlist
+          &lt;/button&gt;
+        &lt;/div&gt;
+      );
+
+    } else {
+      return null;
+    }
+  }
+}
+
+export default PlaylistSpot;</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

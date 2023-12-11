@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - ./auth.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>./auth.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">60.44</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">177</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">38.55</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">1.49</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">import { getPlaylists } from &quot;./playlist&quot;;
+
+const clientId = &quot;950b5e4bacb54dc1ad9c2ce70e2a4d48&quot;;
+const params = new URLSearchParams(window.location.search);
+const code = params.get(&quot;code&quot;);
+let hasCode = false;
+let isTokenExchangeInProgress = false;
+
+export async function checkCode(){
+    console.log(&quot;Ran checkCode&quot;);
+    if (!code) {
+        await redirectToAuthCodeFlow(clientId);
+        console.log(&quot;After redirectToAuthCodeFlow, code: &quot; + code);
+        hasCode = true;
+    }
+};
+
+export async function signIn(loggedIn){
+    console.log(&quot;code at signIn:&quot; + code);
+   
+    if(code &amp;&amp; !sessionStorage.getItem(&quot;accessToken&quot;)){
+
+        const verifier = sessionStorage.getItem(&quot;verifier&quot;);
+        if (!verifier) {
+            
+            console.error(&quot;Verifier not found in localStorage. Redirecting to login flow...&quot;);
+            
+            return;
+        }
+        console.log(&quot;verifier before token request:&quot;, verifier);
+        console.log(&quot;WHAT&quot;);
+
+        const accessToken = await getAccessToken(clientId, code);
+
+        if(accessToken &amp;&amp; accessToken !== &quot;undefined&quot;){
+            const profile = await fetchProfile(accessToken);
+            populateUI(profile);
+        }
+        hasCode = true;
+        
+        sessionStorage.setItem(&quot;loggedIn&quot;, true);
+
+        getPlaylists();
+    } else {
+       
+        // made this change because otherwise every time we returned to our app
+        // from Google auth, it would reset loggedIn to false even if Spotify
+        // was connected
+        if (sessionStorage.getItem(&quot;token&quot;)) {
+            sessionStorage.setItem(&quot;loggedIn&quot;, true);
+        } else {
+            sessionStorage.setItem(&quot;loggedIn&quot;, false);
+        }
+    }
+}
+
+export async function redirectToAuthCodeFlow(clientId) {
+    const verifier = generateCodeVerifier(128);
+    const challenge = await generateCodeChallenge(verifier);
+    
+   if(!sessionStorage.getItem(&quot;verifier&quot;)){
+        sessionStorage.setItem(&quot;verifier&quot;, verifier);
+   }
+
+    const params = new URLSearchParams();
+    params.append(&quot;client_id&quot;, clientId);
+    params.append(&quot;response_type&quot;, &quot;code&quot;);
+    params.append(&quot;redirect_uri&quot;, &quot;http://localhost:3000&quot;);
+    params.append(&quot;scope&quot;, &quot;user-read-private user-read-email playlist-modify-public playlist-modify-private&quot;);
+    params.append(&quot;code_challenge_method&quot;, &quot;S256&quot;);
+    params.append(&quot;code_challenge&quot;, challenge);
+
+    document.location = `https://accounts.spotify.com/authorize?${params.toString()}`;
+    
+}
+
+export function generateCodeVerifier(length) {
+    let text = &#039;&#039;;
+    let possible = &#039;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789&#039;;
+
+    for (let i = 0; i &lt; length; i++) {
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+    }
+    
+    return text;
+}
+
+export async function generateCodeChallenge(codeVerifier) {
+    const data = new TextEncoder().encode(codeVerifier);
+    const digest = await window.crypto.subtle.digest(&#039;SHA-256&#039;, data);
+    return btoa(String.fromCharCode.apply(null, [...new Uint8Array(digest)]))
+        .replace(/\+/g, &#039;-&#039;)
+        .replace(/\//g, &#039;_&#039;)
+        .replace(/=+$/, &#039;&#039;);
+}
+
+export async function getAccessToken(clientId, code) {
+    
+    if (isTokenExchangeInProgress) {
+        console.log(&quot;Token exchange is already in progress. Ignoring this call.&quot;);
+        return null;
+    }
+
+    
+    isTokenExchangeInProgress = true;
+
+    try {
+        
+        const verifier = sessionStorage.getItem(&quot;verifier&quot;);
+
+        console.log(&quot;verifier before token request: &quot;, verifier);
+        console.log(&quot;Code before token request:&quot;, code);
+
+        const params = new URLSearchParams();
+        params.append(&quot;client_id&quot;, clientId);
+        params.append(&quot;grant_type&quot;, &quot;authorization_code&quot;);
+        params.append(&quot;code&quot;, code);
+        params.append(&quot;redirect_uri&quot;, &quot;http://localhost:3000&quot;);
+        params.append(&quot;code_verifier&quot;, verifier);
+
+        console.log(&quot;Token request parameters:&quot;, params.toString());
+
+        const result = await fetch(&quot;https://accounts.spotify.com/api/token&quot;, {
+            method: &quot;POST&quot;,
+            headers: { &quot;Content-Type&quot;: &quot;application/x-www-form-urlencoded&quot; },
+            body: params
+        });
+
+        console.log(&quot;Token request result:&quot;, result);
+
+        const res = await result.json();
+        if (!result.ok || res.status != 200) {
+            console.error(&quot;Token request error:&quot;, res);
+            
+            return null; 
+        }
+
+        const access_token = res.access_token;
+        console.log(&quot;Access token:&quot;, access_token);
+
+       
+        sessionStorage.setItem(&quot;token&quot;, access_token);
+
+        return access_token;
+    } finally {
+        
+        isTokenExchangeInProgress = false;
+    }
+}
+
+export async function fetchProfile(token) {
+    
+    
+    const result = await fetch(&quot;https://api.spotify.com/v1/me&quot;, {
+        method: &quot;GET&quot;, headers: { Authorization: `Bearer ${token}` }
+    });
+    let res = await result.json();
+    console.log(&quot;Before user_id&quot; + res.id);
+    if(!sessionStorage.getItem(&quot;user_id&quot;)){
+        sessionStorage.setItem(&quot;user_id&quot;, res.id);
+        console.log(&quot;user_id&quot; + res.id);
+    }
+   
+    return res;
+}
+
+export function signOut(){
+    let newUrl = window.location.href;
+    newUrl = newUrl.split(&quot;?&quot;)[0];
+    window.location.href = newUrl;
+
+    // only reset Spotify storage (using sessionStorage for MM and YT as well)
+    sessionStorage.setItem(&quot;loggedIn&quot;, &quot;false&quot;);
+    sessionStorage.removeItem(&quot;verifier&quot;);
+    sessionStorage.removeItem(&quot;token&quot;);
+    sessionStorage.removeItem(&quot;user_id&quot;);
+}</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

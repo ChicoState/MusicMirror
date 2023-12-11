@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - ./App.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>./App.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">64.73</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">604</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">37.17</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">2.88</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">// Styles
+import &quot;./styles/App.css&quot;;
+
+// Components
+import AddSongs from &quot;./components/AddSongs&quot;;
+import PageAlert from &quot;./components/PageAlert&quot;;
+import PlaylistMM from &quot;./components/PlaylistMM&quot;;
+import PlaylistSpot from &quot;./components/PlaylistSpot&quot;;
+import PlaylistYT from &quot;./components/PlaylistYT&quot;;
+import SavedPlaylists from &quot;./components/SavedPlaylists&quot;;
+import SpotifyConnection from &quot;./components/SpotifyConnection&quot;;
+import YouTubeConnection from &quot;./components/YouTubeConnection&quot;;
+
+// Back end
+import * as auth from &#039;./auth&#039;;
+import { emailCheck, createUser, getUsername, deleteUser } from &#039;./database&#039;;
+import { findSongs } from &quot;./playlist&quot;;
+import * as youtube from &#039;./youtube&#039;;
+
+// Libraries
+import { useState } from &quot;react&quot;;
+import { Tabs, Tab } from &quot;react-bootstrap&quot;;
+
+//==============================================================================
+
+function App() {
+  const [username, setUsername] = useState(&quot;&quot;);
+  const [email, setEmail] = useState(&quot;&quot;);
+  const [password, setPassword] = useState(&quot;&quot;);
+  const [passwordConfirm, setPasswordConfirm] = useState(&quot;&quot;);
+  const [MMList, setMMList] = useState();
+  const [SpotList, setSpotList] = useState();
+  const [YTList, setYTList] = useState();
+  const [search, setSearch] = useState(0);
+  const [loggedIn, setLog] = useState(false);
+  //const [setLog] = useState();
+  const [spotifyConnection, setSpotifyConnection] = useState(
+    sessionStorage.getItem(&quot;loggedIn&quot;) === &quot;true&quot;
+  );
+  const [youtubeConnection, setYoutubeConnection]=useState(
+    sessionStorage.getItem(&quot;loggedInYT&quot;) === &quot;true&quot;
+  );
+  const [needsListRefresh, setListRefresh] = useState(false);
+  const [viewSignIn, setViewSignIn] = useState(!sessionStorage.getItem(&quot;verifier&quot;));
+  const [viewSignUp, setViewSignUp] = useState(false);
+  const [alertShow, setAlertShow] = useState(false);
+  const [alertHeading, setAlertHeading] = useState(&quot;&quot;);
+  const [alertVariant, setAlertVariant] = useState(&quot;&quot;);
+  const [progress, setProgress] = useState(false);
+
+  //----------------------------------------------------------------------------
+  
+  // This function searches for songs and updates the pending playlist
+  const handleSearch = async (data, title = &quot;MusicMirror Playlist&quot;) =&gt; {
+    console.log(`Searching! This is search number ${search+1}.`)
+    let list = {};
+    let listYT = {};
+
+    if (sessionStorage.getItem(&quot;token&quot;)) {
+      list = await findSongs(data, 5);
+      list.title = title;
+      console.log(&quot;new spotify list:&quot;, list);
+    }
+    if (sessionStorage.getItem(&quot;youtubeAccessToken&quot;)) {
+      listYT = await youtube.performYouTubeSearch(data, 5);
+      listYT.title = title;
+      console.log(&quot;new youtube list:&quot;, listYT);
+    }
+
+    setMMList(Object.keys(list).length &gt; 0? list : listYT);
+    setSpotList(list);
+    setYTList(listYT);
+    setSearch(search+1);
+    // setProgress(false);
+    handleAlertOpen(&quot;Playlist loaded!&quot;, &quot;success&quot;);
+  }
+
+  // Parse a saved playlist from MusicMirror to create a search string
+  const handleSearchMM = async (list) =&gt; {
+    let searchString = &quot;&quot;;
+    for (let song of list.songs) {
+      let term = song.title + &quot; &quot; + song.artist + &quot;\n&quot;;
+      searchString += term;
+    }
+    // setProgress(true);
+    handleSearch(searchString, list.p_name);
+  }
+
+  // Parse a saved playlist from Spotify to create a search string
+  const handleSearchSpot = async (list) =&gt; {
+    // let searchString = &quot;&quot;;
+    // // spotify lists have links to the list but no song data...
+    // setProgress(true);
+    // handleSearch(searchString, list.name);
+  }
+
+  // Parse a saved playlist from YouTube to create a search string
+  const handleSearchYT = async (list) =&gt; {
+    let searchString = &quot;&quot;;
+    for (let vid of list.videos) {
+      let term = vid.snippet.title + &quot; &quot; + vid.snippet.videoOwnerChannelTitle + &quot;\n&quot;;
+      searchString += term;
+    }
+    // setProgress(true);
+    handleSearch(searchString, list.snippet.title);
+  }
+
+  const handleListAdded = () =&gt; {
+    setListRefresh(true);
+  }
+
+  const handleConfirmRefresh = () =&gt; {
+    setListRefresh(false);
+  }
+
+  // Spotify login
+  const handleLogin = async (data) =&gt; {
+    console.log(&quot;handleLogin: Spotify&quot;);
+    setLog(await auth.signIn(data));
+    setSpotifyConnection(data);
+  }
+
+  // YouTube login, data is either true or false
+  const handleLoginYT = async (data) =&gt; {
+    console.log(&quot;handleLogin: YouTube&quot;);
+    setYoutubeConnection(data);
+  }
+
+  const handleMMLogin = async () =&gt; {
+    if (password === &quot;&quot;) {
+      handleAlertOpen(&quot;Please enter your password&quot;, &quot;info&quot;);
+    } else if (email === &quot;&quot;) {
+      handleAlertOpen(&quot;Please enter your email address&quot;, &quot;info&quot;);
+    } else if (!(await emailCheck(email))) {
+      handleAlertOpen(&quot;That email address does not have an account&quot;, &quot;info&quot;);
+    } else if (!(await getUsername(email, password))) {
+      handleAlertOpen(&quot;Password is incorrect, please try again&quot;, &quot;info&quot;);
+    } else {
+      let user = await getUsername(email, password);
+      sessionStorage.setItem(&quot;usernameMM&quot;, user);
+      sessionStorage.setItem(&quot;email&quot;, email);
+      sessionStorage.setItem(&quot;password&quot;, password);
+      sessionStorage.setItem(&quot;loggedInMM&quot;, &quot;true&quot;);
+      setViewSignUp(false);
+      setViewSignIn(false);
+    }
+  }
+
+  const handleMMLogout = async () =&gt; {
+    setUsername(&quot;&quot;);
+    setEmail(&quot;&quot;);
+    setPassword(&quot;&quot;);
+    setPasswordConfirm(&quot;&quot;);
+    setViewSignIn(true);
+    auth.signOut();
+    localStorage.clear();
+    sessionStorage.clear();
+    console.log(&quot;Logging out!&quot;);
+  }
+
+  const handleNewAccount = async () =&gt; {
+    if (username === &quot;&quot;) {
+      handleAlertOpen(&quot;Please enter a username&quot;, &quot;info&quot;);
+    } else if (email === &quot;&quot;) {
+      handleAlertOpen(&quot;Please enter a valid email address&quot;, &quot;info&quot;);
+    } else if (await emailCheck(email)) {
+      handleAlertOpen(&quot;That email address is already in use&quot;, &quot;info&quot;);
+    } else if (password === &quot;&quot;) {
+      handleAlertOpen(&quot;Please enter a password&quot;, &quot;info&quot;);
+    } else if (passwordConfirm === &quot;&quot;) {
+      handleAlertOpen(&quot;Please confirm your password&quot;, &quot;info&quot;);
+    } else if (password !== passwordConfirm) {
+      handleAlertOpen(&quot;Password and confirmation must be the same&quot;, &quot;info&quot;);
+    } else if (await createUser(username, password, email)) {
+      handleMMLogin();
+    }
+  }
+
+  const handleDeleteAccount = async () =&gt; {
+    await deleteUser(sessionStorage.getItem(&quot;email&quot;));
+    handleMMLogout();
+  }
+
+  const handleUsername = event =&gt; {
+    console.log(&quot;Handling username!&quot;);
+    setUsername(event.target.value);
+  };
+
+  const handleEmail = event =&gt; {
+    console.log(&quot;Handling email!&quot;);
+    setEmail(event.target.value);
+  };
+
+  const handlePassword = event =&gt; {
+    console.log(&quot;Handling password!&quot;);
+    setPassword(event.target.value);
+  };
+
+  const handlePasswordConfirm = event =&gt; {
+    console.log(&quot;Handling password confirmation!&quot;);
+    setPasswordConfirm(event.target.value);
+  };
+
+  const handleAlertOpen = (heading, variant) =&gt; {
+    setAlertHeading(heading);
+    setAlertVariant(variant);
+    setAlertShow(true);
+  }
+
+  const handleAlertClose = () =&gt; {
+    setAlertShow(false);
+    setAlertHeading(&quot;&quot;);
+    setAlertVariant(&quot;&quot;);
+  }
+
+  //----------------------------------------------------------------------------
+  const goToSignIn = () =&gt; {
+    handleAlertClose();
+    setUsername(&quot;&quot;);
+    setEmail(&quot;&quot;);
+    setPassword(&quot;&quot;);
+    setPasswordConfirm(&quot;&quot;);
+    setViewSignIn(true);
+    setViewSignUp(false);
+  }
+
+  const goToSignUp = () =&gt; {
+    handleAlertClose();
+    setEmail(&quot;&quot;);
+    setPassword(&quot;&quot;);
+    setViewSignUp(true);
+    setViewSignIn(false);
+  }
+
+  //----------------------------------------------------------------------------
+
+  // Default view when not logged in
+  if (viewSignIn &amp;&amp; sessionStorage.getItem(&quot;loggedInMM&quot;) !== &quot;true&quot;) {
+    return (
+      &lt;div className=&quot;App sign-in&quot;&gt;
+
+        {/* Alert */}
+        &lt;PageAlert 
+          show={alertShow} 
+          heading={alertHeading} 
+          variant={alertVariant}
+          close={handleAlertClose} 
+        /&gt;
+        {/* End alert */}
+
+        {/* Page body */}
+        &lt;div className=&quot;main-wrapper&quot;&gt;
+          &lt;div className=&quot;App-main mx-0 p-5 d-flex flex-column justify-content-between align-items-center&quot;&gt;
+            &lt;h1 className=&quot;login-heading&quot;&gt;MusicMirror Sign In&lt;/h1&gt;
+            &lt;div className=&quot;login&quot;&gt;
+              &lt;div className=&quot;my-3&quot;&gt;
+                &lt;label for=&quot;login-email&quot; className=&quot;form-label&quot;&gt;
+                  Email Address
+                &lt;/label&gt;
+                &lt;input 
+                  type=&quot;email&quot; 
+                  className=&quot;form-control&quot; 
+                  id=&quot;login-email&quot; 
+                  onChange={handleEmail} 
+                  value={email}
+                /&gt;
+              &lt;/div&gt;
+              &lt;div className=&quot;mb-3&quot;&gt;
+                &lt;label for=&quot;login-password&quot; className=&quot;form-label&quot;&gt;
+                  Password
+                &lt;/label&gt;
+                &lt;input 
+                  type=&quot;password&quot; 
+                  className=&quot;form-control&quot; 
+                  id=&quot;login-password&quot; 
+                  onChange={handlePassword} 
+                  value={password}
+                /&gt;
+              &lt;/div&gt;
+              &lt;button className=&quot;mt-3 btn btn-secondary&quot; onClick={handleMMLogin}&gt;
+                Sign In!
+              &lt;/button&gt;
+            &lt;/div&gt;
+            &lt;p className=&quot;m-0&quot;&gt;
+              Don&#039;t have an account yet?&amp;nbsp;
+              &lt;button className=&quot;redirect&quot; onClick={goToSignUp}&gt;
+                Sign up!
+              &lt;/button&gt;
+            &lt;/p&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+        {/* End of page body */}
+
+      &lt;/div&gt;
+    );
+
+  //----------------------------------------------------------------------------
+
+  // View for creating a new account
+  } else if (viewSignUp &amp;&amp; sessionStorage.getItem(&quot;loggedInMM&quot;) !== &quot;true&quot;) {
+    return (
+      &lt;div className=&quot;App sign-up&quot;&gt;
+
+        {/* Alert */}
+        &lt;PageAlert 
+          show={alertShow} 
+          heading={alertHeading} 
+          variant={alertVariant}
+          close={handleAlertClose} 
+        /&gt;
+        {/* End alert */}
+
+        {/* Page body */}
+        &lt;div className=&quot;main-wrapper&quot;&gt;
+          &lt;div className=&quot;App-main mx-0 p-5 d-flex flex-column justify-content-between align-items-center&quot;&gt;
+            &lt;h1 className=&quot;login-heading&quot;&gt;MusicMirror New Account&lt;/h1&gt;
+            &lt;div className=&quot;login&quot;&gt;
+              &lt;div className=&quot;my-3&quot;&gt;
+                &lt;label for=&quot;signup-username&quot; className=&quot;form-label&quot;&gt;
+                  Username
+                &lt;/label&gt;
+                &lt;input 
+                  type=&quot;text&quot; 
+                  className=&quot;form-control&quot; 
+                  id=&quot;signup-username&quot; 
+                  onChange={handleUsername} 
+                  value={username}
+                /&gt;
+              &lt;/div&gt;
+              &lt;div className=&quot;mb-3&quot;&gt;
+                &lt;label for=&quot;signup-email&quot; className=&quot;form-label&quot;&gt;
+                  Email Address
+                &lt;/label&gt;
+                &lt;input 
+                  type=&quot;email&quot; 
+                  className=&quot;form-control&quot; 
+                  id=&quot;signup-email&quot; 
+                  onChange={handleEmail} 
+                  value={email}
+                /&gt;
+              &lt;/div&gt;
+              &lt;div className=&quot;mb-3&quot;&gt;
+                &lt;label for=&quot;signup-password&quot; className=&quot;form-label&quot;&gt;
+                  Password
+                &lt;/label&gt;
+                &lt;input 
+                  type=&quot;password&quot; 
+                  className=&quot;form-control&quot; 
+                  id=&quot;signup-password&quot; 
+                  onChange={handlePassword} 
+                  value={password}
+                /&gt;
+              &lt;/div&gt;
+              &lt;div className=&quot;mb-3&quot;&gt;
+                &lt;label for=&quot;password-confirmation&quot; className=&quot;form-label&quot;&gt;
+                  Confirm Password
+                &lt;/label&gt;
+                &lt;input 
+                  type=&quot;password&quot; 
+                  className=&quot;form-control&quot; 
+                  id=&quot;password-confirmation&quot; 
+                  onChange={handlePasswordConfirm} 
+                  value={passwordConfirm}
+                /&gt;
+              &lt;/div&gt;
+              &lt;button className=&quot;mt-3 btn btn-secondary&quot; onClick={handleNewAccount}&gt;
+                Create Account!
+              &lt;/button&gt;
+            &lt;/div&gt;
+            &lt;p className=&quot;m-0&quot;&gt;
+              Already have an account?&amp;nbsp;
+              &lt;button className=&quot;redirect&quot; onClick={goToSignIn}&gt;
+                Sign in!
+              &lt;/button&gt;
+            &lt;/p&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+        {/* End of page body */}
+
+      &lt;/div&gt;
+    );
+
+  //----------------------------------------------------------------------------
+
+  // View when logged in
+  } else {
+    return (
+      &lt;div className={progress? &quot;App progress-cursor&quot; : &quot;App&quot;}&gt;
+  
+        {/* Page header */}
+        &lt;header className=&quot;App-header d-flex justify-content-center align-items-center&quot;&gt;
+          &lt;h1&gt;MusicMirror&lt;/h1&gt;        
+        &lt;/header&gt;
+        {/* End of page header */}
+
+        {/* Alert displays in fixed position beneath header, when visible */}
+        &lt;PageAlert 
+          show={alertShow} 
+          heading={alertHeading} 
+          variant={alertVariant}
+          close={handleAlertClose} 
+        /&gt;
+        {/* End alert */}
+  
+        {/* Page body */}
+        &lt;div className=&quot;main-wrapper&quot;&gt;
+
+          {/* Wrapper to help with columns */}
+          &lt;div className=&quot;App-main mx-0 px-5 row grid gap-5&quot;&gt;
+            
+            {/* Start of the first window */}
+            &lt;div className=&quot;tab-window p-3 col-12 col-md&quot;&gt;
+              &lt;h2 className=&quot;mb-3 load&quot;&gt;Load Playlists&lt;/h2&gt;
+              &lt;Tabs id=&quot;tab&quot; defaultActiveKey=&quot;musicmirrorLeft&quot; justify&gt;
+                &lt;Tab tabClassName=&quot;tab tab-musicmirror&quot; eventKey=&quot;musicmirrorLeft&quot; title=&quot;MusicMirror&quot;&gt;
+                  &lt;div className=&quot;tab-body p-3&quot;&gt;
+                    &lt;SavedPlaylists 
+                      service=&quot;musicmirror&quot; 
+                      connected=&quot;true&quot;
+                      refresh={needsListRefresh} 
+                      confirm={handleConfirmRefresh}
+                      load={handleSearchMM}
+                      alert={handleAlertOpen}
+                    /&gt;
+                  &lt;/div&gt; 
+                &lt;/Tab&gt;
+                &lt;Tab tabClassName=&quot;tab tab-spotify&quot; eventKey=&quot;spotifyLeft&quot; title=&quot;Spotify&quot;&gt;
+                  &lt;div className=&quot;tab-body p-3&quot;&gt;
+                    &lt;SavedPlaylists 
+                      service=&quot;spotify&quot; 
+                      connected={spotifyConnection} 
+                      refresh={needsListRefresh} 
+                      confirm={handleConfirmRefresh}
+                      load={handleSearchSpot}
+                      alert={handleAlertOpen}
+                    /&gt;
+                    &lt;SpotifyConnection handleLogin={handleLogin}/&gt;
+                  &lt;/div&gt; 
+                &lt;/Tab&gt;
+                &lt;Tab tabClassName=&quot;tab tab-youtube&quot; eventKey=&quot;youtubeLeft&quot; title=&quot;YT Music&quot;&gt;
+                  &lt;div className=&quot;tab-body p-3&quot;&gt;
+                    &lt;SavedPlaylists 
+                      service=&quot;youtube&quot; 
+                      connected={youtubeConnection} 
+                      refresh={needsListRefresh} 
+                      confirm={handleConfirmRefresh}
+                      load={handleSearchYT}
+                      alert={handleAlertOpen}
+                    /&gt;
+                    &lt;YouTubeConnection handleLogin={handleLoginYT} /&gt;
+                  &lt;/div&gt; 
+                &lt;/Tab&gt;
+                &lt;Tab tabClassName=&quot;tab tab-addsongs&quot; eventKey=&quot;addsongs&quot; title=&quot;New&quot;&gt;
+                  &lt;div className=&quot;tab-body p-3 d-flex flex-column&quot;&gt;
+                    &lt;AddSongs search={handleSearch} alert={handleAlertOpen} /&gt;
+                  &lt;/div&gt;
+                &lt;/Tab&gt;
+              &lt;/Tabs&gt;
+            &lt;/div&gt; 
+            {/* End of the first window */}
+            
+            {/* Start of the second window */}
+            &lt;div className=&quot;tab-window p-3 col-12 col-md&quot;&gt;
+              &lt;h2 className=&quot;mb-3 save&quot;&gt;Save Playlists&lt;/h2&gt;
+              &lt;Tabs id=&quot;tab&quot; defaultActiveKey=&quot;musicmirrorRight&quot; justify&gt;
+                &lt;Tab tabClassName=&quot;tab tab-musicmirror&quot; eventKey=&quot;musicmirrorRight&quot; title=&quot;MusicMirror&quot;&gt;
+                  &lt;div className=&quot;tab-body p-3&quot;&gt;
+                    &lt;PlaylistMM 
+                      service=&quot;musicmirror&quot; 
+                      list={MMList} 
+                      search={search} 
+                      save={handleListAdded}
+                      alert={handleAlertOpen}
+                    /&gt;
+                  &lt;/div&gt; 
+                &lt;/Tab&gt;
+                &lt;Tab tabClassName=&quot;tab tab-spotify&quot; eventKey=&quot;spotifyRight&quot; title=&quot;Spotify&quot;&gt;
+                  &lt;div className=&quot;tab-body p-3&quot;&gt;
+                    &lt;PlaylistSpot 
+                      service=&quot;spotify&quot; 
+                      list={SpotList} 
+                      search={search} 
+                      save={handleListAdded}
+                      alert={handleAlertOpen}
+                    /&gt;
+                    &lt;SpotifyConnection handleLogin={handleLogin}/&gt;
+                  &lt;/div&gt; 
+                &lt;/Tab&gt;
+                &lt;Tab tabClassName=&quot;tab tab-youtube&quot; eventKey=&quot;youtubeRight&quot; title=&quot;YT Music&quot;&gt;
+                  &lt;div className=&quot;tab-body p-3&quot;&gt;
+                      {/* &lt;YouTube searchTerm={YTList}/&gt; */}
+                      &lt;PlaylistYT 
+                        service=&quot;youtube&quot; 
+                        list={YTList} 
+                        search={search} 
+                        save={handleListAdded}
+                        alert={handleAlertOpen}
+                      /&gt;
+                      &lt;YouTubeConnection handleLogin={handleLoginYT} /&gt;
+                  &lt;/div&gt; 
+                &lt;/Tab&gt;
+              &lt;/Tabs&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+          {/* End of page body */}
+  
+          {/* Page footer */}
+          &lt;footer className=&quot;App-footer px-3 d-flex justify-content-between align-items-center&quot;&gt;
+            &lt;p className=&quot;m-0&quot;&gt;Welcome&amp;nbsp;{
+              sessionStorage.getItem(&quot;usernameMM&quot;)? 
+              sessionStorage.getItem(&quot;usernameMM&quot;) : null
+            }&lt;/p&gt;
+            &lt;div className=&quot;d-flex&quot;&gt;
+              &lt;p className=&quot;m-0 mm-logout&quot; onClick={handleMMLogout}&gt;Log Out of MusicMirror&lt;/p&gt;
+              &lt;p className=&quot;my-0 mx-2&quot;&gt;|&lt;/p&gt;
+              &lt;p 
+                className=&quot;m-0 mm-delete&quot; 
+                data-bs-toggle=&quot;modal&quot; 
+                data-bs-target=&quot;#confirm-delete-account&quot;
+              &gt;
+                Delete my Account
+              &lt;/p&gt;
+            &lt;/div&gt;
+          &lt;/footer&gt;
+          {/* End of page footer */}
+
+          {/* Account deletion confirmation modal */}
+          &lt;div 
+            id=&quot;confirm-delete-account&quot; 
+            className=&quot;modal fade&quot; 
+            tabIndex=&quot;-1&quot; 
+            aria-hidden=&quot;true&quot;
+          &gt;
+            &lt;div className=&quot;modal-dialog modal-lg modal-fullscreen-sm-down&quot;&gt;
+              &lt;div className=&quot;modal-content&quot;&gt;
+                &lt;div className=&quot;modal-header&quot;&gt;
+                  &lt;h1 className=&quot;modal-title&quot;&gt;Are you sure you want to delete this account?&lt;/h1&gt;
+                  &lt;button 
+                    className=&quot;ms-2 btn-close btn-close-white&quot; 
+                    type=&quot;button&quot; 
+                    data-bs-dismiss=&quot;modal&quot; 
+                    aria-label=&quot;Close&quot;
+                  &gt;&lt;/button&gt;
+                &lt;/div&gt;
+                &lt;div className=&quot;modal-body&quot;&gt;
+                  &lt;div className=&quot;d-flex&quot;&gt;
+                    &lt;p&gt;
+                      Username:&amp;nbsp;
+                    &lt;/p&gt;
+                    &lt;p className=&quot;user-data&quot;&gt;
+                        {sessionStorage.getItem(&quot;usernameMM&quot;)? 
+                          sessionStorage.getItem(&quot;usernameMM&quot;) 
+                          : 
+                          &quot;unable to retrieve username&quot;
+                        }
+                    &lt;/p&gt;
+                  &lt;/div&gt;
+                  &lt;div className=&quot;d-flex&quot;&gt;
+                    &lt;p&gt;
+                      Email:&amp;nbsp;
+                    &lt;/p&gt;
+                    &lt;p className=&quot;user-data&quot;&gt;
+                        {sessionStorage.getItem(&quot;email&quot;)? 
+                          sessionStorage.getItem(&quot;email&quot;) 
+                          : 
+                          &quot;unable to retrieve email&quot;
+                        }
+                    &lt;/p&gt;
+                  &lt;/div&gt;
+                  &lt;br /&gt;
+                  &lt;p&gt;&lt;b&gt;
+                    WARNING: If you delete your account, all playlists saved to
+                    MusicMirror will be lost.
+                  &lt;/b&gt;&lt;/p&gt;
+                &lt;/div&gt;
+                &lt;div className=&quot;modal-footer d-flex&quot;&gt;
+                  &lt;button 
+                    className=&quot;nevermind-button btn btn-secondary flex-fill&quot;
+                    type=&quot;button&quot; 
+                    data-bs-dismiss=&quot;modal&quot; 
+                  &gt;
+                    Not Now
+                  &lt;/button&gt;
+                  &lt;button 
+                    className=&quot;delete-button btn btn-secondary flex-fill&quot;
+                    type=&quot;button&quot; 
+                    data-bs-dismiss=&quot;modal&quot;
+                    onClick={handleDeleteAccount}
+                  &gt;
+                    Delete It
+                  &lt;/button&gt;
+                &lt;/div&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+          {/* End of account deletion modal */}
+
+        &lt;/div&gt;
+      &lt;/div&gt;
+    );
+  }
+}
+
+export default App;</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

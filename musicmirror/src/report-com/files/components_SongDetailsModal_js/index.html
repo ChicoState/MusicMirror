@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - components\SongDetailsModal.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>components\SongDetailsModal.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">74.38</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">349</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">50.28</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">2.39</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">import React from &quot;react&quot;;
+import { findSongs } from &quot;../playlist&quot;;
+import { performYouTubeSearch } from &quot;../youtube&quot;;
+
+class SongDetailsModal extends React.Component{
+  constructor(){
+    super();
+    this.state = {
+      message: &quot;&quot;,
+      song: {},
+      trackIndex: 0,
+      progress: false,
+    };
+    this.observer = null;
+  }
+
+  /*--- COMPONENT LIFECYCLE FUNCTIONS ----------------------------------------*/
+
+  /* Called every time the state or props change */
+  componentDidUpdate(prevProps, prevState) {
+
+    /* Add a mutation observer after the DOM renders */
+    if (Object.keys(prevState.song).length === 0 &amp;&amp; 
+        Object.keys(this.state.song).length &gt; 0) {
+      this.addObserver();
+    }
+
+    /* Make sure the trackIndex resets for each song */
+    if (prevProps.song !== this.props.song) {
+      this.setState({song: this.props.song, trackIndex: 0}, () =&gt; {
+        console.log(&quot;MODAL STATE UPDATE COMPLETE {song: this.props.song, trackIndex: 0}&quot;);
+        console.log(this.props.service, this.props.song);
+      });
+    }
+  }
+
+
+  /* Disconnect the observer on Unmount to prevent memory leaks */
+  componentWillUnmount() {
+    if (this.observer) {
+      this.observer.disconnect();
+    }
+  }
+
+  /*--- HANDLERS -------------------------------------------------------------*/
+
+  /* Updates the search bar value */
+  handleChange = event =&gt; {
+    this.setState({message: event.target.value}, () =&gt; {
+      console.log(&quot;MODAL STATE UPDATE COMPLETE {message: event.target.value}&quot;)
+    });
+  };
+
+
+  /* Updates the track selection */
+  handleConfirm = () =&gt; {
+    if (this.state.trackIndex !== 0) {
+      let updatedSong = this.state.song;
+      let chosenTrack = updatedSong.tracks[this.state.trackIndex];
+      updatedSong.tracks = [
+        chosenTrack,
+        ...updatedSong.tracks.slice(0, this.state.trackIndex),
+        ...updatedSong.tracks.slice(this.state.trackIndex + 1)
+      ];
+      this.setState({song: updatedSong}, () =&gt; {
+        console.log(&quot;MODAL STATE UPDATE COMPLETE, TRACK CONFIRMED {song: updatedSong}&quot;);
+      });
+    } 
+    this.props.updatePlaylist(this.state.song);
+  };
+
+
+  /* If the enter key is pressed inside the searchbox, 
+  return to the first carousel slide and perform a search */
+  handleKeyDown = (event) =&gt; {
+    if (event.key === &quot;Enter&quot;) {
+      event.target.setAttribute(&quot;data-bs-target&quot;, &quot;#details-carousel&quot;);
+      event.target.click();
+      event.target.setAttribute(&quot;data-bs-target&quot;, &quot;&quot;);
+      // this.setState({progress: true});
+      this.handleSearch();
+    }
+  }
+
+  handleClick = (event) =&gt; {
+    // this.setState({progress: true});
+    this.handleSearch();
+  }
+
+
+  /* Perform a search and display the results */
+  handleSearch = async() =&gt; {
+    console.log(`searching: ${this.state.message}`);
+    let newList;
+    // If the selected song has Spotify data, do a Spotify search
+    if (this.state.song.tracks[this.state.trackIndex].album) {
+      newList = await findSongs(this.state.message, 5);
+    // Otherwise do a YouTube search
+    } else {
+      newList = await performYouTubeSearch(this.state.message, 5);
+    }
+    if (newList.songs) {
+      console.log(&quot;search successful&quot;);
+      this.setState({song: newList.songs[0], trackIndex: 0, progress: false}, () =&gt; {
+        console.log(&quot;MODAL STATE UPDATE COMPLETE, SEARCH SUCCESSFUL {song: newList.songs[0], trackIndex: 0}&quot;);
+      });
+    } else {
+      console.log(&quot;could not perform search&quot;);
+      this.setState({trackIndex: 0, progress: false}, () =&gt; {
+        console.log(&quot;MODAL STATE UPDATE COMPLETE, SEARCH NOT SUCCESSFUL {trackIndex: 0}&quot;);
+      });
+    }
+  };
+
+
+  /* Update this.state.trackIndex to match which track is being displayed */
+  handleTrackIter = (index) =&gt; {
+    if (index === &quot;next&quot; &amp;&amp; 
+        this.state.trackIndex === this.props.song.tracks.length-1) {
+      this.setState({trackIndex: 0}, () =&gt; {
+        console.log(&quot;TRACKITER STATE UPDATE COMPLETE {trackIndex: 0}&quot;);
+      });
+    } else if (index === &quot;next&quot;) {
+      this.setState({trackIndex: this.state.trackIndex+1}, () =&gt; {
+        console.log(&quot;TRACKITER STATE UPDATE COMPLETE {trackIndex: this.state.trackIndex+1}&quot;);
+      });
+    } else if (index === &quot;prev&quot; &amp;&amp; this.state.trackIndex === 0) {
+      this.setState({trackIndex: this.props.song.tracks.length-1}, () =&gt; {
+        console.log(&quot;TRACKITER STATE UPDATE COMPLETE {trackIndex: this.props.song.tracks.length-1}&quot;);
+      });
+    } else if (index === &quot;prev&quot;) {
+      this.setState({trackIndex: this.state.trackIndex-1}, () =&gt; {
+        console.log(&quot;TRACKITER STATE UPDATE COMPLETE {trackIndex: this.state.trackIndex-1}&quot;);
+      });
+    } else {
+      this.setState({trackIndex: index}, () =&gt; {
+        console.log(&quot;TRACKITER STATE UPDATE COMPLETE {trackIndex: index}&quot;);
+      });
+    }
+  }
+
+  /*--- OTHER FUNCTIONS ------------------------------------------------------*/
+
+  /* Add a mutation observer that resets the carousel when the modal closes */
+  addObserver = () =&gt; {
+
+    const modal = document.getElementById(&quot;song-details-&quot;+this.props.service);
+    const indicators = document.querySelectorAll(&quot;.carousel-indicators &gt; button&quot;);
+    const slides = document.querySelectorAll(&quot;.carousel-item&quot;);
+    
+    this.observer = new MutationObserver((mutations) =&gt; {
+      mutations.forEach((mutation) =&gt; {
+        if (mutation.type === &quot;attributes&quot; &amp;&amp; 
+            mutation.attributeName === &quot;aria-hidden&quot;) {
+          if (modal.getAttribute(&quot;aria-hidden&quot;)){
+            indicators.forEach((indicator) =&gt; {
+              if (indicator.getAttribute(&quot;data-bs-slide-to&quot;) === &quot;0&quot;){
+                indicator.classList.add(&quot;active&quot;);
+                indicator.setAttribute(&quot;aria-current&quot;, &quot;true&quot;);
+              } else {
+                indicator.classList.remove(&quot;active&quot;);
+                indicator.setAttribute(&quot;aria-current&quot;, &quot;false&quot;);
+              }
+            });
+            slides.forEach((slide) =&gt; {
+              if (slide.getAttribute(&quot;data-index&quot;) === &quot;0&quot;) {
+                slide.classList.add(&quot;active&quot;);
+              } else {
+                slide.classList.remove(&quot;active&quot;);
+              }
+            });
+            this.setState({message: &quot;&quot;, song: this.props.song, trackIndex: 0}, () =&gt; {
+              console.log(&#039;MUTATION OBSERVER STATE UPDATE COMPLETE {message: &quot;&quot;, song: this.props.song, trackIndex: 0}&#039;);
+            });
+          }
+        }
+      });
+    });
+
+    this.observer.observe(modal, {
+      attributes: true,
+      attributeFilter: [&quot;aria-hidden&quot;]
+    });
+  }
+
+  /*--------------------------------------------------------------------------*/
+
+  render() {
+
+    if (!this.state.song || Object.keys(this.state.song).length === 0) {
+      return (
+        &lt;div 
+          id={&quot;song-details-&quot; + this.props.service} 
+          className=&quot;SongDetailsModal modal fade&quot; 
+          tabIndex=&quot;-1&quot; 
+          aria-hidden=&quot;true&quot;
+        &gt;
+          &lt;div className=&quot;modal-dialog modal-lg modal-fullscreen-sm-down&quot;&gt;
+            &lt;div className=&quot;modal-content&quot;&gt;
+              &lt;div className=&quot;modal-header&quot;&gt;&lt;/div&gt;
+              &lt;div className=&quot;modal-body&quot;&gt;&lt;/div&gt;
+              &lt;div className=&quot;modal-footer&quot;&gt;&lt;/div&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      );
+
+    } else {
+      return (
+        &lt;div 
+          id={&quot;song-details-&quot; + this.props.service} 
+          className={this.state.progress? 
+            &quot;SongDetailsModal progress-cursor modal fade&quot; 
+            : 
+            &quot;SongDetailsModal modal fade&quot;
+          }
+          tabIndex=&quot;-1&quot; 
+          aria-hidden=&quot;true&quot;
+        &gt;
+          &lt;div className=&quot;modal-dialog modal-lg modal-fullscreen-sm-down&quot;&gt;
+            &lt;div className=&quot;modal-content&quot;&gt;
+              &lt;div className=&quot;modal-header&quot;&gt;
+                &lt;div className=&quot;searchbox input-group&quot;&gt;
+                  &lt;input 
+                    id=&quot;textInput&quot;
+                    className=&quot;form-control input-group-text&quot; 
+                    type=&quot;search&quot; 
+                    aria-label=&quot;refine search&quot; 
+                    placeholder={this.props.song.query} 
+                    value={this.state.message} 
+                    // data-bs-target=&quot;#details-carousel&quot; 
+                    data-bs-target=&quot;&quot; 
+                    data-bs-slide-to=&quot;0&quot;
+                    onChange={this.handleChange} 
+                    onKeyDown={this.handleKeyDown}
+                  /&gt;
+                  &lt;img 
+                    className=&quot;btn btn-info&quot;
+                    src=&quot;./images/search.svg&quot; 
+                    alt=&quot;search&quot; 
+                    role=&quot;button&quot; 
+                    data-bs-target=&quot;#details-carousel&quot; 
+                    data-bs-slide-to=&quot;0&quot;
+                    onClick={this.handleClick}
+                  /&gt;
+                &lt;/div&gt;
+                &lt;button 
+                  className=&quot;ms-2 btn-close btn-close-white&quot; 
+                  type=&quot;button&quot; 
+                  data-bs-dismiss=&quot;modal&quot; 
+                  aria-label=&quot;Close&quot;
+                &gt;&lt;/button&gt;
+              &lt;/div&gt;
+
+              {/* This section handles search result slides */}
+              &lt;div id=&quot;details-carousel&quot; className=&quot;modal-body carousel slide&quot;&gt;
+                &lt;div className=&quot;carousel-indicators&quot;&gt;
+                  {this.state.song &amp;&amp; this.state.song.tracks.map((track, index) =&gt; (
+                    &lt;button 
+                      className={index === 0 ? &quot;active&quot; : &quot;&quot;}
+                      type=&quot;button&quot; 
+                      data-bs-target=&quot;#details-carousel&quot; 
+                      data-bs-slide-to={index} 
+                      aria-current={index === 0 ? &quot;true&quot; : &quot;&quot;} 
+                      aria-label={`Search Result ${index+1}`} 
+                      onClick={() =&gt; this.handleTrackIter(index)}
+                    &gt;&lt;/button&gt;
+                  ))}
+                &lt;/div&gt;
+                &lt;div className=&quot;carousel-inner&quot;&gt;
+                  {/* Add check for additional array if second array is used */}
+                  {this.state.song &amp;&amp; this.state.song.tracks.map((track, index) =&gt; (
+                    &lt;div 
+                      className={`carousel-item ${index === 0 ? &quot;active&quot; : &quot;&quot;}`} 
+                      data-index={index}
+                    &gt;
+                      &lt;div className=&quot;mb-2 details-header d-flex align-items-center&quot;&gt;
+                        &lt;h1 className=&quot;mx-2 mb-0&quot;&gt;{track.title}&lt;/h1&gt;
+                        &lt;p className=&quot;mb-0 song-length&quot;&gt;({track.length})&lt;/p&gt;
+                      &lt;/div&gt;
+                      {track.album?
+                        &lt;div&gt;
+                          &lt;div className=&quot;d-flex justify-content-between&quot;&gt;
+                            &lt;p&gt;Artist:&amp;nbsp;&lt;/p&gt;
+                            &lt;p&gt;{track.artist}&lt;/p&gt;
+                          &lt;/div&gt;
+                          &lt;div className=&quot;d-flex justify-content-between&quot;&gt;
+                            &lt;p&gt;Album:&amp;nbsp;&lt;/p&gt;
+                            &lt;p&gt;{track.album}&lt;/p&gt;
+                          &lt;/div&gt;
+                        &lt;/div&gt;
+                        :
+                        &lt;div&gt;
+                          {/* Angel: playable youtube video goes inside this div */}
+                        &lt;/div&gt;
+                      }
+                    &lt;/div&gt;
+                  ))}
+                &lt;/div&gt;
+                &lt;button 
+                  className=&quot;carousel-control-prev&quot; 
+                  type=&quot;button&quot; 
+                  data-bs-target=&quot;#details-carousel&quot; 
+                  data-bs-slide=&quot;prev&quot; 
+                  onClick={() =&gt; this.handleTrackIter(&quot;prev&quot;)}
+                &gt;
+                  &lt;span className=&quot;carousel-control-prev-icon&quot; aria-hidden=&quot;true&quot;&gt;&lt;/span&gt;
+                  &lt;span className=&quot;visually-hidden&quot;&gt;Previous&lt;/span&gt;
+                &lt;/button&gt;
+                &lt;button 
+                  className=&quot;carousel-control-next&quot; 
+                  type=&quot;button&quot; 
+                  data-bs-target=&quot;#details-carousel&quot; 
+                  data-bs-slide=&quot;next&quot; 
+                  onClick={() =&gt; this.handleTrackIter(&quot;next&quot;)}
+                &gt;
+                  &lt;span className=&quot;carousel-control-next-icon&quot; aria-hidden=&quot;true&quot;&gt;&lt;/span&gt;
+                  &lt;span className=&quot;visually-hidden&quot;&gt;Next&lt;/span&gt;
+                &lt;/button&gt;
+              &lt;/div&gt;
+              {/* End search result slides */}
+
+              &lt;div className=&quot;modal-footer d-flex&quot;&gt;
+                &lt;button 
+                  className=&quot;confirm-button btn btn-secondary flex-fill&quot;
+                  type=&quot;button&quot; 
+                  data-bs-dismiss=&quot;modal&quot; 
+                  onClick={() =&gt; this.handleConfirm()}
+                &gt;
+                  Confirm Selection
+                &lt;/button&gt;
+                &lt;button 
+                  className=&quot;remove-button btn btn-secondary flex-fill&quot;
+                  type=&quot;button&quot; 
+                  data-bs-dismiss=&quot;modal&quot; 
+                  onClick={() =&gt; this.props.updatePlaylist(null)}
+                &gt;
+                  Remove Song
+                &lt;/button&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/div&gt;
+      );
+    }
+  }
+}
+
+export default SongDetailsModal;</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

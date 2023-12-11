@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - ./playlist.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>./playlist.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">55.40</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">153</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">57.83</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">1.59</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">export async function findSongs(input, resCount) {
+    console.log(input);
+    const token = sessionStorage.getItem(&quot;token&quot;);
+    //separate each query by line
+    let search = input.split(&#039;\n&#039;);
+    //iterate over songs and search for song
+    let playlist = {
+        title: &quot;MusicMirror Playlist&quot;,
+        songs: [],
+    };
+    let url = &quot;&quot;;
+    for(let i in search){
+        //skip over empty lines
+        if(search[i].trim() === &#039;&#039;) {
+            continue;
+        }
+        url = &quot;https://api.spotify.com/v1/search/?q=&quot; + search[i].replace(&#039; &#039;, &#039;+&#039;) + &quot;&amp;type=track&quot;;
+        //search for search[i]
+        let resp = await fetch(url, {
+            method: &quot;GET&quot;, headers: { Authorization: `Bearer ${token}` }
+        });
+        let obj = await resp.json();
+        //if exists, add to playlist
+        let results = {
+            query: &quot;&quot;,
+            tracks: [],
+        }
+
+        let res = 0;
+        // added obj.tracks check to prevent &quot;reading props of undefined&quot; runtime error
+        while(res &lt; resCount &amp;&amp; obj.tracks &amp;&amp; res &lt; Object.keys(obj.tracks.items).length) {
+            let names = &quot;&quot;;
+            for(let j in obj.tracks.items[res].artists){
+                names += obj.tracks.items[res].artists[j].name + &quot;, &quot;;
+            }
+            names = names.substring(0, names.length - 2)
+
+            let time = new Date(obj.tracks.items[res].duration_ms);
+            let track = {
+                title: obj.tracks.items[res].name,
+                artist: names,
+                album: obj.tracks.items[res].album.name,
+                length: `${time.getMinutes()}:${time.getSeconds()}`,
+                uri: obj.tracks.items[res].uri,
+            };
+            results.tracks.push(track);
+            console.log(track);
+            res++;
+        }
+        results.query = search[i];
+        playlist.songs.push(results);
+    }
+    console.log(playlist);
+    return playlist;
+}
+
+export async function genPlaylist(list) {
+    console.log(list);
+    const user_id = sessionStorage.getItem(&quot;user_id&quot;);
+    const token = sessionStorage.getItem(&quot;token&quot;);
+    let uris = [];
+    // if list size &gt; 0, create playlist (api req)
+    if(Object.keys(list.songs).length &gt; 0){
+        try {
+            //create spotify playlist
+            let resp = await fetch(&quot;https://api.spotify.com/v1/users/&quot; + user_id + &quot;/playlists&quot;, {
+                method: &quot;POST&quot;,
+                body: JSON.stringify({ name: list.title }),
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            let obj = await resp.json();
+            let p_id = obj.id;
+            for (let i in list.songs) {
+                if (list.songs[i].tracks[0]) {
+                    uris.push(list.songs[i].tracks[0].uri);
+                }
+            }
+            // Iterate through list of matches and add each song to the playlist (api req)
+            resp = await fetch(&quot;https://api.spotify.com/v1/playlists/&quot; + p_id + &quot;/tracks&quot;, {
+                method: &quot;POST&quot;,
+                body: JSON.stringify({ uris }),
+                headers: { Authorization: `Bearer ${token}` }
+            }).then((response) =&gt; response.json())
+                .then((json) =&gt; console.log(json));
+            return uris;
+        } catch (err) {
+            throw err;
+        }
+    }
+    return undefined; //Mostly for testing purposes
+}
+
+export async function getPlaylists() {
+    const user_id = sessionStorage.getItem(&quot;user_id&quot;);
+    const token = sessionStorage.getItem(&quot;token&quot;);
+
+    let resp = await fetch(&quot;https://api.spotify.com/v1/users/&quot; + user_id + &quot;/playlists&quot;, {
+        method: &quot;GET&quot;,
+        headers: { Authorization: `Bearer ${token}` }
+    });
+    let obj = await resp.json();
+
+    console.log(obj);
+    return obj;
+}
+
+export async function searchPlaylists(query) {
+    const token = localStorage.getItem(&quot;token&quot;);
+
+    let url = &quot;https://api.spotify.com/v1/search/?q=&quot; + query.replace(&#039; &#039;, &#039;+&#039;) + &quot;&amp;type=playlist&quot;;
+    let resp = await fetch(url, {
+        method: &quot;GET&quot;, headers: { Authorization: `Bearer ${token}` }
+    });
+    return await resp.json();
+}
+
+export async function savePlaylist(list, uid) {
+    if (!list || JSON.stringify(list) === &#039;{}&#039; || list.songs.length &lt;= 0) {
+        return undefined;
+    }
+
+    let q_body = {
+        playlist: {
+            p_name: list.title,
+            songs: []
+        }
+    }
+    for (let i in list.songs) {
+        if (list.songs[i].tracks[0]) {
+            q_body.playlist.songs.push({
+                title: list.songs[i].tracks[0].title,
+                artist: list.songs[i].tracks[0].artist
+            });
+        }
+    }
+    console.log(q_body);
+
+    try {
+        // let resp = await fetch(&quot;http://localhost:3002/playlist/&quot; + uid, {
+        await fetch(&quot;http://localhost:3002/playlist/&quot; + uid, {
+            method: &quot;POST&quot;,
+            headers: {
+                &quot;Content-Type&quot;: &quot;application/json&quot;,
+            },
+            body: JSON.stringify(q_body),
+        });
+    } catch (err) {
+        console.error(err);
+        throw err;
+    }
+
+    return q_body;
+  }</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

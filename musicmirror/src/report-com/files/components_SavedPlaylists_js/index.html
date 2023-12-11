@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - components\SavedPlaylists.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>components\SavedPlaylists.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">68.51</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">227</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">61.71</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">1.74</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">import { getMMPlaylists } from &quot;../database&quot;;
+import { getPlaylists } from &quot;../playlist&quot;;
+import { fetchUserPlaylists } from &quot;../youtube&quot;;
+import React from &quot;react&quot;;
+
+class SavedPlaylists extends React.Component{
+  constructor(){
+    super();
+    this.state = {
+      MusicMirrorLists: {},
+      SpotifyLists: {},
+      YouTubeLists: {},
+    };
+  }
+
+  /*--- COMPONENT LIFECYCLE FUNCTIONS ----------------------------------------*/
+
+  componentDidMount() {
+    if (this.props.service === &quot;musicmirror&quot; &amp;&amp; 
+        this.props.connected) {
+
+      this.getMusicMirrorLists();
+
+    } else if (this.props.service === &quot;spotify&quot; &amp;&amp; 
+        this.props.connected) {
+
+      this.getSpotifyLists();
+
+    } else if (this.props.service === &quot;youtube&quot; &amp;&amp; 
+        this.props.connected) {
+
+      this.getYouTubeLists();
+    }
+  }
+  
+  componentDidUpdate(prevProps) {
+
+    // Retrieve playlists on service login
+    if (this.props.service === &quot;musicmirror&quot; &amp;&amp; 
+        Object.keys(this.state.MusicMirrorLists).length &lt; 1) {
+          
+      this.getMusicMirrorLists();
+
+    } else if (this.props.service === &quot;spotify&quot; &amp;&amp; 
+        sessionStorage.getItem(&quot;loggedIn&quot;) === &quot;true&quot; &amp;&amp; 
+        Object.keys(this.state.SpotifyLists).length &lt; 1) {
+
+      this.getSpotifyLists();
+
+    } else if (this.props.service === &quot;youtube&quot; &amp;&amp; 
+        sessionStorage.getItem(&quot;loggedInYT&quot;) === &quot;true&quot; &amp;&amp; 
+        Object.keys(this.state.YouTubeLists).length &lt; 1) {
+
+      this.getYouTubeLists();
+      console.log(&quot;GETTING YOUTUBE LISTS&quot;);
+    }
+
+    // Remove playlists on logout
+    if (this.props.service === &quot;spotify&quot; &amp;&amp; 
+        sessionStorage.getItem(&quot;loggedIn&quot;) !== &quot;true&quot; &amp;&amp; 
+        this.state.SpotifyLists &amp;&amp;
+        Object.keys(this.state.SpotifyLists).length &gt; 0) {
+
+      this.setState({SpotifyLists: {}});
+
+    } else if (this.props.service === &quot;youtube&quot; &amp;&amp; 
+        sessionStorage.getItem(&quot;loggedInYT&quot;) !== &quot;true&quot; &amp;&amp; 
+        this.state.YouTubeLists &amp;&amp;
+        Object.keys(this.state.YouTubeLists).length &gt; 0) {
+
+      this.setState({YouTubeLists: {}});
+    }
+
+    // Refresh playlists when a new list is added to a service
+    if (!prevProps.refresh &amp;&amp; this.props.refresh) {
+      this.props.confirm();
+      if (this.props.service === &quot;musicmirror&quot;) {
+        this.getMusicMirrorLists();
+      } else if (this.props.service === &quot;spotify&quot;) {
+        this.getSpotifyLists();
+      } else if (this.props.service === &quot;youtube&quot;) {
+        this.getYouTubeLists();
+      }
+    }
+  }
+
+  /*--- HANDLERS -------------------------------------------------------------*/
+
+  getMusicMirrorLists = async() =&gt; {
+    let playlists = await getMMPlaylists(sessionStorage.getItem(&quot;email&quot;));
+    if (playlists) {
+      this.setState({MusicMirrorLists: playlists}, () =&gt; {
+        console.log(&quot;SAVEDPLAYLIST STATE UPDATED: MusicMirrorLists&quot;);
+        console.log(this.state.MusicMirrorLists);
+      });
+    }
+  }
+
+  getSpotifyLists = async() =&gt; {
+
+    let playlists = {error: &quot;this is a placeholder&quot;};
+    while (sessionStorage.getItem(&quot;verifier&quot;) &amp;&amp; Object.keys(playlists)[0] &amp;&amp;
+        Object.keys(playlists)[0] === &quot;error&quot;) {
+
+      let test = await getPlaylists();
+      if (Object.keys(test).length &gt; 2 &amp;&amp; 
+          test.href !== &quot;https://api.spotify.com/v1/users/null/playlists?offset=0&amp;limit=20&quot;) {
+
+        playlists = test;
+      }
+    }
+    this.setState({SpotifyLists: playlists}, () =&gt; {
+      console.log(&quot;SAVEDPLAYLIST STATE UPDATED: SpotifyLists&quot;);
+      console.log(this.state.SpotifyLists);
+    });
+  }
+
+  getYouTubeLists = async() =&gt; {
+    let playlists = await fetchUserPlaylists();
+    if (playlists) {
+      this.setState({YouTubeLists: playlists}, () =&gt; {
+        console.log(&quot;SAVEDPLAYLIST STATE UPDATED: YouTubeLists&quot;);
+        console.log(this.state.YouTubeLists);
+      });
+    }
+  }
+
+  handleSelectList = (list) =&gt; {
+    // right now the only way to &quot;load&quot; a list is to do a search for the songs
+    // that should be in it, and that requires you to be logged in to either
+    // youtube or spotify
+    if (sessionStorage.getItem(&quot;loggedIn&quot;) === &quot;true&quot; ||
+        sessionStorage.getItem(&quot;loggedInYT&quot;) === &quot;true&quot;) {
+          
+      this.props.alert(&quot;Loading...&quot;, &quot;info&quot;);
+      this.props.load(list);
+      console.log(&quot;Loading playlist:&quot;, list);
+    }
+  }
+
+  /*--------------------------------------------------------------------------*/
+
+  render() {
+
+    let lists = {};
+    if (this.props.service === &quot;musicmirror&quot;) {
+      lists = this.state.MusicMirrorLists;
+    } else if (this.props.service === &quot;spotify&quot;) {
+      lists = this.state.SpotifyLists;
+    } else if (this.props.service === &quot;youtube&quot;) {
+      lists = this.state.YouTubeLists;
+    }
+
+    if ((this.props.service === &quot;musicmirror&quot;) &amp;&amp; lists &amp;&amp; Object.keys(lists).length &gt; 0) {
+      return (
+        &lt;div className=&quot;SavedPlaylists&quot;&gt;
+          {/* List of playlists */}
+          {lists.map((playlist, index) =&gt; (
+            &lt;div 
+              className=&quot;my-1 list-card d-flex align-items-center&quot;
+              onClick={() =&gt; this.handleSelectList(playlist)}
+            &gt;
+              &lt;h1 className=&quot;m-0 px-2 py-1 list-index&quot;&gt;{index+1}&lt;/h1&gt;
+              &lt;div className=&quot;p-1 list-data flex-grow-1&quot;&gt;
+                &lt;h2 className=&quot;m-0&quot;&gt;{playlist.p_name}&lt;/h2&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;
+          ))}
+        &lt;/div&gt;
+      );
+
+    } else if ((this.props.service === &quot;spotify&quot;) &amp;&amp; 
+        lists &amp;&amp; Object.keys(lists).length &gt; 0 &amp;&amp; lists.items) {
+      return (
+        &lt;div className=&quot;SavedPlaylists&quot;&gt;
+          {/* List of playlists */}
+          {lists.items.map((playlist, index) =&gt; (
+            &lt;div 
+              className=&quot;my-1 list-card d-flex align-items-center&quot;
+              onClick={() =&gt; this.handleSelectList(playlist)}
+            &gt;
+              &lt;h1 className=&quot;m-0 px-2 py-1 list-index&quot;&gt;{index+1}&lt;/h1&gt;
+              &lt;div className=&quot;p-1 list-data flex-grow-1&quot;&gt;
+                &lt;h2 className=&quot;m-0&quot;&gt;{playlist.name}&lt;/h2&gt;
+                {playlist.description?
+                  &lt;p className=&quot;m-0&quot;&gt;{playlist.description}&lt;/p&gt; : null
+                }
+              &lt;/div&gt;
+            &lt;/div&gt;
+          ))}
+        &lt;/div&gt;
+      );
+
+    } else if (this.props.service === &quot;youtube&quot; &amp;&amp; lists &amp;&amp; Object.keys(lists).length &gt; 0) {
+      return (
+        &lt;div className=&quot;SavedPlaylists&quot;&gt;
+          {/* List of playlists */}
+          {lists.map((playlist, index) =&gt; (
+            &lt;div 
+              className=&quot;my-1 list-card d-flex align-items-center&quot;
+              onClick={() =&gt; this.handleSelectList(playlist)}
+            &gt;
+              &lt;h1 className=&quot;m-0 px-2 py-1 list-index&quot;&gt;{index+1}&lt;/h1&gt;
+              &lt;div className=&quot;p-1 list-data flex-grow-1&quot;&gt;
+                &lt;h2 className=&quot;m-0&quot;&gt;{playlist.snippet.localized.title}&lt;/h2&gt;
+                {playlist.snippet.localized.description?
+                  &lt;p className=&quot;m-0&quot;&gt;{playlist.snippet.localized.description}&lt;/p&gt; : null
+                }
+              &lt;/div&gt;
+            &lt;/div&gt;
+          ))}
+        &lt;/div&gt;
+      );
+
+    } else {
+      return (
+        &lt;div className=&quot;SavedPlaylists&quot;&gt;
+          &lt;h1&gt;Nothing to see here&lt;/h1&gt;
+          &lt;p&gt;Sign in and make some playlists!&lt;/p&gt;
+        &lt;/div&gt;
+      );
+    }
+  }
+
+}
+
+export default SavedPlaylists;</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>

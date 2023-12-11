@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Plato - components\YouTube.js</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <link href="../../assets/css/vendor/morris.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/bootstrap.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/font-awesome.css" rel="stylesheet">
+  <link href="../../assets/css/vendor/codemirror.css" rel="stylesheet">
+  <link href="../../assets/css/plato.css" rel="stylesheet">
+  <link href="../../assets/css/plato-file.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-fixed-top">
+  <div class="container">
+    <a class="navbar-brand" href="http://github.com/es-analysis/plato">Plato on Github</a>
+    <ul class="nav navbar-nav">
+      <li>
+        <a href="../../index.html">Report Home</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="jumbotron">
+  <div class="container">
+    <h1>components\YouTube.js</h1>
+  </div>
+</div>
+
+<div class="container aggregate-stats">
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Maintainability <a href="http://blogs.msdn.com/b/codeanalysis/archive/2007/11/20/maintainability-index-range-and-meaning.aspx"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="A value between 0 and 100 that represents the relative ease of maintaining the code. A high value means better maintainability." data-original-title="Maintainability Index"  data-container="body"></i></a></h2>
+      <p class="stat">69.33</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Lines of code <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h2>
+      <p class="stat">252</p>
+    </div>
+  </div>
+  <div class="row historical">
+    <div class="col-md-6">
+      <p id="chart_historical_maint" class="chart"></p>
+    </div>
+    <div class="col-md-6">
+      <p id="chart_historical_sloc" class="chart"></p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h2 class="header">Difficulty  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="The difficulty measure is related to the difficulty of the program to write or understand." data-original-title="Difficulty" data-container="body"></i></a></h2>
+      <p class="stat">32.88</p>
+    </div>
+    <div class="col-md-6">
+      <h2 class="header">Estimated Errors  <a href="http://en.wikipedia.org/wiki/Halstead_complexity_measures"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Halstead's delivered bugs is an estimate for the number of errors in the implementation." data-original-title="Delivered Bugs" data-container="body"></i></a></h2>
+      <p class="stat">1.66</p>
+    </div>
+  </div>
+</div>
+
+<div class="container charts">
+  <div class="row">
+    <h2 class="header">Function weight</h2>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="chart-header">By Complexity <a href="http://en.wikipedia.org/wiki/Cyclomatic_complexity"><i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="This metric counts the number of distinct paths through a block of code. Lower values are better." data-original-title="Cyclomatic Complexity" data-container="body"></i></a></h3>
+      <div id="fn-by-complexity" class="stat"></div>
+    </div>
+    <div class="col-md-6">
+      <h3 class="chart-header">By SLOC  <i class="icon icon-info-sign" rel="popover" data-placement="top" data-trigger="hover" data-content="Source Lines of Code / Logical Lines of Code" data-original-title="SLOC/LSLOC" data-container="body"></i></h3>
+      <div id="fn-by-sloc" class="stat"></div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <textarea id="file-source" class="col-md-12">import React, { useState } from &#039;react&#039;
+import { useEffect } from &#039;react&#039;;
+import axios from &#039;axios&#039;;
+import YoutubeSearch from &#039;./YoutubeSearch&#039;;
+import {Tabs, Tab} from &quot;react-bootstrap&quot;;
+
+/*
+API_KETYS:
+
+1ST:AIzaSyDhDpQvbI2W1P5IH8xV4o2fsw0gK_5lGzY
+
+2ND:AIzaSyBnKLIVgOiPTzRVvXMguoHi8a49aVvEUvI
+
+3RD: AIzaSyBWAir5kNDcRDZAAPr8pvINjmJA2ERD22M
+
+CHNAGE whne the API search limit has been reached and request, 
+go to the server and change the need info
+*/
+const API_KEY = &#039;AIzaSyDhDpQvbI2W1P5IH8xV4o2fsw0gK_5lGzY&#039;;
+const MAXRESULTS = 20;
+
+//We are reciving the search term form the text  box 
+function Youtube({searchTerm}){
+  const [user, setUser] = useState({});//sets user state 
+  const [accessToken, setAccessToken] = useState(null);//access token used for the user
+  const [playlists, setPlaylists] = useState([]);//Playlist 
+  const [currentVideoId, setCurrentVideoId] = useState(null);
+  const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
+  const [currentPlaylistIndex, setCurrentPlaylistIndex] = useState(0);
+  console.log(&#039;The Search: val&#039;, searchTerm);
+//START OF EFFECT
+  useEffect(()=&gt;{
+    let storedToken = localStorage.getItem(&#039;youtubeToken&#039;);//use to store the token
+    const urlParams = new URLSearchParams(window.location.search);//url parameters
+    //used to be called authCode
+    const token = urlParams.get(&#039;accessToken&#039;);
+    const code = urlParams.get(&#039;code&#039;);
+    if(token){
+      setAccessToken(token);
+      localStorage.setItem(&#039;youtubeAccessToken&#039;,token);
+    }else if(code){
+      axios.post(&#039;http://localhost:3001/getAccessToken&#039;,{code: code}).then(response=&gt;{
+        setAccessToken(response.data.acessToken);
+        localStorage.setItem(&#039;youtubeAccessToken&#039;,accessToken);
+      }
+      ).catch(error=&gt;console.error(&#039;Error in fetching acess Token:&#039;,error));
+    }else if(storedToken){
+      setAccessToken(storedToken);
+      fetchUserPlaylists(storedToken);
+    }
+    if(accessToken){
+      fetchUserPlaylists();
+    }
+
+  },[searchTerm, accessToken]);
+  
+  const signIn =()=&gt; {
+    window.location.href = &#039;http://localhost:3001/auth/google&#039;;
+  };
+  const createPlaylist = async (accessToken, playlistTitle, playlistDescription) =&gt; {
+    const response = await axios.post(&#039;https://www.googleapis.com/youtube/v3/playlists&#039;, {
+      snippet: {
+        title: playlistTitle,
+        description: playlistDescription
+      },
+      status: {
+        privacyStatus: &#039;public&#039; // or &#039;public&#039; or &#039;unlisted&#039;
+      }
+    }, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        &#039;Content-Type&#039;: &#039;application/json&#039;
+      }
+    });
+  
+    return response.data; // This will include the newly created playlist ID
+  };
+  const addVideoToPlaylist = async (accessToken, playlistId, videoId) =&gt; {
+    await axios.post(&#039;https://www.googleapis.com/youtube/v3/playlistItems&#039;, {
+      snippet: {
+        playlistId: playlistId,
+        resourceId: {
+          kind: &#039;youtube#video&#039;,
+          videoId: videoId
+        }
+      }
+    }, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        &#039;Content-Type&#039;: &#039;application/json&#039;
+      }
+    });
+  };
+    
+
+  const signOut =()=&gt;{
+    setUser(null);
+    setPlaylists([]);
+    localStorage.removeItem(&#039;youtubeAccessToken&#039;);
+    setAccessToken(null);
+  };
+  useEffect(() =&gt; {
+    if (window.YT &amp;&amp; currentVideoId) {
+      initializePlayer();
+    }
+  }, [currentVideoId]);
+
+  const fetchUserPlaylists = async () =&gt; {
+    if (!accessToken) {
+      return;
+    }
+    try {
+      const playlistsResponse = await axios.get(&#039;http://localhost:3001/youtube/playlists&#039;, {
+        params: { accessToken: accessToken }
+      });
+
+      const playlistsWithVideos = await Promise.all(
+        playlistsResponse.data.items.map(async (playlist) =&gt; {
+          const videosResponse = await axios.get(`http://localhost:3001/youtube/playlistItems`, {
+            params: { accessToken: accessToken, playlistId: playlist.id }
+          });
+          return { ...playlist, videos: videosResponse.data.items };
+        })
+      );
+
+      setPlaylists(playlistsWithVideos); // Use the combined playlists and videos data
+    } catch (error) {
+      console.error(&#039;Error fetching playlists:&#039;, error);
+    }
+  };
+
+  const handleVideoSelect = (playlistIndex, videoIndex) =&gt; {
+    setCurrentPlaylistIndex(playlistIndex);
+    setCurrentVideoIndex(videoIndex);
+    setCurrentVideoId(playlists[playlistIndex].videos[videoIndex].snippet.resourceId.videoId);
+};
+const renderVideoPlayer = () =&gt; {
+  return (
+    &lt;div&gt;
+      {currentVideoId &amp;&amp; (
+        &lt;iframe 
+          width=&quot;auto&quot;
+          height=&quot;auto&quot;
+          src={`https://www.youtube.com/embed/${currentVideoId}?enablejsapi=1`}
+          allow=&quot;accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture&quot;
+          allowFullScreen&gt;
+        &lt;/iframe&gt;
+      )}
+      {/* Render the current playlist below the video */}
+      {playlists.length &gt; 0 &amp;&amp; currentPlaylistIndex !== null &amp;&amp; (
+        &lt;div&gt;
+          &lt;h3&gt;{playlists[currentPlaylistIndex].snippet.title}&lt;/h3&gt;
+          {playlists[currentPlaylistIndex].videos.map((video, videoIndex) =&gt; (
+            &lt;div key={video.id} onClick={() =&gt; handleVideoSelect(currentPlaylistIndex, videoIndex)}&gt;
+              &lt;img
+                height=&quot;200&quot;
+                width=&quot;250&quot;
+                src={video.snippet.thumbnails.medium.url}
+                alt={video.snippet.title}
+              /&gt;
+              &lt;p&gt;{video.snippet.title}&lt;/p&gt;
+            &lt;/div&gt;
+          ))}
+        &lt;/div&gt;
+      )}
+    &lt;/div&gt;
+  );
+};
+
+
+    // Function that initializes the YouTube player
+    const initializePlayer = () =&gt; {
+      return new window.YT.Player(&#039;youtube-player&#039;, {
+        videoId: currentVideoId,
+        events: {
+          &#039;onStateChange&#039;: onPlayerStateChange
+        },
+        playerVars: {
+          autoplay: 1, // Auto-play the video on load
+          controls: 1, // Show pause/play buttons in player
+          enablejsapi: 1, // Enable the JavaScript API
+          modestbranding: 1, // Hide the Youtube Logo
+          rel: 0, //  Don’t show related videos
+          showinfo: 0, // Hide the video title
+          iv_load_policy: 3, // Hide the Video Annotations
+        },
+      });
+    };
+  
+    const onPlayerStateChange = (event) =&gt; {
+      console.log(&quot;Here on state change&quot;,event);
+      if (event.data === window.YT.PlayerState.ENDED &amp;&amp; currentPlaylistIndex !== null) {
+        let nextIndex = (currentVideoIndex + 1) % playlists[currentPlaylistIndex].videos.length;
+        setCurrentVideoIndex(nextIndex);
+        setCurrentVideoId(playlists[currentPlaylistIndex].videos[nextIndex].snippet.resourceId.videoId);
+      }
+    };
+    
+
+  // After the current video ID is updated, load the new video into the player
+  useEffect(() =&gt; {
+    if (window.YT &amp;&amp; window.YT.Player) {
+      initializePlayer();
+    }
+  }, [currentVideoId]);
+  
+  return(
+    &lt;Tabs&gt;
+     &lt;Tab tabClassName=&#039;Signing&#039;eventKey={&quot;Singing&quot;} title=&quot;Signing/Signout&quot; &gt;
+        { !user &amp;&amp;(
+            &lt;button onClick={signIn}&gt;Sign In with Google&lt;/button&gt;
+          )
+          
+        }
+        { user &amp;&amp;(
+          &lt;div&gt;
+            &lt;img src ={user.picture} alt={user.name} width =&quot;18&quot; height=&quot;18&quot;/&gt;
+            &lt;h6&gt;{user.name}&lt;/h6&gt;
+            &lt;button onClick={signOut}&gt;Sign Out&lt;/button&gt;
+          &lt;/div&gt;
+        )
+
+        }
+      &lt;/Tab&gt;
+      &lt;Tab tabClassName=&quot;SearchResults&quot; eventKey={&quot;SearchResults&quot;} title=&quot;Search Results&quot; &gt;
+        {searchTerm &amp;&amp; (
+            &lt;YoutubeSearch
+              searchTearm={searchTerm}
+              API_KEY={API_KEY} 
+              MAXRESULTS={MAXRESULTS}
+              accessToken={accessToken}
+              playlists={playlists}
+            /&gt;
+          
+        )}
+
+      &lt;/Tab&gt;
+      
+      &lt;Tab tabClassName=&#039;Playlist&#039; eventKey={&quot;Playlist&quot; }title=&quot;Playlist&quot;&gt;
+      &lt;div&gt;
+          {renderVideoPlayer()}
+      &lt;/div&gt;
+      &lt;/Tab&gt;
+        {/*&lt;button onClick={fetchUserPlaylists}&gt;
+            Playlist
+        &lt;/button&gt;*/}
+
+  &lt;/Tabs&gt;
+  );
+}
+
+export default Youtube;</textarea>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="container">
+    <p>.</p>
+  </div>
+</footer>
+
+<script type="text/html" id="complexity-popover-template">
+  <div class="complexity-notice">
+    Complexity : {{ cyclomatic }} <br>
+    Length : {{ halstead.length }} <br>
+    Difficulty : {{ halstead.difficulty.toFixed(2) }} <br>
+    Est # bugs : {{ halstead.bugs.toFixed(2) }}<br>
+  </div>
+</script>
+
+<script type="text/javascript" src="../../assets/scripts/bundles/core-bundle.js"></script>
+<script type="text/javascript" src="../../assets/scripts/bundles/codemirror.js"></script>
+<script type="text/javascript" src="../../assets/scripts/codemirror.markpopovertext.js"></script>
+<script type="text/javascript" src="report.js"></script>
+<script type="text/javascript" src="report.history.js"></script>
+<script type="text/javascript" src="../../assets/scripts/plato-file.js"></script>
+</body>
+</html>
