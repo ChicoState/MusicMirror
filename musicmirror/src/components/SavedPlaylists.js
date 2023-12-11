@@ -98,10 +98,13 @@ class SavedPlaylists extends React.Component{
 
   getSpotifyLists = async() => {
 
+    let maxTries = 10;
+    let i = 0;
     let playlists = {error: "this is a placeholder"};
     while (sessionStorage.getItem("verifier") && Object.keys(playlists)[0] &&
-        Object.keys(playlists)[0] === "error") {
+        Object.keys(playlists)[0] === "error" && i < maxTries) {
 
+      i += 1;
       let test = await getPlaylists();
       if (Object.keys(test).length > 2 && 
           test.href !== "https://api.spotify.com/v1/users/null/playlists?offset=0&limit=20") {
