@@ -131,7 +131,7 @@ it('getAccessToken sad fetch response', async () => {
 
 it('getAccessToken !result.ok', async () => {
   sessionStorage.setItem("verifier", 'mock_verifier');
-  fetch.mockResponse(JSON.stringify({mock: "mock"}, {status: 400}));
+  fetch.mockResponseOnce('{}', { status: 500, headers: { 'content-type': 'application/json' } });
   expect(await getAccessToken("mock_id", "mock_code")).toBe(null);
 });
 
