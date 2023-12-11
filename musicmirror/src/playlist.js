@@ -6,7 +6,7 @@ export async function findSongs(input, resCount) {
     let search = input.split('\n');
     //iterate over songs and search for song
     let playlist = {
-        title: "Music Mirror Playlist",
+        title: "MusicMirror Playlist",
         songs: [],
     };
     let url = "";
@@ -72,7 +72,9 @@ export async function genPlaylist(list) {
             let obj = await resp.json();
             let p_id = obj.id;
             for (let i in list.songs) {
-                uris.push(list.songs[i].tracks[0].uri);
+                if (list.songs[i].tracks[0]) {
+                    uris.push(list.songs[i].tracks[0].uri);
+                }
             }
             // Iterate through list of matches and add each song to the playlist (api req)
             resp = await fetch("https://api.spotify.com/v1/playlists/" + p_id + "/tracks", {
@@ -113,9 +115,7 @@ export async function searchPlaylists(query) {
     return await resp.json();
 }
 
-export async function savePlaylist(list) {
-    //change later to get current user's id
-    let uid = "656822bfe9f57013d3b46c2e"
+export async function savePlaylist(list, uid) {
     if (!list || JSON.stringify(list) === '{}' || list.songs.length <= 0) {
         return undefined;
     }
@@ -127,15 +127,18 @@ export async function savePlaylist(list) {
         }
     }
     for (let i in list.songs) {
-        q_body.playlist.songs.push({
-            title: list.songs[i].tracks[0].title,
-            artist: list.songs[i].tracks[0].artist
-        });
+        if (list.songs[i].tracks[0]) {
+            q_body.playlist.songs.push({
+                title: list.songs[i].tracks[0].title,
+                artist: list.songs[i].tracks[0].artist
+            });
+        }
     }
     console.log(q_body);
 
     try {
-        let resp = await fetch("http://localhost:5000/playlist/" + uid, {
+        // let resp = await fetch("http://localhost:3002/playlist/" + uid, {
+        await fetch("http://localhost:3002/playlist/" + uid, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

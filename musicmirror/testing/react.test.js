@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import SpotifyProfile from '../src/components/SpotifyProfile'; 
+import SpotifyConnection from '../src/components/SpotifyConnection'; 
 import AddSongs from '../src/components/AddSongs.js';
 import * as auth from '../src/auth.js';
 import '@testing-library/jest-dom';
@@ -25,7 +25,7 @@ beforeEach(() => {
 test('should call auth.checkCode and update state in handleAuth', async () => {
     sessionStorage.setItem('loggedIn', 'false');
 
-    render(<SpotifyProfile handleLogin={() => {}} />);
+    render(<SpotifyConnection handleLogin={() => {}} />);
 
     userEvent.click(screen.getByRole('button', { name: 'Sign in with Spotify!' }));
 
@@ -40,7 +40,7 @@ test('should call auth.checkCode and update state in handleAuth', async () => {
 test('should call handleLogin in componentDidMount', () => {
     const handleLoginMock = jest.fn();
 
-    render(<SpotifyProfile handleLogin={handleLoginMock} />);
+    render(<SpotifyConnection handleLogin={handleLoginMock} />);
 
     expect(handleLoginMock).toHaveBeenCalledWith(false);
 });
@@ -48,7 +48,7 @@ test('should call handleLogin in componentDidMount', () => {
 test('renders "Sign in" view when loggedIn is false', () => {
     sessionStorage.setItem('loggedIn', 'false');
   
-    render(<SpotifyProfile handleLogin={() => {}} />);
+    render(<SpotifyConnection handleLogin={() => {}} />);
   
     //we should have a sign in view with state false & loggedIn should be false
     expect(screen.getByText(/Looks like you haven't connected to Spotify yet/i)).toBeInTheDocument();
@@ -58,7 +58,7 @@ test('renders "Sign in" view when loggedIn is false', () => {
 test('renders "Connected" view when loggedIn is true', () => {
     sessionStorage.setItem('loggedIn', 'true');
   
-    render(<SpotifyProfile handleLogin={() => {}} />);
+    render(<SpotifyConnection handleLogin={() => {}} />);
     
     //Should see logged in view and loggedIn state should be true
     expect(screen.getByText(/Spotify Connected!/i)).toBeInTheDocument();

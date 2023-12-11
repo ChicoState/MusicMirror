@@ -21,7 +21,8 @@ export async function emailCheck(email) {
         }
     } catch (err) {
         console.error(err);
-        throw err;
+        // throw err;
+        return undefined;
     }
 }
 
@@ -81,15 +82,44 @@ export async function getUsername(email, password){
         }
     } catch (err) {
         console.error(err);
-        throw err;
+        // throw err;
+        return undefined;
+    }
+}
+
+//Returns user id if there is one. If the email doesn't exist or the password
+// is incorrect, returns undefined
+export async function getUserId(email, password){
+
+    try {
+        let resp = await fetch(`http://localhost:3002/user?email=${email}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        });
+        if (resp.ok) {
+            let jsonData = await resp.json();
+            //console.log(jsonData);
+            
+            if(jsonData.password === password){
+                return jsonData._id;
+            }
+        } else {
+            console.error(`Error: ${resp.status} - ${resp.statusText}`);
+        }
+    } catch (err) {
+        console.error(err);
+        // throw err;
+        return undefined;
     }
 }
 
 //Returns a list of playlist objects if a user matches id
 //Otherwise, returns undefined
-export async function getMMPlaylists(id){
+export async function getMMPlaylists(email){
     try {
-        let resp = await fetch(`http://localhost:3002/user?_id=${id}`, {
+        let resp = await fetch(`http://localhost:3002/user?email=${email}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -98,7 +128,7 @@ export async function getMMPlaylists(id){
         if (resp.ok) {
             let jsonData = await resp.json();
             
-            if(jsonData.playlists.length == 0){
+            if(jsonData.playlists.length === 0){
                 return undefined;
             } else {
                 return jsonData.playlists;

@@ -5,7 +5,7 @@
 2. Next, run docker-compose up --build
    - You can also break this up into two steps by running "docker-compose build ." and "docker-compose up" in order.
 3. This should start both the react app and the backed api server in docker containers.
-4. You can check that they are both up by opening localhost:5000 and 3000 in your browser respectively.
+4. You can check that they are both up by opening localhost:3002 and 3000 in your browser respectively.
    - If you wish to test the api endpoints, you can use Postman or other ways of sending api requests and send them to localhost:5000 + "endpoint path"
 
 ## How to get started with React (windows, linux/mac steps may vary):
