@@ -1,5 +1,4 @@
-//import axios from 'axios';
-axios = require('axios');
+import axios from 'axios';
 
 /*******************************************************************************
 API_KEYS:
