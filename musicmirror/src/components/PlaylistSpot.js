@@ -140,7 +140,7 @@ class PlaylistSpot extends React.Component{
         this.state.playlist.songs.length === 0)) {
 
       return (
-        <div className="Playlist">
+        <div className="Playlist" data-testid="playlist-title-input">
           <h1>Choose a playlist to preview, or create a new one.</h1>
         </div>
       );
@@ -149,7 +149,7 @@ class PlaylistSpot extends React.Component{
     } else if (this.state.playlist && 
         Object.keys(this.state.playlist).length > 0) {
       return (
-        <div className="Playlist">
+        <div className="Playlist" data-testid="playlist-spot-input">
           <h1 className="list-title">
             {this.state.isEditing? 
             (<div className="d-flex justify-content-between align-items-center">
@@ -160,6 +160,7 @@ class PlaylistSpot extends React.Component{
                 onChange={this.handleChange} 
                 onBlur={this.handleBlur} 
                 autoFocus
+                data-testid="playlist-title-input"
               />
               <svg className="bi bi-pencil-square" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16">
                 <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
