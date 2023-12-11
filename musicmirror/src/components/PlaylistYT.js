@@ -1,6 +1,7 @@
 import React from "react";
 import SongDetailsModal from "./SongDetailsModal";
-
+import * as yt from '../youtube';
+import PlaylistCreationYT from "../PlaylistCreationYT";
 class PlaylistYT extends React.Component{
   constructor(){
     super();
@@ -11,6 +12,8 @@ class PlaylistYT extends React.Component{
       selectedSong: {},
       selectedIndex: null,
       search: 1,
+      selectedPlaylist: null,
+      userPlaylists: []
     };
   }
 
@@ -29,6 +32,21 @@ class PlaylistYT extends React.Component{
       });
     }
   }
+/*==Mounting====================== */
+  componentDidMount (){
+    this.fetchUserPlaylists();
+  }
+
+  fetchUserPlaylists = async () => {
+    const playlists = await yt.fetchUserPlaylists();
+    this.setState({ userPlaylists: playlists });
+  };
+
+  handlePlaylistSelection = (event) => {
+    this.setState({ selectedPlaylist: event.target.value });
+  };
+
+
 
   /*--- HANDLERS -------------------------------------------------------------*/
 
@@ -64,8 +82,12 @@ class PlaylistYT extends React.Component{
     if (sessionStorage.getItem("loggedInYT") !== "true") {
       this.props.alert("You must be signed in to YouTube to save this playlist!", "info");
     } else {
-      // await youtube_gen_playlist_func;
-      // this.props.save();
+      //await youtube_gen_playlist_func;
+      const title = this.state.currentTitle;
+      const videos = this.state.playlist;//<- deals with the search getting the searchs from it the list of the data for the playlist
+      
+      yt.createPlaylist(title, videos);
+      this.props.save();
       this.props.alert(`${this.state.currentTitle} playlist saved to YouTube!`, "success");
     }
   }
@@ -118,6 +140,27 @@ class PlaylistYT extends React.Component{
       });
     }
   };
+/**++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+
+  handleAddSongToPlaylist = async (song) => {
+    const { selectedPlaylist } = this.state;
+    const accessToken = sessionStorage.getItem('youtubeAccessToken');
+  
+    if (!selectedPlaylist) {
+      alert('Please select a playlist first.');
+      return;
+    }
+  
+    try {
+      await yt.addSongToPlaylist(selectedPlaylist, song.id.videoId, accessToken);
+      alert(`Added ${song.title} to playlist`);
+    } catch (error) {
+      console.error('Error adding song to playlist:', error);
+      alert('Failed to add song to playlist');
+    }
+  }
+/**++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+  
 
   /*--------------------------------------------------------------------------*/
 
@@ -155,6 +198,15 @@ class PlaylistYT extends React.Component{
                 <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
                 <path fillRule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
               </svg>
+              { //Added here for adding songs, drop down  
+                <select onChange={this.handlePlaylistSelection}>
+                      {this.state.userPlaylists.map(playlist => (
+                        <option key={playlist.id} value={playlist.id}>
+                          {playlist.title}
+                        </option>
+                      ))}
+              </select>
+              }
             </div>) 
             : 
             (<span 
@@ -168,7 +220,6 @@ class PlaylistYT extends React.Component{
               </svg>
             </span>)}
           </h1>
-
           {/* List of song cards */}
           {this.state.playlist.songs.map((song, index) => (
             <div 
@@ -191,8 +242,10 @@ class PlaylistYT extends React.Component{
               >
                 <h2 className="m-0">{song.tracks[0].title}</h2>
                 <p className="m-0">{song.tracks[0].artist}</p>
+                
               </div>
             </div>
+            
           ))}
 
           {/* This modal pops up when you click on a song */}
@@ -200,15 +253,17 @@ class PlaylistYT extends React.Component{
             service={this.props.service}
             song={this.state.selectedSong} 
             updatePlaylist={this.handleUpdate}
+            
           />
 
-          {/* Upload the playlist to Spotify */}
+          {/* Upload the playlist to YT */}
           <button 
             className="mt-3 btn btn-secondary" 
             onClick={this.handleSave}
           >
             Save Playlist
           </button>
+          
         </div>
       );
 

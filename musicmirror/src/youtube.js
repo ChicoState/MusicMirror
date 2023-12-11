@@ -3,17 +3,25 @@ import axios from 'axios';
 /*******************************************************************************
 API_KEYS:
 
-1ST:AIzaSyDhDpQvbI2W1P5IH8xV4o2fsw0gK_5lGzY
-
-2ND:AIzaSyBnKLIVgOiPTzRVvXMguoHi8a49aVvEUvI
-
-3RD: AIzaSyBWAir5kNDcRDZAAPr8pvINjmJA2ERD22M
-
+//1ST:
+const API_KEY ='AIzaSyDhDpQvbI2W1P5IH8xV4o2fsw0gK_5lGzY';
+*//*
+//2ND:
+const API_KEY='AIzaSyBnKLIVgOiPTzRVvXMguoHi8a49aVvEUvI';
+*//*
+//3RD:
+const API_KEY='AIzaSyBWAir5kNDcRDZAAPr8pvINjmJA2ERD22M';
+*//*
+4th:*/
+const API_KEY = 'AIzaSyAV-JTsRzcn_ZIj32pSkrEGlY1eJHvosv0';
+/**//*
+Fith:
+*//*
 CHANGE when the API search limit has been reached and request, 
 go to the server and change the needed info
 *******************************************************************************/
-const API_KEY = 'AIzaSyDhDpQvbI2W1P5IH8xV4o2fsw0gK_5lGzY';
-const MAXRESULTS = 20;
+
+const MAXRESULTS = 5; //Used to limit the amout of search output to show
 
 
 //------------------------------------------------------------------------------
@@ -24,6 +32,7 @@ export async function signIn(urlSafe) {
   const urlParams = new URLSearchParams(window.location.search);
   const token = urlParams.get('accessToken');
   const code = urlParams.get('code');
+  const selectedVideoId = [];
 
   if (urlSafe && token) {
     sessionStorage.setItem('youtubeAccessToken',token);
@@ -80,7 +89,7 @@ export async function fetchUserPlaylists() {
 };
 
 //------------------------------------------------------------------------------
-
+/**++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
 export async function performYouTubeSearch(searchInput, numResults) {
 
   let searchTerms = searchInput.split(/[\n,]\s*/);
@@ -95,8 +104,8 @@ export async function performYouTubeSearch(searchInput, numResults) {
       const searchResponse = await axios.get('https://www.googleapis.com/youtube/v3/search', {
         params: {
           part: 'snippet',
-          maxResults: MAXRESULTS,
-          key: API_KEY,
+          maxResults: MAXRESULTS, //amount of searches that will be displayed
+          key: API_KEY, //this isn't truly needed but is good to have
           q: term,
           type: 'video',
           videoCategoryId: '10',
@@ -139,10 +148,10 @@ export async function performYouTubeSearch(searchInput, numResults) {
   console.log(newList);
   return(newList);
 };
-
-//------------------------------------------------------------------------------
-export async function createPlaylist(accessToken,title, description) {
-  console.log('Here:::::::::::::>',accessToken);
+/**++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+/**+++++++++++++++++++++++++++++++++++++++CREATE PLAYLIST STARTS+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+export async function createPlaylist(title, description) {
+  const accessToken = sessionStorage.getItem('youtubeAccessToken');
   if (!accessToken) {
     console.error('An issue with the token:', accessToken);
     return;
@@ -151,10 +160,15 @@ export async function createPlaylist(accessToken,title, description) {
     console.log('No title given');
     return;
   }
+  else{
+    title = "MusicMirror Playlis";
+  }
   try {
-    const response = await axios.post('http://localhost:3001/youtube/createPlaylists',{      accessToken
-      ,title
-      ,description}
+    const response = await axios.post('http://localhost:3001/youtube/createPlaylists',{     
+       accessToken //This is also needed, since we need to have permision to edit said user YT
+      ,title//This is required to name the playlist
+      ,description//this not so much, can be left blank
+    }
     );
     console.log('Playlist created successfully:', response.data);
     return response.data;
@@ -162,3 +176,39 @@ export async function createPlaylist(accessToken,title, description) {
     console.error('Error in creating playlist:', error);
   }
 }
+/*This function is called upon thee PlaylistCreationYT.js, there we have the form and getting the user input
+as well we get the accessToken, we can change that as well to be ony in here.*/
+/**++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+/**+++++++++++++++++++++++++++++++++++++++++++Add Songs To Playlist++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/
+
+export async function addSongToPlaylist(playlistId, videoId, accessToken) {
+  if (!playlistId || !videoId || !accessToken) {
+    console.error('Playlist ID, video ID, and access token are required');
+    return;
+  }
+
+  try {
+    const response = await axios.post('https://www.googleapis.com/youtube/v3/playlistItems', {
+      snippet: {
+        playlistId: playlistId,
+        resourceId: {
+          kind: 'youtube#video',
+          videoId: videoId
+        }
+      }
+    }, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json'
+      }
+    });
+
+    console.log('Song added to playlist:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error in adding song to playlist:', error);
+    throw error;
+  }
+}
+
+/**+++++++++++++++++++++++++++++++++++++++++++++++++++FISH++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*/

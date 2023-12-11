@@ -419,10 +419,11 @@ function App() {
                 </Tab>
                 <Tab tabClassName="tab tab-youtube" eventKey="youtubeLeft" title="YT Music">
                   <div className="tab-body p-3">
+                    <h4>::You're Playlists::</h4>
                     <SavedPlaylists 
                       service="youtube" 
                       connected={youtubeConnection} 
-                      refresh={needsListRefresh} 
+                      refresh={needsListRefresh}
                       confirm={handleConfirmRefresh}
                     />
                     <PlaylistCreationYT/>
